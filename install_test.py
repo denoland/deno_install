@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
+# TODO travis and appveyor. test on python 2 and 3.
 import sys
 import shutil
 import os

@@ -1,5 +1,6 @@
 #!/usr/bin/env python
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
+# TODO(everyone) Keep this script simple and easily auditable.
 from __future__ import print_function
 
 import io
