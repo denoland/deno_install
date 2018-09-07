@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
-# TODO travis and appveyor. test on python 2 and 3.
+from __future__ import print_function
+
 import sys
 import shutil
 import os
@@ -14,7 +15,7 @@ def main():
     PATTERN = "DENO_EXE: "
     home = os.path.expanduser("~")
     expected_bin_dir = os.path.join(home, ".deno", "bin")
-    print "Testing install.py ... Expect deno installed to ", expected_bin_dir
+    print("Testing install.py ... Expect deno installed to ", expected_bin_dir)
     if os.path.exists(expected_bin_dir):
         shutil.rmtree(expected_bin_dir)
     expected_fn = os.path.join(expected_bin_dir, "deno")
@@ -23,9 +24,9 @@ def main():
     out = subprocess.check_output(cmd, universal_newlines=True)
     actual_fn = None
     for line in out.splitlines():
-        print line
+        print(line)
         if PATTERN in line:
-            print "set actual"
+            print("set actual")
             actual_fn = line[len(PATTERN):]
     assert actual_fn == expected_fn, "actual %s != expected %s" % (actual_fn,
                                                                    expected_fn)
