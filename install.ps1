@@ -17,7 +17,7 @@ Write-Part 'Downloading '; Write-Emphasized $LatestReleaseUri; Write-Part ' ... 
 $LatestReleaseResponse = Invoke-WebRequest -Uri $LatestReleaseUri
 Write-Done
 
-Write-Part 'Determining latest Deno version: '
+Write-Part 'Determining latest Deno release: '
 $LatestRelease = ($LatestReleaseResponse | ConvertFrom-Json).tag_name
 Write-Emphasized $LatestRelease; Write-Part ' ... '
 Write-Done
