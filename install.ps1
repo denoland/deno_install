@@ -73,3 +73,8 @@ if (!$IsInPath) {
 	$Env:Path = "${SessionPath};${DenoBin}"
 	Write-Done
 }
+
+Write-Host ''
+Write-Host '    Deno was installed successfully.' -ForegroundColor 'Green'
+Write-Part '    Run '; Write-Emphasized 'deno --help'; Write-Host ' to get started.'
+Write-Host ''
