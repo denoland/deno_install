@@ -14,9 +14,9 @@ import zipfile
 import zlib
 
 try:
-    from urllib.request import urlopen
+    from urllib.request import urlopen, URLError
 except ImportError:
-    from urllib2 import urlopen
+    from urllib2 import urlopen, URLError
 
 RELEASES_URL = "https://github.com/denoland/deno/releases/latest"
 FILENAME_LOOKUP = {
@@ -31,20 +31,25 @@ FILENAME_LOOKUP = {
 def release_url(platform):
     try:
         filename = FILENAME_LOOKUP[platform]
+        html = urlopen(RELEASES_URL).read().decode('utf-8')
+        urls = re.findall(r'href=[\'"]?([^\'" >]+)', html)
+        matching = [u for u in urls if filename in u]
+
+        if len(matching) != 1:
+            print("Unable to find download url for", filename)
+            sys.exit(1)
+        return "https://github.com" + matching[0]
+
     except KeyError:
         print("Unable to locate appropriate filename for", platform)
         sys.exit(1)
 
-    html = urlopen(RELEASES_URL).read().decode('utf-8')
-    urls = re.findall(r'href=[\'"]?([^\'" >]+)', html)
-    matching = [u for u in urls if filename in u]
-
-    if len(matching) != 1:
-        print("Unable to find download url for", filename)
-        sys.exit(1)
-
-    return "https://github.com" + matching[0]
-
+    except URLError as e:
+        err_message = e.args[0]
+        if '[SSL: TLSV1_ALERT_PROTOCOL_VERSION]' in err_message :
+            print('You might want to update your OpenSSL.')
+            print('Checkout this issue : https://github.com/denoland/deno_install/issues/1')
+            sys.exit(1)
 
 def main():
     bin_dir = deno_bin_dir()
