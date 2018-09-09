@@ -15,7 +15,7 @@ curl -sSf https://raw.githubusercontent.com/denoland/deno_install/master/install
 **Install with PowerShell:**
 
 ```powershell
-iex (new-object net.webclient).downloadstring('https://raw.githubusercontent.com/denoland/deno_install/master/install.ps1')
+iex (iwr https://raw.githubusercontent.com/denoland/deno_install/master/install.ps1)
 ```
 
 _Note: Depending on your security settings, you may have to run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` first to allow downloaded scripts to be executed._
