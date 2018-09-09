@@ -1,12 +1,12 @@
-﻿$ErrorActionPreference = Stop
+﻿$ErrorActionPreference = 'Stop'
 
 # Enable TLS 1.2 since it is required for connections to GitHub
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 # Helper functions for pretty terminal output
 function Write-Part ([string] $Part) { Write-Host -Object $Part -NoNewline }
-function Write-Emphasized ([string] $Emphasis) { Write-Host -Object $Emphasis -NoNewLine -ForegroundColor Yellow }
-function Write-Done { Write-Host -Object 'done' -NoNewline -ForegroundColor Green; Write-Host '.' }
+function Write-Emphasized ([string] $Emphasis) { Write-Host -Object $Emphasis -NoNewLine -ForegroundColor 'Yellow' }
+function Write-Done { Write-Host -Object 'done' -NoNewline -ForegroundColor 'Green'; Write-Host '.' }
 
 # Determine latest Deno release via GitHub API
 $LatestReleaseUri = 'https://api.github.com/repos/denoland/deno/releases/latest'
@@ -23,7 +23,7 @@ Write-Done
 $DenoBin = "${Home}\.deno\bin"
 if (!(Test-Path $DenoBin)) {
 	Write-Part 'Creating directory '; Write-Emphasized $DenoBin; Write-Part ' ... '
-	New-Item -Path $DenoBin -ItemType Directory | Out-Null
+	New-Item -Path $DenoBin -ItemType 'Directory' | Out-Null
 	Write-Done
 }
 
