@@ -30,15 +30,11 @@ FILENAME_LOOKUP = {
 
 def release_url(platform):
     try:
+
         filename = FILENAME_LOOKUP[platform]
         html = urlopen(RELEASES_URL).read().decode('utf-8')
         urls = re.findall(r'href=[\'"]?([^\'" >]+)', html)
         matching = [u for u in urls if filename in u]
-
-        if len(matching) != 1:
-            print("Unable to find download url for", filename)
-            sys.exit(1)
-        return "https://github.com" + matching[0]
 
     except KeyError:
         print("Unable to locate appropriate filename for", platform)
@@ -50,6 +46,11 @@ def release_url(platform):
             print('You might want to update your OpenSSL.')
             print('Checkout this issue : https://github.com/denoland/deno_install/issues/1')
             sys.exit(1)
+            
+    if len(matching) != 1:
+            print("Unable to find download url for", filename)
+            sys.exit(1)
+        return "https://github.com" + matching[0]
 
 def main():
     bin_dir = deno_bin_dir()
