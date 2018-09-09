@@ -6,7 +6,6 @@
 		'PSReservedCmdletChar',
 		'PSReservedParams',
 		'PSShouldProcess',
-		'PSUseShouldProcessForStateChangingFunctions',
 		'PSUseSingularNouns',
 		'PSMissingModuleManifestField',
 		'PSAvoidDefaultValueSwitchParameter',
@@ -23,8 +22,7 @@
 		'PSPlaceOpenBrace',
 		'PSPlaceCloseBrace',
 		'PSUseConsistentWhitespace',
-		'PSUseConsistentIndentation',
-		'PSAlignAssignmentStatement'
+		'PSUseConsistentIndentation'
 	)
 	Rules = @{
 		PSPlaceOpenBrace = @{
@@ -50,10 +48,6 @@
 			CheckOpenParen = $true
 			CheckOperator = $true
 			CheckSeparator = $true
-		}
-		PSAlignAssignmentStatement = @{
-			Enable = $true
-			CheckHashtable = $false
 		}
 	}
 }
