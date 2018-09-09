@@ -1,4 +1,7 @@
-﻿$ErrorActionPreference = 'Stop'
+﻿# Copyright 2018 the Deno authors. All rights reserved. MIT license.
+# TODO(everyone): Keep this script simple and easily auditable.
+
+$ErrorActionPreference = 'Stop'
 
 # Enable TLS 1.2 since it is required for connections to GitHub
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
