@@ -41,10 +41,8 @@ Write-Done
 # Extract deno.exe from .zip file
 Write-Part 'Extracting '; Write-Emphasized $DenoZip
 Write-Part ' into '; Write-Emphasized "${DenoBin}\deno.exe"; Write-Part ' ... '
-Expand-Archive `
-	-Path $DenoZip `
-	-DestinationPath $DenoBin `
-	-Force # Using -Force to overwrite deno.exe if it already exists
+# Using -Force to overwrite deno.exe if it already exists
+Expand-Archive -Path $DenoZip -DestinationPath $DenoBin -Force
 Write-Done
 
 # Remove .zip file
@@ -56,11 +54,9 @@ Write-Done
 $User = [EnvironmentVariableTarget]::User
 $Path = [Environment]::GetEnvironmentVariable('Path', $User)
 
-# Check whether Deno is in the Path already
+# Check whether Deno is in the Path
 $Paths = $Path -split ';'
-$IsInPath = `
-	$Paths -contains $DenoBin -or `
-	$Paths -contains "${DenoBin}\"
+$IsInPath = $Paths -contains $DenoBin -or $Paths -contains "${DenoBin}\"
 
 # Add Deno to the Path if it hasn't been added already
 if (!$IsInPath) {
