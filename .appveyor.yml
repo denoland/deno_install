@@ -1,11 +1,31 @@
 environment:
-
   matrix:
-    - PYTHON: "C:\\Python27"
-    - PYTHON: "C:\\Python33"
+    - TYPE: powershell
+    - TYPE: python
+      PYTHON_DIR: "C:\\Python27"
+    - TYPE: python
+      PYTHON_DIR: "C:\\Python33"
 
 build: off
 
-test_script:
-  - "%PYTHON%\\python.exe install.py"
-  - "%PYTHON%\\python.exe install_test.py"
+for:
+  - matrix:
+      only:
+        - TYPE: powershell
+    install:
+      - ps: $url = "https://raw.githubusercontent.com", $env:APPVEYOR_REPO_NAME,
+                   $env:APPVEYOR_REPO_COMMIT, "install.ps1" -join "/"
+      - ps: iex (iwr $url)
+    test_script:
+      - ps: if (-not (Test-Path "~\.deno\bin\deno.exe")) {
+              throw "deno.exe not found in expected location"
+            }
+      - ps: deno --help
+
+  - matrix:
+      only:
+        - TYPE: python
+    install:
+      - "%PYTHON_DIR%\\python.exe install.py"
+    test_script:
+      - "%PYTHON_DIR%\\python.exe install_test.py"
