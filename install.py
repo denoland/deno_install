@@ -18,7 +18,9 @@ try:
 except ImportError:
     from urllib2 import urlopen
 
-RELEASES_URL = "https://github.com/denoland/deno/releases/latest"
+DENO_REPO_URL = "https://github.com/denoland/deno"
+LATEST_RELEASE_URL = DENO_REPO_URL + "/releases/latest"
+TAG_URL = DENO_REPO_URL + "/releases/tag/"
 FILENAME_LOOKUP = {
     "darwin": "deno_osx_x64.gz",
     "linux": "deno_linux_x64.gz",  # python3
@@ -28,14 +30,21 @@ FILENAME_LOOKUP = {
 }
 
 
-def release_url(platform):
+def release_url(platform, tag):
     try:
         filename = FILENAME_LOOKUP[platform]
     except KeyError:
         print("Unable to locate appropriate filename for", platform)
         sys.exit(1)
 
-    html = urlopen(RELEASES_URL).read().decode('utf-8')
+    url = TAG_URL + tag if tag else LATEST_RELEASE_URL
+
+    try:
+        html = urlopen(url).read().decode('utf-8')
+    except:
+        print("Unable to find release page for", tag)
+        sys.exit(1)
+
     urls = re.findall(r'href=[\'"]?([^\'" >]+)', html)
     matching = [u for u in urls if filename in u]
 
@@ -50,7 +59,7 @@ def main():
     bin_dir = deno_bin_dir()
     exe_fn = os.path.join(bin_dir, "deno")
 
-    url = release_url(sys.platform)
+    url = release_url(sys.platform, sys.argv[1] if len(sys.argv) > 1 else None)
     print("Downloading", url)
     compressed = urlopen(url).read()
 
