@@ -55,13 +55,36 @@ def release_url(platform, tag):
     return "https://github.com" + matching[0]
 
 
+def download_with_progress(url):
+    print("Downloading", url)
+
+    remote_file = urlopen(url)
+    total_size = int(remote_file.headers['Content-Length'].strip())
+
+    data = []
+    bytes_read = 0.0
+
+    while True:
+        d = remote_file.read(8192)
+
+        if not d:
+            print()
+            break
+
+        bytes_read += len(d)
+        data.append(d)
+        sys.stdout.write('\r%2.2f%% downloaded' % (bytes_read / total_size * 100))
+        sys.stdout.flush()
+
+    return b''.join(data)
+
+
 def main():
     bin_dir = deno_bin_dir()
     exe_fn = os.path.join(bin_dir, "deno")
 
     url = release_url(sys.platform, sys.argv[1] if len(sys.argv) > 1 else None)
-    print("Downloading", url)
-    compressed = urlopen(url).read()
+    compressed = download_with_progress(url)
 
     if url.endswith(".zip"):
         with zipfile.ZipFile(io.BytesIO(compressed), 'r') as z:
