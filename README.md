@@ -9,13 +9,25 @@ Downloads the latest Deno binary into `$HOME/.deno/bin`.
 **Install with Python:**
 
 ```
-curl -sSf https://raw.githubusercontent.com/denoland/deno_install/master/install.py | python
+curl -L https://deno.land/x/install/install.py | python
 ```
 
 **Install with PowerShell:**
 
 ```powershell
-iex (iwr https://raw.githubusercontent.com/denoland/deno_install/master/install.ps1)
+iex (iwr https://deno.land/x/install/install.ps1)
 ```
 
 _Note: Depending on your security settings, you may have to run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` first to allow downloaded scripts to be executed._
+
+## Install other versions
+
+If you need to install specific version of deno, use the following commands:
+
+**Install with Python:**
+
+```
+curl -L https://deno.land/x/install/install.py | python - v0.2.0
+```
+
+(PowerShell version is not available yet)
