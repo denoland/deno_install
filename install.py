@@ -81,7 +81,7 @@ def download_with_progress(url):
 
 def main():
     bin_dir = deno_bin_dir()
-    exe_fn = os.path.join(bin_dir, "deno")
+    exe_fn = os.path.join(bin_dir, "deno.exe" if sys.platform == "win32" else "deno")
 
     url = release_url(sys.platform, sys.argv[1] if len(sys.argv) > 1 else None)
     compressed = download_with_progress(url)
