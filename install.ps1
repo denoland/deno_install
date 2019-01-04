@@ -1,5 +1,10 @@
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
+param 
+( 
+    [alias("v")]
+    [string]$version
+)
 
 $ErrorActionPreference = "Stop"
 
@@ -18,15 +23,25 @@ function Write-Done {
   Write-Host "."
 }
 
-# Determine latest Deno release via GitHub API.
-$latest_release_uri = "https://api.github.com/repos/denoland/deno/releases/latest"
-Write-Part "Downloading "; Write-Emphasized $latest_release_uri; Write-Part "..."
-$latest_release_json = Invoke-WebRequest -Uri $latest_release_uri
-Write-Done
+if (-not $version) {
+  # Determine latest Deno release via GitHub API.
+  $latest_release_uri = "https://api.github.com/repos/denoland/deno/releases/latest"
+  Write-Part "Downloading "; Write-Emphasized $latest_release_uri; Write-Part "..."
+  $latest_release_json = Invoke-WebRequest -Uri $latest_release_uri
+  Write-Done
 
-Write-Part "Determining latest Deno release: "
-$latest_release = ($latest_release_json | ConvertFrom-Json).tag_name
-Write-Emphasized $latest_release; Write-Part "... "
+  Write-Part "Determining latest Deno release: "
+  $version = ($latest_release_json | ConvertFrom-Json).tag_name
+  Write-Emphasized $version; Write-Part "... "
+  Write-Done
+}
+
+# Download Deno release.
+$zip_file = "${deno_dir}\deno_win_x64.zip"
+$download_uri = "https://github.com/denoland/deno/releases/download/" +
+                "${version}/deno_win_x64.zip"
+Write-Part "Downloading "; Write-Emphasized $download_uri; Write-Part "..."
+Invoke-WebRequest -Uri $download_uri -OutFile $zip_file
 Write-Done
 
 # Create ~\.deno\bin directory if it doesn't already exist
@@ -36,14 +51,6 @@ if (-not (Test-Path $deno_dir)) {
   New-Item -Path $deno_dir -ItemType Directory | Out-Null
   Write-Done
 }
-
-# Download latest Deno release.
-$zip_file = "${deno_dir}\deno_win_x64.zip"
-$download_uri = "https://github.com/denoland/deno/releases/download/" +
-                "${latest_release}/deno_win_x64.zip"
-Write-Part "Downloading "; Write-Emphasized $download_uri; Write-Part "..."
-Invoke-WebRequest -Uri $download_uri -OutFile $zip_file
-Write-Done
 
 # Extract deno.exe from .zip file.
 Write-Part "Extracting "; Write-Emphasized $zip_file
