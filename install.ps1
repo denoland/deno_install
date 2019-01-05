@@ -18,16 +18,22 @@ function Write-Done {
   Write-Host "."
 }
 
-# Determine latest Deno release via GitHub API.
-$latest_release_uri = "https://api.github.com/repos/denoland/deno/releases/latest"
-Write-Part "Downloading "; Write-Emphasized $latest_release_uri; Write-Part "..."
-$latest_release_json = Invoke-WebRequest -Uri $latest_release_uri
-Write-Done
+if ($args.count) {
+    # If specific release is mentioned
+    $release = $args[0]
+} else {
+    # Else determine latest Deno release via GitHub API.
+    $latest_release_uri = "https://api.github.com/repos/denoland/deno/releases/latest"
+    Write-Part "Downloading "; Write-Emphasized $latest_release_uri; Write-Part "..."
+    $latest_release_json = Invoke-WebRequest -Uri $latest_release_uri
+    Write-Done
 
-Write-Part "Determining latest Deno release: "
-$latest_release = ($latest_release_json | ConvertFrom-Json).tag_name
-Write-Emphasized $latest_release; Write-Part "... "
-Write-Done
+    Write-Part "Determining latest Deno release: "
+    $latest_release = ($latest_release_json | ConvertFrom-Json).tag_name
+    $release = $latest_release
+    Write-Emphasized $latest_release; Write-Part "... "
+    Write-Done
+}
 
 # Create ~\.deno\bin directory if it doesn't already exist
 $deno_dir = "${Home}\.deno\bin"
@@ -40,7 +46,7 @@ if (-not (Test-Path $deno_dir)) {
 # Download latest Deno release.
 $zip_file = "${deno_dir}\deno_win_x64.zip"
 $download_uri = "https://github.com/denoland/deno/releases/download/" +
-                "${latest_release}/deno_win_x64.zip"
+                "${release}/deno_win_x64.zip"
 Write-Part "Downloading "; Write-Emphasized $download_uri; Write-Part "..."
 Invoke-WebRequest -Uri $download_uri -OutFile $zip_file
 Write-Done
