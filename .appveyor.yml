@@ -5,6 +5,7 @@ environment:
       PYTHON_DIR: "C:\\Python27"
     - TYPE: python
       PYTHON_DIR: "C:\\Python33"
+    - TYPE: deno
 
 build: off
 
@@ -29,3 +30,15 @@ for:
       - "%PYTHON_DIR%\\python.exe install.py"
     test_script:
       - "%PYTHON_DIR%\\python.exe install_test.py"
+      
+  - matrix:
+      only: 
+        - TYPE: deno
+    install:
+        - ps: $url = "https://raw.githubusercontent.com", $env:APPVEYOR_REPO_NAME,
+                     $env:APPVEYOR_REPO_COMMIT, "install.ps1" -join "/"
+        - ps: iex (iwr $url)
+    test_script:
+      - deno --allow-write --allow-net --allow-env --allow-run install.ts v0.2.1
+      - deno -v | findstr 0.2.1
+      

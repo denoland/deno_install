@@ -20,6 +20,14 @@ iex (iwr https://deno.land/x/install/install.ps1)
 
 _Note: Depending on your security settings, you may have to run `Set-ExecutionPolicy RemoteSigned -Scope CurrentUser` first to allow downloaded scripts to be executed._
 
+**Update with deno:**
+
+```
+deno --allow-write --allow-net --allow-env --allow-run https://deno.land/x/install/install.ts
+```
+
+_Note: Installs the latest `deno` version by default._
+
 ## Install other versions
 
 If you need to install specific version of deno, use the following commands:
@@ -34,4 +42,10 @@ curl -L https://deno.land/x/install/install.py | python - v0.2.0
 
 ```
 iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.0
+```
+
+**(Re)install with deno:**
+
+```
+deno --allow-write --allow-net --allow-env --allow-run https://deno.land/x/install/install.ts v0.2.0
 ```

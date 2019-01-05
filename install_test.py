@@ -8,6 +8,8 @@ import os
 import subprocess
 
 this_dir = os.path.dirname(os.path.realpath(__file__))
+tag = sys.argv[1] if len(sys.argv) > 1 else "v0.1.11"
+mmp = tag[1:]
 
 
 def bin_dir():
@@ -41,16 +43,14 @@ def test_tag_install():
     print(
         "Testing install.py [tag_name] ... Expect specified version of deno installed"
     )
-    cmd = [sys.executable, "install.py", "v0.1.11"]
+    cmd = [sys.executable, "install.py", tag]
     out = subprocess.check_output(cmd, universal_newlines=True)
 
     bin_path = os.path.join(bin_dir(), "deno")
     cmd = [bin_path, "-v"]
     out = subprocess.check_output(cmd, universal_newlines=True)
 
-    assert "deno: 0.1.11" in out, "installed deno version is not 0.1.11"
-    assert "v8: 7.1.302.4" in out, "v8 version is not 7.1.302.4"
-    assert "typescript: 3.1.3" in out, "typescript version is not 3.1.3"
+    assert "deno: " + mmp in out, "installed deno version is not " + mmp
 
 
 def main():
