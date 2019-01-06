@@ -33,4 +33,5 @@ curl -L https://deno.land/x/install/install.py | python - v0.2.0
 **Install with PowerShell:**
 
 ```powershell
-$install = iwr https://deno.land/x/install/install.ps1; iex "$install v0.2.0"
+iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.0
+```
