@@ -4,10 +4,6 @@ param (
   [alias("v")]
   [string] $version
 )
-( 
-    [alias("v")]
-    [string]$version
-)
 
 $ErrorActionPreference = "Stop"
 
@@ -39,14 +35,6 @@ if (-not $version) {
   Write-Done
 }
 
-# Download Deno release.
-$zip_file = "${deno_dir}\deno_win_x64.zip"
-$download_uri = "https://github.com/denoland/deno/releases/download/" +
-                "${version}/deno_win_x64.zip"
-Write-Part "Downloading "; Write-Emphasized $download_uri; Write-Part "..."
-Invoke-WebRequest -Uri $download_uri -OutFile $zip_file
-Write-Done
-
 # Create ~\.deno\bin directory if it doesn't already exist
 $deno_dir = "${Home}\.deno\bin"
 if (-not (Test-Path $deno_dir)) {
@@ -54,6 +42,14 @@ if (-not (Test-Path $deno_dir)) {
   New-Item -Path $deno_dir -ItemType Directory | Out-Null
   Write-Done
 }
+
+# Download Deno release.
+$zip_file = "${deno_dir}\deno_win_x64.zip"
+$download_uri = "https://github.com/denoland/deno/releases/download/" +
+                "${version}/deno_win_x64.zip"
+Write-Part "Downloading "; Write-Emphasized $download_uri; Write-Part "..."
+Invoke-WebRequest -Uri $download_uri -OutFile $zip_file
+Write-Done
 
 # Extract deno.exe from .zip file.
 Write-Part "Extracting "; Write-Emphasized $zip_file
