@@ -1,6 +1,9 @@
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
-param 
+param (
+  [alias("v")]
+  [string] $version
+)
 ( 
     [alias("v")]
     [string]$version
