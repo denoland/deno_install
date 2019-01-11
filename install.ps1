@@ -61,9 +61,26 @@ if ($IsWindows) {
   Remove-Item $DenoZip
 }
 
-# TODO:
-# - Set PATH on Windows as in previous script
-# - Test whether setting PATH on Unix is possible via Environment API
-# - Make deno executable on Unix
+if ($IsWindows) {
+  $User = [EnvironmentVariableTarget]::User
+  $Path = [Environment]::GetEnvironmentVariable('Path', $User)
+  $Paths = $Path -split ';' | ForEach-Object { $_.ToLower() }
+  if (!(
+    $Paths -contains $DenoDir.ToLower() -or
+    $Paths -contains "${DenoDir}\".ToLower()
+  )) {
+    [Environment]::SetEnvironmentVariable('Path', "${Path};${DenoDir}", $User)
+    $Env:Path += ";${DenoDir}"
+  }
+}
 
-Write-Host "Deno was installed successfully." -ForegroundColor Green
+if (!$IsWindows) {
+  chmod +x "$DenoDir/deno"
+}
+
+Write-Host 'Deno was installed successfully.'
+if ($IsWindows) {
+  Write-Host "Run 'deno --help' to get started."
+} else {
+  Write-Host "Run '~/.deno/bin/deno --help' to get started."
+}
