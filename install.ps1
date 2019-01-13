@@ -64,7 +64,12 @@ if ($IsWindows) {
   chmod +x "${DenoDir}/deno"
   Write-Host 'Deno was installed successfully.'
   $Paths = $Env:PATH -split ':'
-  $IsInPath = $Paths -contains $DenoDir -or $Paths -contains "${DenoDir}/"
+  $IsInPath = (
+    $Paths -contains "~/.deno/bin" -or
+    $Paths -contains "~/.deno/bin/" -or
+    $Paths -contains $DenoDir -or
+    $Paths -contains "${DenoDir}/"
+  )
   if ($IsInPath) {
     Write-Host "Run 'deno --help' to get started."
   } else {
