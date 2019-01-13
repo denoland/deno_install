@@ -37,50 +37,37 @@ if (!(Test-Path $DenoDir)) {
   New-Item $DenoDir -ItemType Directory | Out-Null
 }
 
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 Invoke-WebRequest $DenoUri -Out $DenoZip
 
 if ($IsWindows) {
   Expand-Archive $DenoZip -Destination $DenoDir -Force
   Remove-Item $DenoZip
 } else {
-  $InputStream = New-Object IO.FileStream $DenoZip, ([IO.FileMode]::Open), ([IO.FileAccess]::Read), ([IO.FileShare]::Read)
-  $OutputStream = New-Object IO.FileStream "${DenoDir}/deno", ([IO.FileMode]::Create), ([IO.FileAccess]::Write), ([IO.FileShare]::None)
-  $GzipStream = New-Object IO.Compression.GzipStream $InputStream, ([IO.Compression.CompressionMode]::Decompress)
-
-  $Buffer = New-Object Byte[](1024)
-  while ($true) {
-    $Read = $GzipStream.Read($Buffer, 0, 1024)
-    if ($Read -le 0) { break }
-    $OutputStream.Write($Buffer, 0, $Read)
-  }
-
-  $GzipStream.Close()
-  $OutputStream.Close()
-  $InputStream.Close()
-  Remove-Item $DenoZip
+  gunzip -d $DenoZip
 }
 
 if ($IsWindows) {
   $User = [EnvironmentVariableTarget]::User
   $Path = [Environment]::GetEnvironmentVariable('Path', $User)
   $Paths = $Path -split ';' | ForEach-Object { $_.ToLower() }
-  if (!(
+  $IsInPath = (
     $Paths -contains $DenoDir.ToLower() -or
     $Paths -contains "${DenoDir}\".ToLower()
-  )) {
+  )
+  if (!$IsInPath) {
     [Environment]::SetEnvironmentVariable('Path', "${Path};${DenoDir}", $User)
     $Env:Path += ";${DenoDir}"
   }
-}
-
-if (!$IsWindows) {
-  chmod +x "$DenoDir/deno"
-}
-
-Write-Host 'Deno was installed successfully.'
-if ($IsWindows) {
+  Write-Host 'Deno was installed successfully.'
   Write-Host "Run 'deno --help' to get started."
 } else {
-  Write-Host "Run '~/.deno/bin/deno --help' to get started."
+  chmod +x "${DenoDir}/deno"
+  Write-Host 'Deno was installed successfully.'
+  $Paths = $Env:PATH -split ':'
+  $IsInPath = $Paths -contains $DenoDir -or $Paths -contains "${DenoDir}/"
+  if ($IsInPath) {
+    Write-Host "Run 'deno --help' to get started."
+  } else {
+    Write-Host "Run '~/.deno/bin/deno --help' to get started."
+  }
 }
