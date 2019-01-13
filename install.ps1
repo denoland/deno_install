@@ -43,7 +43,7 @@ if ($IsWindows) {
   Expand-Archive $DenoZip -Destination $DenoDir -Force
   Remove-Item $DenoZip
 } else {
-  gunzip -d $DenoZip
+  gunzip -df $DenoZip
 }
 
 if ($IsWindows) {
