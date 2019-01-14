@@ -11,28 +11,24 @@ else
 fi
 
 deno_dir="$HOME/.deno/bin"
-deno_zip="${deno_dir}/deno.gz"
-deno_bin="${deno_dir}/deno"
 
 if [ ! -d "$deno_dir" ]; then
   mkdir -p "$deno_dir"
 fi
 
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  os="osx"
-else
-  os="linux"
-fi
+case $(uname -s) in
+  Darwin) os="osx" ;;
+  *) os="linux" ;;
+esac
 
 deno_uri="https://github.com/denoland/deno/releases/download/${version}/deno_${os}_x64.gz"
-curl -fL# -o "$deno_zip" "$deno_uri"
 
-gunzip -df "$deno_zip"
-chmod +x "$deno_bin"
+curl -fL# -o "$deno_dir/deno.gz" "$deno_uri"
+gunzip -df "$deno_dir/deno.gz"
+chmod +x "$deno_dir/deno"
 
 echo "Deno was installed successfully."
-if [[ "$PATH" == *"$deno_dir"* ]]; then
-  echo "Run 'deno --help' to get started."
-else
-  echo "Run '~/.deno/bin/deno --help' to get started."
-fi
+case $PATH in
+  *"$deno_dir"*) echo "Run 'deno --help' to get started." ;;
+  *) echo "Run '~/.deno/bin/deno --help' to get started." ;;
+esac
