@@ -14,8 +14,8 @@ deno_dir="$HOME/.deno/bin"
 deno_zip="${deno_dir}/deno.gz"
 deno_bin="${deno_dir}/deno"
 
-if [ ! -d $deno_dir ]; then
-  mkdir -p $deno_dir
+if [ ! -d "$deno_dir" ]; then
+  mkdir -p "$deno_dir"
 fi
 
 if [[ "$OSTYPE" == "darwin"* ]]; then
@@ -25,10 +25,10 @@ else
 fi
 
 deno_uri="https://github.com/denoland/deno/releases/download/${version}/deno_${os}_x64.gz"
-curl -fL# -o $deno_zip $deno_uri
+curl -fL# -o "$deno_zip" "$deno_uri"
 
-gunzip -df $deno_zip
-chmod +x $deno_bin
+gunzip -df "$deno_zip"
+chmod +x "$deno_bin"
 
 echo "Deno was installed successfully."
 if [[ "$PATH" == *"$deno_dir"* ]]; then
