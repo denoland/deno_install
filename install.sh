@@ -24,8 +24,8 @@ else
   os="linux"
 fi
 
-download_uri="https://github.com/denoland/deno/releases/download/${version}/deno_${os}_x64.gz"
-curl -fL# -o $deno_zip $download_uri
+deno_uri="https://github.com/denoland/deno/releases/download/${version}/deno_${os}_x64.gz"
+curl -fL# -o $deno_zip $deno_uri
 
 gunzip -df $deno_zip
 chmod +x $deno_bin
