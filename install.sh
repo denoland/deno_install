@@ -28,8 +28,8 @@ gunzip -df "$deno_dir/deno.gz"
 chmod +x "$deno_dir/deno"
 
 echo "Deno was installed successfully."
-if ! type deno > /dev/null; then
-  echo "Run '~/.deno/bin/deno --help' to get started."
-else
+if type deno > /dev/null 2>&1; then
   echo "Run 'deno --help' to get started."
+else
+  echo "Run '~/.deno/bin/deno --help' to get started."
 fi
