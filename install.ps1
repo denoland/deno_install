@@ -48,10 +48,10 @@ if ($IsWindows) {
 
 if ($IsWindows) {
   $User = [EnvironmentVariableTarget]::User
-  $Path = [Environment]::GetEnvironmentVariable('Path', $User)
+  $Path = [Environment]::GetEnvironmentVariable('PATH', $User)
   if (";$Path;".ToLower() -like "*;$DenoDir;*".ToLower()) {
-    [Environment]::SetEnvironmentVariable('Path', "$Path;$DenoDir", $User)
-    $Env:Path += ";$DenoDir"
+    [Environment]::SetEnvironmentVariable('PATH', "$Path;$DenoDir", $User)
+    $Env:PATH += ";$DenoDir"
   }
   Write-Host 'Deno was installed successfully.'
   Write-Host "Run 'deno --help' to get started."
