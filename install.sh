@@ -29,6 +29,6 @@ chmod +x "$deno_dir/deno"
 
 echo "Deno was installed successfully."
 case $PATH in
-  *"$deno_dir"*) echo "Run 'deno --help' to get started." ;;
+  *"$deno_dir"*|*"~/.deno/bin"*) echo "Run 'deno --help' to get started." ;;
   *) echo "Run '~/.deno/bin/deno --help' to get started." ;;
 esac
