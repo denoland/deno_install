@@ -15,23 +15,23 @@ if ($PSVersionTable.PSVersion.Major -lt 6) {
 }
 
 $DenoDir = if ($IsWindows)
-  { "${Home}\.deno\bin" } else
-  { "${Home}/.deno/bin" }
+  { "$Home\.deno\bin" } else
+  { "$Home/.deno/bin" }
 
 $Zip = if ($IsWindows)
   { 'zip' } else
   { 'gz' }
 
 $DenoZip = if ($IsWindows)
-  { "${DenoDir}\deno.${Zip}" } else
-  { "${DenoDir}/deno.${Zip}" }
+  { "$DenoDir\deno.$Zip" } else
+  { "$DenoDir/deno.$Zip" }
 
 $OS = if ($IsWindows)
   { 'win' } else { if ($IsMacOS)
   { 'osx' } else
   { 'linux' } }
 
-$DenoUri = "https://github.com/denoland/deno/releases/download/${Version}/deno_${OS}_x64.${Zip}"
+$DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
 
 if (!(Test-Path $DenoDir)) {
   New-Item $DenoDir -ItemType Directory | Out-Null
@@ -49,28 +49,16 @@ if ($IsWindows) {
 if ($IsWindows) {
   $User = [EnvironmentVariableTarget]::User
   $Path = [Environment]::GetEnvironmentVariable('Path', $User)
-  $Paths = $Path -split ';' | ForEach-Object { $_.ToLower() }
-  $IsInPath = (
-    $Paths -contains $DenoDir.ToLower() -or
-    $Paths -contains "${DenoDir}\".ToLower()
-  )
-  if (!$IsInPath) {
-    [Environment]::SetEnvironmentVariable('Path', "${Path};${DenoDir}", $User)
-    $Env:Path += ";${DenoDir}"
+  if (";$Path;".ToLower() -like "*;$DenoDir;*".ToLower()) {
+    [Environment]::SetEnvironmentVariable('Path', "$Path;$DenoDir", $User)
+    $Env:Path += ";$DenoDir"
   }
   Write-Host 'Deno was installed successfully.'
   Write-Host "Run 'deno --help' to get started."
 } else {
-  chmod +x "${DenoDir}/deno"
+  chmod +x "$DenoDir/deno"
   Write-Host 'Deno was installed successfully.'
-  $Paths = $Env:PATH -split ':'
-  $IsInPath = (
-    $Paths -contains "~/.deno/bin" -or
-    $Paths -contains "~/.deno/bin/" -or
-    $Paths -contains $DenoDir -or
-    $Paths -contains "${DenoDir}/"
-  )
-  if ($IsInPath) {
+  if (Get-Command deno -ErrorAction SilentlyContinue) {
     Write-Host "Run 'deno --help' to get started."
   } else {
     Write-Host "Run '~/.deno/bin/deno --help' to get started."
