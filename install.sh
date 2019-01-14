@@ -28,7 +28,7 @@ gunzip -df "$deno_dir/deno.gz"
 chmod +x "$deno_dir/deno"
 
 echo "Deno was installed successfully."
-case $PATH in
-  *"$deno_dir"*|*"~/.deno/bin"*) echo "Run 'deno --help' to get started." ;;
+case ":$PATH:" in
+  *":$deno_dir:"*) echo "Run 'deno --help' to get started." ;;
   *) echo "Run '~/.deno/bin/deno --help' to get started." ;;
 esac
