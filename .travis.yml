@@ -13,7 +13,7 @@ matrix:
       script:
         - ./install.py
         - ./install_test.py
-      
+
     - language: sh
       os:
         - linux
@@ -39,8 +39,8 @@ matrix:
           shellcheck -s dash *.sh;
           shellcheck -s ksh *.sh;
           shellcheck -s bash *.sh
-        - 'echo "Checking script formatting using \`shfmt\`:";
-          shfmt -d -p -i 2 -ci . || (echo "shfmt: Found formatting issues." && false)'
+        - echo "Checking script formatting using \`shfmt\`:";
+          shfmt -d -p -i 2 -ci .
         - echo "Running test suite inside supported shells:";
           echo "\`sh\`:"; sh ./install_test.sh;
           echo "\`dash\`:"; dash ./install_test.sh;

@@ -1,10 +1,10 @@
 #!/bin/sh
-set -eo pipefail
+set -e
 chmod +x install.sh
 rm -rf ~/.deno
 ./install.sh | grep -e "Run '~/.deno/bin/deno --help' to get started."
-PATH=$PATH:~/.deno/bin
 rm -rf ~/.deno
+PATH=$PATH:~/.deno/bin
 ./install.sh | grep -e "Run 'deno --help' to get started."
 deno --help
 rm -rf ~/.deno
