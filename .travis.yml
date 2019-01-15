@@ -52,9 +52,4 @@ matrix:
       os:
         - osx
       script:
-        - echo "Running test suite";
-          ./install_test.sh
-        - echo "Running end-to-end test";
-          echo "$TRAVIS_REPO_SLUG";
-          echo "$TRAVIS_BRANCH";
-          curl -sSL "https://raw.githubusercontent.com/$TRAVIS_REPO_SLUG/$TRAVIS_BRANCH/install.sh" | sh
+        - ./install_test.sh
