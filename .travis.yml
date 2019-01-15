@@ -47,3 +47,9 @@ matrix:
           echo "\`ksh\`:"; ksh ./install_test.sh;
           echo "\`bash\`:"; bash ./install_test.sh;
           echo "\`zsh\`:"; zsh ./install_test.sh
+
+    - language: bash
+      os:
+        - osx
+      script:
+        - ./install_test.sh
