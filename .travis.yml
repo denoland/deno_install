@@ -14,7 +14,7 @@ matrix:
         - ./install.py
         - ./install_test.py
 
-    - language: sh
+    - language: bash
       os:
         - linux
       addons:
@@ -31,25 +31,7 @@ matrix:
         - curl --version
         - shellcheck --version
         - curl -sSL "$SHFMT_DOWNLOAD_URL" -o $HOME/bin/shfmt;
-          chmod +x $HOME/bin/shfmt;
-          shfmt --version
-      script:
-        - echo "Linting installer script using \`shellcheck\`:";
-          shellcheck -s sh *.sh;
-          shellcheck -s dash *.sh;
-          shellcheck -s ksh *.sh;
-          shellcheck -s bash *.sh
-        - echo "Checking script formatting using \`shfmt\`:";
-          shfmt -d -p -i 2 -ci .
-        - echo "Running test suite inside supported shells:";
-          echo "\`sh\`:"; sh ./install_test.sh;
-          echo "\`dash\`:"; dash ./install_test.sh;
-          echo "\`ksh\`:"; ksh ./install_test.sh;
-          echo "\`bash\`:"; bash ./install_test.sh;
-          echo "\`zsh\`:"; zsh ./install_test.sh
-
-    - language: bash
-      os:
-        - osx
+        - chmod +x $HOME/bin/shfmt;
+        - shfmt --version
       script:
         - ./install_test.sh
