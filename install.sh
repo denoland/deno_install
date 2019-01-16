@@ -5,31 +5,34 @@
 set -e
 
 if [ $# -eq 0 ]; then
-  version="v0.2.6"
+	version="v0.2.7"
 else
-  version=$1
+	version=$1
 fi
 
-deno_dir="$HOME/.deno/bin"
+bin_dir="$HOME/.deno/bin"
+exe="$bin_dir/deno"
 
-if [ ! -d "$deno_dir" ]; then
-  mkdir -p "$deno_dir"
+if [ ! -d "$bin_dir" ]; then
+	mkdir -p "$bin_dir"
 fi
 
 case $(uname -s) in
-  Darwin) os="osx" ;;
-  *) os="linux" ;;
+Darwin) os="osx" ;;
+*) os="linux" ;;
 esac
 
 deno_uri="https://github.com/denoland/deno/releases/download/${version}/deno_${os}_x64.gz"
 
-curl -fL# -o "$deno_dir/deno.gz" "$deno_uri"
-gunzip -df "$deno_dir/deno.gz"
-chmod +x "$deno_dir/deno"
+curl -fL# -o "$exe.gz" "$deno_uri"
+gunzip -df "$exe.gz"
+chmod +x "$exe"
 
-echo "Deno was installed successfully."
+echo "Deno was installed successfully to $exe"
 if command -v deno >/dev/null; then
-  echo "Run 'deno --help' to get started."
+	echo "Run 'deno --help' to get started."
 else
-  echo "Run '~/.deno/bin/deno --help' to get started."
+	echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
+	echo "  export PATH=\"$bin_dir:\$PATH\""
+	echo "Run '$exe --help' to get started."
 fi
