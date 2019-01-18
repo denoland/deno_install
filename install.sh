@@ -24,6 +24,7 @@ if [ ! -d "$bin_dir" ]; then
 	mkdir -p "$bin_dir"
 fi
 
+echo "deno_uri: $deno_uri"
 curl -fL# -o "$exe.gz" "$deno_uri"
 gunzip -df "$exe.gz"
 chmod +x "$exe"
