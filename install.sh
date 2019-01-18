@@ -11,7 +11,7 @@ esac
 
 if [ $# -eq 0 ]; then
 	deno_uri=$(curl -sS https://api.github.com/repos/denoland/deno/releases?per_page=2 |
-		grep -o "https://github.com/denoland/deno/releases/download/v[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}/deno_${os}_x64\.gz" |
+		grep -o "https://github.com/denoland/deno/releases/download/.*/deno_${os}_x64\.gz" |
 		head -n 1)
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
