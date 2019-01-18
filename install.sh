@@ -2,7 +2,7 @@
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
 
-set -eo pipefail
+set -e
 
 case $(uname -s) in
 Darwin) os="osx" ;;
