@@ -18,8 +18,6 @@ chmod +x ./shfmt
 # Lint code.
 shellcheck -s bash ./*.sh
 shellcheck -s sh ./install.sh
-shellcheck -s dash ./install.sh
-shellcheck -s ksh ./install.sh
 
 test_specific_version() {
 	rm -rf ~/.deno
