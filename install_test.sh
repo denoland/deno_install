@@ -12,12 +12,6 @@ shfmt_url="https://github.com/mvdan/sh/releases/download/${shfmt_version}/shfmt_
 curl -sSL -o ./shfmt "$shfmt_url"
 chmod +x ./shfmt
 
-# Print versions.
-$SHELL --version
-curl --version
-shellcheck --version
-shfmt --version
-
 # Check formatting.
 ./shfmt -d .
 
