@@ -16,8 +16,8 @@ chmod +x ./shfmt
 ./shfmt -d .
 
 # Lint code.
-shellcheck -s bash ./*.sh
 shellcheck -s sh ./install.sh
+shellcheck -s bash ./install_test.sh
 
 test_specific_version() {
 	rm -rf ~/.deno
