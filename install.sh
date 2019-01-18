@@ -13,6 +13,7 @@ if [ $# -eq 0 ]; then
 	deno_uri=$(curl -sSf "https://api.github.com/repos/denoland/deno/releases?per_page=2" |
 		grep -o "https://github.com/denoland/deno/releases/download/.*/deno_${os}_x64\.gz" |
 		head -n 1)
+	if [ ! "$deno_uri" ]; then exit 1; fi
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
 fi
