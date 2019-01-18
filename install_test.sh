@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -e
+set -ev
 
 PATH=$HOME/bin/:$PATH
 
