@@ -2,8 +2,6 @@
 
 set -ev
 
-PATH=$HOME/bin/:$PATH
-
 # Install shfmt.
 shfmt_version=v2.6.2
 case $(uname -s) in
@@ -11,8 +9,8 @@ Darwin) shfmt_os="darwin" ;;
 *) shfmt_os="linux" ;;
 esac
 shfmt_url="https://github.com/mvdan/sh/releases/download/${shfmt_version}/shfmt_${shfmt_version}_${shfmt_os}_amd64"
-curl -sSL -o "$HOME/bin/shfmt" "$shfmt_url"
-chmod +x "$HOME/bin/shfmt"
+curl -sSL -o ./shfmt "$shfmt_url"
+chmod +x ./shfmt
 
 # Print versions.
 $SHELL --version
@@ -21,7 +19,7 @@ shellcheck --version
 shfmt --version
 
 # Check formatting.
-shfmt -d .
+./shfmt -d .
 
 # Lint code.
 shellcheck -s bash ./*.sh
