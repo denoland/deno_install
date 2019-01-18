@@ -32,5 +32,6 @@ matrix:
           packages:
             - ksh
             - zsh
+            - shellcheck
       script:
         - ./install_test.sh
