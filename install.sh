@@ -10,11 +10,11 @@ Darwin) os="osx" ;;
 esac
 
 if [ $# -eq 0 ]; then
-	deno_uri="https://github.com$(
-		curl -sSf https://github.com/denoland/deno/releases |
-			grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\.gz" |
-			head -n 1
-	)"
+	deno_asset_path=$(curl -sSf https://github.com/denoland/deno/releases |
+		grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\.gz" |
+		head -n 1)
+	if [ ! "$deno_asset_path" ]; then exit 1; fi
+	deno_uri="https://github.com${deno_asset_path}"
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
 fi
