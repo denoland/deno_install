@@ -4,10 +4,17 @@
 
 set -e
 
+case $(uname -s) in
+Darwin) os="osx" ;;
+*) os="linux" ;;
+esac
+
 if [ $# -eq 0 ]; then
-	version="v0.2.7"
+	deno_uri=$(curl -sS https://api.github.com/repos/denoland/deno/releases?per_page=2 |
+		grep -o "https://github.com/denoland/deno/releases/download/v[0-9]\{1,\}\.[0-9]\{1,\}\.[0-9]\{1,\}/deno_${os}_x64\.gz" |
+		head -n 1)
 else
-	version=$1
+	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
 fi
 
 bin_dir="$HOME/.deno/bin"
@@ -16,13 +23,6 @@ exe="$bin_dir/deno"
 if [ ! -d "$bin_dir" ]; then
 	mkdir -p "$bin_dir"
 fi
-
-case $(uname -s) in
-Darwin) os="osx" ;;
-*) os="linux" ;;
-esac
-
-deno_uri="https://github.com/denoland/deno/releases/download/${version}/deno_${os}_x64.gz"
 
 curl -fL# -o "$exe.gz" "$deno_uri"
 gunzip -df "$exe.gz"
