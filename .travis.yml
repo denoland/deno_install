@@ -16,12 +16,18 @@ matrix:
     - language: bash
       os:
         - linux
-        - osx
       addons:
         apt:
           packages:
             - ksh
             - zsh
+      script:
+        - ./install_test.sh
+
+    - language: bash
+      os:
+        - osx
+      addons:
         homebrew:
           packages:
             - ksh
