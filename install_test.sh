@@ -2,18 +2,8 @@
 
 set -ev
 
-# Install shfmt.
-shfmt_version=v2.6.2
-case $(uname -s) in
-Darwin) shfmt_os="darwin" ;;
-*) shfmt_os="linux" ;;
-esac
-shfmt_url="https://github.com/mvdan/sh/releases/download/${shfmt_version}/shfmt_${shfmt_version}_${shfmt_os}_amd64"
-curl -sSL -o ./shfmt "$shfmt_url"
-chmod +x ./shfmt
-
 # Check formatting.
-./shfmt -d .
+shfmt -d .
 
 # Lint code.
 shellcheck -s sh ./install.sh
@@ -32,8 +22,8 @@ test_latest_version() {
 }
 
 case $(uname -s) in
-Darwin) shells=(sh bash ksh zsh) ;;
-*) shells=(sh bash dash ksh zsh) ;;
+Darwin) shells=(bash ksh zsh) ;;
+*) shells=(dash ksh zsh) ;;
 esac
 
 for shell in $"${shells[@]}"; do
