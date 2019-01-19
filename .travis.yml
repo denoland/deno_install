@@ -21,6 +21,7 @@ matrix:
           packages:
             - ksh
             - zsh
+            - shellcheck
       env:
         - PATH=$HOME/bin/:$PATH
         - SHFMT_VERSION=v2.6.2
