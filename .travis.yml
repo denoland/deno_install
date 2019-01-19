@@ -40,12 +40,6 @@ matrix:
             - ksh
             - zsh
             - shellcheck
-      env:
-        - PATH=/usr/local/bin:$PATH
-        - SHFMT_OS=darwin
-        - SHFMT_VERSION=v2.6.2
-      before_script:
-        - curl -sSL -o "/usr/local/bin/shfmt" "https://github.com/mvdan/sh/releases/download/${SHFMT_VERSION}/shfmt_${SHFMT_VERSION}_${SHFMT_OS}_amd64"
-        - chmod +x "/usr/local/bin/shfmt"
+            - shfmt
       script:
         - ./install_test.sh
