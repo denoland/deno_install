@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 set -ev
 
@@ -6,31 +6,14 @@ set -ev
 shfmt -d .
 
 # Lint code.
-shellcheck -s sh ./install.sh
-shellcheck -s bash ./install_test.sh
+shellcheck -s sh ./*.sh
 
-test_specific_version() {
-	rm -rf ~/.deno
-	$1 install.sh v0.2.0
-	~/.deno/bin/deno -v | grep -e 0.2.0
-}
+# Test installing a specific version.
+rm -rf ~/.deno
+sh install.sh v0.2.0
+~/.deno/bin/deno -v | grep -e 0.2.0
 
-test_latest_version() {
-	rm -rf ~/.deno
-	$1 install.sh
-	~/.deno/bin/deno -v
-}
-
-if [ ! "$CI" ]; then
-	test_specific_version sh
-	test_latest_version sh
-else
-	case $(uname -s) in
-	Darwin) shells=(bash ksh zsh) ;;
-	*) shells=(dash ksh zsh) ;;
-	esac
-	for shell in $"${shells[@]}"; do
-		test_specific_version $shell
-		test_latest_version $shell
-	done
-fi
+# Test installing the latest version.
+rm -rf ~/.deno
+sh install.sh
+~/.deno/bin/deno -v

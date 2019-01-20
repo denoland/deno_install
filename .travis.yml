@@ -19,8 +19,6 @@ matrix:
       addons:
         apt:
           packages:
-            - ksh
-            - zsh
             - shellcheck
       env:
         - PATH=$HOME/bin/:$PATH
@@ -37,8 +35,6 @@ matrix:
       addons:
         homebrew:
           packages:
-            - ksh
-            - zsh
             - shellcheck
             - shfmt
       script:
