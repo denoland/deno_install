@@ -21,12 +21,16 @@ test_latest_version() {
 	~/.deno/bin/deno -v
 }
 
-case $(uname -s) in
-Darwin) shells=(bash ksh zsh) ;;
-*) shells=(dash ksh zsh) ;;
-esac
-
-for shell in $"${shells[@]}"; do
-	test_specific_version $shell
-	test_latest_version $shell
-done
+if [ ! "$CI" ]; then
+	test_specific_version sh
+	test_latest_version sh
+else
+	case $(uname -s) in
+	Darwin) shells=(bash ksh zsh) ;;
+	*) shells=(dash ksh zsh) ;;
+	esac
+	for shell in $"${shells[@]}"; do
+		test_specific_version $shell
+		test_latest_version $shell
+	done
+fi
