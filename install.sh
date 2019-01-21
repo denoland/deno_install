@@ -11,7 +11,7 @@ esac
 
 if [ $# -eq 0 ]; then
 	deno_asset_path=$(curl -sSf https://github.com/denoland/deno/releases |
-		grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\.gz" |
+		grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\\.gz" |
 		head -n 1)
 	if [ ! "$deno_asset_path" ]; then exit 1; fi
 	deno_uri="https://github.com${deno_asset_path}"
