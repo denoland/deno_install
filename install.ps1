@@ -83,6 +83,6 @@ if ($IsWindows) {
   } else {
     Write-Output "Manually add the directory to your `$HOME/.bash_profile (or similar)"
 	  Write-Output "  export PATH=`"${BinDir}:`$PATH`""
-    Write-Output "Run '~/.deno/bin/deno --help' to get started."
+    Write-Output "Run '~/.deno/bin/deno --help' to get started"
   }
 }
