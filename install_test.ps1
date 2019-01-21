@@ -18,6 +18,10 @@ $IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
   $IsWindows
 }
 
+if ($IsWin) {
+  Set-PSDebug -Trace 2
+}
+
 .\install.ps1 v0.2.0
 $DenoVersion = if ($IsWin) {
   deno --version
@@ -26,6 +30,8 @@ $DenoVersion = if ($IsWin) {
 }
 if (!($DenoVersion[0] -eq 'deno: 0.2.0')) {
   throw $DenoVersion
+} else {
+  Write-Output $DenoVersion
 }
 
 .\install.ps1
@@ -36,4 +42,6 @@ $DenoVersion = if ($IsWin) {
 }
 if (!($DenoVersion[0] -match 'deno: \d+\.\d+\.\d+')) {
   throw $DenoVersion
+} else {
+  Write-Output $DenoVersion
 }
