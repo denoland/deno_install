@@ -18,8 +18,10 @@ $IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
   $IsWindows
 }
 
-if ($IsWin) {
-  Set-PSDebug -Trace 2
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+  Write-Output $PSVersionTable
+  Write-Output (Invoke-WebRequest 'https://github.com/denoland/deno/releases' | Get-Member)
+  exit 0
 }
 
 .\install.ps1 v0.2.0
