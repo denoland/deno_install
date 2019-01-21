@@ -34,6 +34,6 @@ $DenoVersion = if ($IsWin) {
 } else {
   ~/.deno/bin/deno --version
 }
-if (!(DenoVersion[0] -match 'deno: \d+\.\d+\.\d+')) {
+if (!($DenoVersion[0] -match 'deno: \d+\.\d+\.\d+')) {
   throw $DenoVersion
 }
