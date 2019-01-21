@@ -41,6 +41,6 @@ matrix:
         - osx
       before_script:
         - brew tap caskroom/cask
-        - brew install cask powershell
+        - brew cask install powershell
       script:
         - pwsh install_test.ps1
