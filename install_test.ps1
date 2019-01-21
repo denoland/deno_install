@@ -24,7 +24,7 @@ $DenoVersion = if ($IsWin) {
 } else {
   ~/.deno/bin/deno --version
 }
-if (!($DenoVersion[0] -match 'deno: 0\.2\.0')) {
+if (!($DenoVersion[0] -eq 'deno: 0.2.0')) {
   throw $DenoVersion
 }
 
