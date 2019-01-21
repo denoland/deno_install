@@ -36,9 +36,9 @@ $DenoZip = if ($IsWin) {
 }
 
 $DenoExe = if ($IsWin) {
-  "$DenoDir\deno.exe"
+  "$BinDir\deno.exe"
 } else {
-  "$DenoDir/deno"
+  "$BinDir/deno"
 }
 
 $OS = if ($IsWin) {
