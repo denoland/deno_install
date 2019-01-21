@@ -4,7 +4,7 @@
 
 param (
   [ValidatePattern('^v(\d+).(\d+).(\d+)$')]
-  [String] $Version = 'v0.2.6'
+  [String] $Version
 )
 
 $ErrorActionPreference = 'Stop'
@@ -51,7 +51,15 @@ $OS = if ($IsWin) {
   }
 }
 
-$DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
+if (!$Version) {
+  $DenoAssetPath = (Invoke-WebRequest 'https://github.com/denoland/deno/releases').Links |
+    Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
+    ForEach-Object { $_.href } |
+    Select-Object -First 1
+  $DenoUri = "https://github.com$DenoAssetPath"
+} else {
+  $DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
+}
 
 if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
@@ -82,7 +90,7 @@ if ($IsWindows) {
     Write-Output "Run 'deno --help' to get started"
   } else {
     Write-Output "Manually add the directory to your `$HOME/.bash_profile (or similar)"
-	  Write-Output "  export PATH=`"${BinDir}:`$PATH`""
+    Write-Output "  export PATH=`"${BinDir}:`$PATH`""
     Write-Output "Run '~/.deno/bin/deno --help' to get started"
   }
 }

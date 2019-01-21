@@ -18,6 +18,10 @@ $IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
   $IsWindows
 }
 
+if ($IsWin) {
+  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+}
+
 .\install.ps1 v0.2.0
 $DenoVersion = if ($IsWin) {
   deno --version
