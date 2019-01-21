@@ -35,3 +35,12 @@ matrix:
         - shfmt --version
       script:
         - ./install_test.sh
+
+    - language: minimal
+      os:
+        - osx
+      before_script:
+        - brew tap caskroom/cask
+        - brew install cask powershell
+      script:
+        - pwsh install_test.ps1

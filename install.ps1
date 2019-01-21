@@ -10,37 +10,57 @@ param (
 $ErrorActionPreference = 'Stop'
 
 if ($PSVersionTable.PSVersion.Major -lt 6) {
-  $IsWindows = $true
-  $IsMacOS = $false
+  $IsWin = $true
+  $IsOsx = $false
+} else {
+  $IsWin = $IsWindows
+  $IsOsx = $IsMacOS
 }
 
-$DenoDir = if ($IsWindows)
-  { "$Home\.deno\bin" } else
-  { "$Home/.deno/bin" }
+$BinDir = if ($IsWin) {
+  "$Home\.deno\bin"
+} else {
+  "$Home/.deno/bin"
+}
 
-$Zip = if ($IsWindows)
-  { 'zip' } else
-  { 'gz' }
+$Zip = if ($IsWin) {
+  'zip'
+} else {
+  'gz'
+}
 
-$DenoZip = if ($IsWindows)
-  { "$DenoDir\deno.$Zip" } else
-  { "$DenoDir/deno.$Zip" }
+$DenoZip = if ($IsWin) {
+  "$BinDir\deno.$Zip"
+} else {
+  "$BinDir/deno.$Zip"
+}
 
-$OS = if ($IsWindows)
-  { 'win' } else { if ($IsMacOS)
-  { 'osx' } else
-  { 'linux' } }
+$DenoExe = if ($IsWin) {
+  "$DenoDir\deno.exe"
+} else {
+  "$DenoDir/deno"
+}
+
+$OS = if ($IsWin) {
+  'win'
+} else {
+  if ($IsOsx) {
+    'osx'
+  } else {
+    'linux'
+  }
+}
 
 $DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
 
-if (!(Test-Path $DenoDir)) {
-  New-Item $DenoDir -ItemType Directory | Out-Null
+if (!(Test-Path $BinDir)) {
+  New-Item $BinDir -ItemType Directory | Out-Null
 }
 
 Invoke-WebRequest $DenoUri -Out $DenoZip
 
 if ($IsWindows) {
-  Expand-Archive $DenoZip -Destination $DenoDir -Force
+  Expand-Archive $DenoZip -Destination $BinDir -Force
   Remove-Item $DenoZip
 } else {
   gunzip -df $DenoZip
@@ -49,18 +69,20 @@ if ($IsWindows) {
 if ($IsWindows) {
   $User = [EnvironmentVariableTarget]::User
   $Path = [Environment]::GetEnvironmentVariable('Path', $User)
-  if (!(";$Path;".ToLower() -like "*;$DenoDir;*".ToLower())) {
-    [Environment]::SetEnvironmentVariable('Path', "$Path;$DenoDir", $User)
-    $Env:Path += ";$DenoDir"
+  if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
+    [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User)
+    $Env:Path += ";$BinDir"
   }
-  Write-Host 'Deno was installed successfully.'
-  Write-Host "Run 'deno --help' to get started."
+  Write-Output "Deno was installed successfully to $DenoExe"
+  Write-Output "Run 'deno --help' to get started"
 } else {
-  chmod +x "$DenoDir/deno"
-  Write-Host 'Deno was installed successfully.'
+  chmod +x "$BinDir/deno"
+  Write-Output "Deno was installed successfully to $DenoExe"
   if (Get-Command deno -ErrorAction SilentlyContinue) {
-    Write-Host "Run 'deno --help' to get started."
+    Write-Output "Run 'deno --help' to get started"
   } else {
-    Write-Host "Run '~/.deno/bin/deno --help' to get started."
+    Write-Output "Manually add the directory to your `$HOME/.bash_profile (or similar)"
+	  Write-Output "  export PATH=`"${BinDir}:`$PATH`""
+    Write-Output "Run '~/.deno/bin/deno --help' to get started."
   }
 }
