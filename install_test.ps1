@@ -12,13 +12,15 @@ if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
 
 Invoke-ScriptAnalyzer *.ps1 -EnableExit
 
-$IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
-  $true
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+  $IsWin = $true
+  $IsMac = $false
 } else {
-  $IsWindows
+  $IsWin = $IsWindows
+  $IsMac = $IsMacOS
 }
 
-if ($IsWin) {
+if (!$IsMac) {
   Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 }
 
