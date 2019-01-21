@@ -7,21 +7,15 @@ if (!(Get-PSRepository)) {
 }
 
 if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
-  Install-Module PSScriptAnalyzer -Force
+  Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
 }
 
 Invoke-ScriptAnalyzer *.ps1 -EnableExit
 
-if ($PSVersionTable.PSVersion.Major -lt 6) {
-  $IsWin = $true
-  $IsMac = $false
+$IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
+  $true
 } else {
-  $IsWin = $IsWindows
-  $IsMac = $IsMacOS
-}
-
-if (!$IsMac) {
-  Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
+  $IsWindows
 }
 
 .\install.ps1 v0.2.0
