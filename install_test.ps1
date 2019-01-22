@@ -19,8 +19,7 @@ $IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
 }
 
 if ($PSVersionTable.PSVersion.Major -lt 6) {
-  Write-Output $PSVersionTable
-  Write-Output (Invoke-WebRequest 'https://github.com/denoland/deno/releases' | Get-Member)
+  Write-Output (Invoke-WebRequest 'https://github.com/denoland/deno/releases').Links
   exit 0
 }
 
