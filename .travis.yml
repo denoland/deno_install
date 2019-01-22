@@ -39,3 +39,28 @@ matrix:
             - shfmt
       script:
         - ./install_test.sh
+
+    - language: minimal
+      os:
+        - linux
+      before_script:
+        - wget -q https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
+        - sudo dpkg -i packages-microsoft-prod.deb
+        - sudo apt-get update
+        - sudo apt-get install -y powershell
+      script:
+        - pwsh install_test.ps1
+
+    - language: minimal
+      os:
+        - osx
+      cache:
+        directories:
+          - $HOME/Library/Caches/Homebrew
+      before_cache:
+        - brew cleanup
+      before_script:
+        - brew tap caskroom/cask
+        - brew cask install powershell
+      script:
+        - pwsh install_test.ps1

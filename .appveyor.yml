@@ -13,14 +13,11 @@ for:
       only:
         - TYPE: powershell
     install:
-      - ps: $url = "https://raw.githubusercontent.com", $env:APPVEYOR_REPO_NAME,
-                   $env:APPVEYOR_REPO_COMMIT, "install.ps1" -join "/"
-      - ps: iex (iwr $url)
+      - ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+      - ps: scoop install pwsh
     test_script:
-      - ps: if (-not (Test-Path "~\.deno\bin\deno.exe")) {
-              throw "deno.exe not found in expected location"
-            }
-      - ps: deno --help
+      - ps: .\install_test.ps1
+      - ps: pwsh install_test.ps1
 
   - matrix:
       only:
