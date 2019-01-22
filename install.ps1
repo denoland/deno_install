@@ -52,11 +52,20 @@ $OS = if ($IsWin) {
 }
 
 if (!$Version) {
-  $DenoAssetPath = (Invoke-WebRequest 'https://github.com/denoland/deno/releases').Links |
-    Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
-    ForEach-Object { $_.href } |
-    Select-Object -First 1
-  $DenoUri = "https://github.com$DenoAssetPath"
+  if ($PSVersionTable.PSVersion.Major -lt 6) {
+    $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
+    $HTMLFile = New-Object -Com HTMLFile
+    $HTMLFile.IHTMLDocument2_write($Response.Content)
+    $DenoUri = $HTMLFile.getElementsByTagName('a') |
+      Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
+      ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
+      Select-Object -First 1
+  } else {
+    $DenoUri = (Invoke-WebRequest 'https://github.com/denoland/deno/releases').Links |
+      Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
+      ForEach-Object { 'https://github.com' + $_.href } |
+      Select-Object -First 1
+  }
 } else {
   $DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
 }
