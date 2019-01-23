@@ -10,16 +10,14 @@ if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
   Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
 }
 
-Invoke-ScriptAnalyzer *.ps1 -EnableExit
+Invoke-ScriptAnalyzer *.ps1 -Exclude PSAvoidAssignmentToAutomaticVariable
 
-$IsWin = if ($PSVersionTable.PSVersion.Major -lt 6) {
-  $true
-} else {
-  $IsWindows
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+  $IsWindows = $true
 }
 
 .\install.ps1 v0.2.0
-$DenoVersion = if ($IsWin) {
+$DenoVersion = if ($IsWindows) {
   deno --version
 } else {
   ~/.deno/bin/deno --version
@@ -31,7 +29,7 @@ if (!($DenoVersion[0] -eq 'deno: 0.2.0')) {
 }
 
 .\install.ps1
-$DenoVersion = if ($IsWin) {
+$DenoVersion = if ($IsWindows) {
   deno --version
 } else {
   ~/.deno/bin/deno --version
