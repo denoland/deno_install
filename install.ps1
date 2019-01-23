@@ -10,41 +10,38 @@ param (
 $ErrorActionPreference = 'Stop'
 
 if ($PSVersionTable.PSVersion.Major -lt 6) {
-  $IsWin = $true
-  $IsOsx = $false
-} else {
-  $IsWin = $IsWindows
-  $IsOsx = $IsMacOS
+  $IsWindows = $true
+  $IsMacOS = $false
 }
 
-$BinDir = if ($IsWin) {
+$BinDir = if ($IsWindows) {
   "$Home\.deno\bin"
 } else {
   "$Home/.deno/bin"
 }
 
-$Zip = if ($IsWin) {
+$Zip = if ($IsWindows) {
   'zip'
 } else {
   'gz'
 }
 
-$DenoZip = if ($IsWin) {
+$DenoZip = if ($IsWindows) {
   "$BinDir\deno.$Zip"
 } else {
   "$BinDir/deno.$Zip"
 }
 
-$DenoExe = if ($IsWin) {
+$DenoExe = if ($IsWindows) {
   "$BinDir\deno.exe"
 } else {
   "$BinDir/deno"
 }
 
-$OS = if ($IsWin) {
+$OS = if ($IsWindows) {
   'win'
 } else {
-  if ($IsOsx) {
+  if ($IsMacOS) {
     'osx'
   } else {
     'linux'
