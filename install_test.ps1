@@ -2,7 +2,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-Set-PSDebug -Trace 1
+Set-PSDebug -Trace 2
 
 if (!(Get-PSRepository)) {
   Register-PSRepository -Default
