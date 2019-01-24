@@ -5,15 +5,15 @@ import {
   copyFile,
   env,
   exit,
+  mkdir,
   platform,
   writeFile,
-  removeAll,
+  remove,
   rename,
   run,
   makeTempDir
 } from "deno";
 
-import { mkdirp } from "https://deno.land/x/std/fs/mkdirp.ts";
 import { join, resolve } from "https://deno.land/x/std/fs/path/mod.ts";
 
 const MAX_FOLLOWS: number = 4;
@@ -53,8 +53,8 @@ function pinup(...args: any): void {
 }
 
 async function runBufferStdout(args: string[]): Promise<string> {
-  const p = run({ args, stdout: "piped" });
-  const stdout = await p.output();
+  const p: Process = run({ args, stdout: "piped" });
+  const stdout: Uint8Array = await p.output();
   if (!(await p.status()).success) {
     panic(Error(`Running ${args} failed`));
   }
@@ -63,7 +63,7 @@ async function runBufferStdout(args: string[]): Promise<string> {
 }
 
 async function follow(url: string): Promise<any> {
-  let res: any; // TODO: annotate deno Response
+  let res: any;
   let located: boolean = false;
   let count: number = 0;
   while (!located) {
@@ -98,7 +98,7 @@ async function releaseUrl(tag?: string): Promise<{ [key: string]: string }> {
     default:
       panic(Error(`Unsupported operating system ${platform.os}`));
   }
-  const res: any = await follow(url); // TODO: annotate deno Response
+  const res: any = await follow(url);
   const release: { [key: string]: any } = await res.json();
   const archive: { [key: string]: any } = release.assets.find(
     (asset: { [key: string]: any }) => asset.name === filename
@@ -117,14 +117,14 @@ async function tempDownload(
   url: string,
   suffix: string
 ): Promise<string> {
-  const res: any = await follow(url); // TODO: annotate deno Response
+  const res: any = await follow(url);
   const tempFile: string = join(tempDir, `${Date.now()}.${suffix}`);
   await writeFile(tempFile, new Uint8Array(await res.arrayBuffer()));
   return tempFile;
 }
 
 async function unpackBin(archive: string): Promise<void> {
-  await mkdirp(DENO_BIN_DIR);
+  await mkdir(DENO_BIN_DIR, true);
   let args: string[];
   if (isWindows) {
     await rename(DENO_BIN, OLD_DENO_BIN);
@@ -211,7 +211,7 @@ async function main(): Promise<void> {
   await unpackBin(tempFile);
   await makeHandy();
   await checkVersion(actual.tag);
-  await removeAll(tempDir);
+  await remove(tempDir, { recursive: true });
   pinup(`Successfully installed deno ${actual.tag}`);
 }
 

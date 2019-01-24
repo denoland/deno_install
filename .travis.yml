@@ -64,3 +64,41 @@ matrix:
         - brew cask install powershell
       script:
         - pwsh install_test.ps1
+
+      - language: minimal
+        os: 
+          - linux
+        before_script: 
+          - sh ./install.sh
+        script:
+          - ~/.deno/bin/deno --allow-all ./install.ts v0.2.8
+          - ~/.deno/bin/deno -v | grep -e 0.2.8
+
+      - language: minimal
+        os: 
+          - osx
+        before_script: 
+          - sh ./install.sh
+        script:
+          - ~/.deno/bin/deno --allow-all ./install.ts v0.2.8
+          - ~/.deno/bin/deno -v | grep -e 0.2.8
+
+      - language: minimal
+        os: 
+          - linux
+        before_script: 
+          - sh ./install.sh
+        script:
+          - ~/.deno/bin/deno --allow-all ./install.ts
+          - ~/.deno/bin/deno -v
+
+      - language: minimal
+        os: 
+          - osx
+        before_script: 
+          - sh ./install.sh
+        script:
+          - ~/.deno/bin/deno --allow-all ./install.ts
+          - ~/.deno/bin/deno -v
+          
+      

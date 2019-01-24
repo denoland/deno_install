@@ -36,6 +36,6 @@ for:
                      $env:APPVEYOR_REPO_COMMIT, "install.ps1" -join "/"
         - ps: iex (iwr $url)
     test_script:
-      - deno --allow-write --allow-net --allow-env --allow-run install.ts v0.2.1
-      - deno -v | findstr 0.2.1
+      - deno --allow-all install.ts v0.2.8
+      - deno -v | findstr 0.2.8
       
