@@ -1,88 +1,101 @@
+#!/usr/bin/env pwsh
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
 
-$ErrorActionPreference = "Stop"
+$ErrorActionPreference = 'Stop'
 
-# Enable TLS 1.2 since it is required for connections to GitHub.
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-
-# Helper functions for pretty terminal output.
-function Write-Part ([string] $Text) {
-  Write-Host $Text -NoNewline
-}
-function Write-Emphasized ([string] $Text) {
-  Write-Host $Text -NoNewLine -ForegroundColor "Yellow"
-}
-function Write-Done {
-  Write-Host " done" -NoNewline -ForegroundColor "Green";
-  Write-Host "."
+if ($args.Length -gt 0) {
+  $Version = $args.Get(0)
 }
 
-if ($args.count) {
-    # If specific release is mentioned
-    $release = $args[0]
+if ($PSVersionTable.PSVersion.Major -lt 6) {
+  $IsWindows = $true
+  $IsMacOS = $false
+}
+
+$BinDir = if ($IsWindows) {
+  "$Home\.deno\bin"
 } else {
-    # Else determine latest Deno release via GitHub API.
-    $latest_release_uri = "https://api.github.com/repos/denoland/deno/releases/latest"
-    Write-Part "Downloading "; Write-Emphasized $latest_release_uri; Write-Part "..."
-    $latest_release_json = Invoke-WebRequest -Uri $latest_release_uri
-    Write-Done
-
-    Write-Part "Determining latest Deno release: "
-    $latest_release = ($latest_release_json | ConvertFrom-Json).tag_name
-    $release = $latest_release
-    Write-Emphasized $latest_release; Write-Part "... "
-    Write-Done
+  "$Home/.deno/bin"
 }
 
-# Create ~\.deno\bin directory if it doesn't already exist
-$deno_dir = "${Home}\.deno\bin"
-if (-not (Test-Path $deno_dir)) {
-  Write-Part "Creating directory "; Write-Emphasized $deno_dir; Write-Part "..."
-  New-Item -Path $deno_dir -ItemType Directory | Out-Null
-  Write-Done
+$Zip = if ($IsWindows) {
+  'zip'
+} else {
+  'gz'
 }
 
-# Download latest Deno release.
-$zip_file = "${deno_dir}\deno_win_x64.zip"
-$download_uri = "https://github.com/denoland/deno/releases/download/" +
-                "${release}/deno_win_x64.zip"
-Write-Part "Downloading "; Write-Emphasized $download_uri; Write-Part "..."
-Invoke-WebRequest -Uri $download_uri -OutFile $zip_file
-Write-Done
-
-# Extract deno.exe from .zip file.
-Write-Part "Extracting "; Write-Emphasized $zip_file
-Write-Part " into "; Write-Emphasized ${deno_dir}; Write-Part "..."
-# Using -Force to overwrite deno.exe if it already exists
-Expand-Archive -Path $zip_file -DestinationPath $deno_dir -Force
-Write-Done
-
-# Remove .zip file.
-Write-Part "Removing "; Write-Emphasized $zip_file; Write-Part "..."
-Remove-Item -Path $zip_file
-Write-Done
-
-# Get Path environment variable for the current user.
-$user = [EnvironmentVariableTarget]::User
-$path = [Environment]::GetEnvironmentVariable("PATH", $user)
-
-# Check whether Deno is in the Path.
-$paths = $path -split ";"
-$is_in_path = $paths -contains $deno_dir -or $paths -contains "${deno_dir}\"
-
-# Add Deno to PATH if it hasn't been added already.
-if (-not $is_in_path) {
-  Write-Part "Adding "; Write-Emphasized $deno_dir; Write-Part " to the "
-  Write-Emphasized "PATH"; Write-Part " environment variable..."
-  [Environment]::SetEnvironmentVariable("PATH", "${path};${deno_dir}", $user)
-  # Add Deno to the PATH variable of the current terminal session
-  # so `deno` can be used immediately without restarting the terminal.
-  $env:PATH += ";${deno_dir}"
-  Write-Done
+$DenoZip = if ($IsWindows) {
+  "$BinDir\deno.$Zip"
+} else {
+  "$BinDir/deno.$Zip"
 }
 
-Write-Host ""
-Write-Host "Deno was installed successfully." -ForegroundColor "Green"
-Write-Part "Run "; Write-Emphasized "deno --help"; Write-Host " to get started."
-Write-Host ""
+$DenoExe = if ($IsWindows) {
+  "$BinDir\deno.exe"
+} else {
+  "$BinDir/deno"
+}
+
+$OS = if ($IsWindows) {
+  'win'
+} else {
+  if ($IsMacOS) {
+    'osx'
+  } else {
+    'linux'
+  }
+}
+
+if (!$Version) {
+  if ($PSVersionTable.PSVersion.Major -lt 6) {
+    $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
+    $HTMLFile = New-Object -Com HTMLFile
+    $HTMLFile.IHTMLDocument2_write($Response.Content)
+    $DenoUri = $HTMLFile.getElementsByTagName('a') |
+      Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
+      ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
+      Select-Object -First 1
+  } else {
+    $DenoUri = (Invoke-WebRequest 'https://github.com/denoland/deno/releases').Links |
+      Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
+      ForEach-Object { 'https://github.com' + $_.href } |
+      Select-Object -First 1
+  }
+} else {
+  $DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
+}
+
+if (!(Test-Path $BinDir)) {
+  New-Item $BinDir -ItemType Directory | Out-Null
+}
+
+Invoke-WebRequest $DenoUri -Out $DenoZip
+
+if ($IsWindows) {
+  Expand-Archive $DenoZip -Destination $BinDir -Force
+  Remove-Item $DenoZip
+} else {
+  gunzip -df $DenoZip
+}
+
+if ($IsWindows) {
+  $User = [EnvironmentVariableTarget]::User
+  $Path = [Environment]::GetEnvironmentVariable('Path', $User)
+  if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
+    [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User)
+    $Env:Path += ";$BinDir"
+  }
+  Write-Output "Deno was installed successfully to $DenoExe"
+  Write-Output "Run 'deno --help' to get started"
+} else {
+  chmod +x "$BinDir/deno"
+  Write-Output "Deno was installed successfully to $DenoExe"
+  if (Get-Command deno -ErrorAction SilentlyContinue) {
+    Write-Output "Run 'deno --help' to get started"
+  } else {
+    Write-Output "Manually add the directory to your `$HOME/.bash_profile (or similar)"
+    Write-Output "  export PATH=`"${BinDir}:`$PATH`""
+    Write-Output "Run '~/.deno/bin/deno --help' to get started"
+  }
+}

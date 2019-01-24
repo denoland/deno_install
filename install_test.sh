@@ -1,17 +1,17 @@
-#!/usr/bin/env bash
+#!/bin/sh
 
-set -eo pipefail
+set -ev
 
-if [[ $TRAVIS_OS_NAME != "linux" ]]; then
-  curl -sL https://deno.land/x/install/install.sh | sh -s v0.2.5
-else
-  echo "testing ./install.py"
-  python ./install.py v0.2.5
-  python ./install_test.py v0.2.5
-fi
+# Lint.
+shellcheck -s sh ./*.sh
+shfmt -d .
 
-echo "testing ./install.ts"
-$HOME/.deno/bin/deno --allow-write --allow-net --allow-env --allow-run ./install.ts v0.2.6
+# Test we can install a specific version.
+rm -rf ~/.deno
+./install.sh v0.2.0
+~/.deno/bin/deno -v | grep -e 0.2.0
 
-echo "testing deno (version)"
-$HOME/.deno/bin/deno -v | grep 0.2.6
+# Test we can get the latest version.
+rm -rf ~/.deno
+sh ./install.sh
+~/.deno/bin/deno -v

@@ -1,14 +1,66 @@
-language: minimal
-
-# not yet testing python installers on osx
-# once a set of core installers is defined this matrix should be redrawn
 matrix:
-    include:
-        - os: linux
-          python: 2.7
-        - os: linux
-          python: 3.3
-        - os: osx
+  include:
+    - language: python
+      os:
+        - linux
+        # Travis does not support python on osx yet.
+        # see: https://github.com/travis-ci/travis-ci/issues/2312
+        # - osx
+      python:
+        - "2.7"
+        - "3.3"
+      script:
+        - ./install.py
+        - ./install_test.py
 
-# Test the install scripts.
-script: bash ./install_test.sh
+    - language: bash
+      os:
+        - linux
+      addons:
+        apt:
+          packages:
+            - shellcheck
+      env:
+        - PATH=$HOME/bin/:$PATH
+        - SHFMT_VERSION=v2.6.2
+      before_script:
+        - curl -sSL -o "$HOME/bin/shfmt" "https://github.com/mvdan/sh/releases/download/${SHFMT_VERSION}/shfmt_${SHFMT_VERSION}_linux_amd64"
+        - chmod +x "$HOME/bin/shfmt"
+      script:
+        - ./install_test.sh
+
+    - language: bash
+      os:
+        - osx
+      addons:
+        homebrew:
+          packages:
+            - shellcheck
+            - shfmt
+      script:
+        - ./install_test.sh
+
+    - language: minimal
+      os:
+        - linux
+      before_script:
+        - wget -q https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
+        - sudo dpkg -i packages-microsoft-prod.deb
+        - sudo apt-get update
+        - sudo apt-get install -y powershell
+      script:
+        - pwsh install_test.ps1
+
+    - language: minimal
+      os:
+        - osx
+      cache:
+        directories:
+          - $HOME/Library/Caches/Homebrew
+      before_cache:
+        - brew cleanup
+      before_script:
+        - brew tap caskroom/cask
+        - brew cask install powershell
+      script:
+        - pwsh install_test.ps1
