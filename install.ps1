@@ -5,7 +5,7 @@
 $ErrorActionPreference = 'Stop'
 
 if ($args.Length -gt 0) {
-  $Version = $args.Get(1)
+  $Version = $args.Get(0)
 }
 
 if ($PSVersionTable.PSVersion.Major -lt 6) {

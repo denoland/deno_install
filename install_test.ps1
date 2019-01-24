@@ -46,8 +46,6 @@ if (!($DenoVersion[0] -match 'deno: \d+\.\d+\.\d+')) {
   Write-Output $DenoVersion
 }
 
-Set-PSDebug -Trace 2
-
 if ($Env:CI) {
   if ($Env:TRAVIS) {
     if ($Env:TRAVIS_PULL_REQUEST -ne 'false') {
