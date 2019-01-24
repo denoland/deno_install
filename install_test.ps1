@@ -10,13 +10,7 @@ if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
   Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
 }
 
-$Exclude = @(
-  'PSAvoidUsingCmdletAliases',
-  'PSAvoidAssignmentToAutomaticVariable',
-  'PSAvoidUsingInvokeExpression'
-)
-Invoke-ScriptAnalyzer install_test.ps1 -EnableExit -Exclude $Exclude
-Invoke-ScriptAnalyzer install.ps1 -EnableExit -Exclude PSAvoidAssignmentToAutomaticVariable
+Invoke-ScriptAnalyzer *.ps1 -EnableExit -Exclude PSAvoidAssignmentToAutomaticVariable
 
 if ($PSVersionTable.PSVersion.Major -lt 6) {
   $IsWindows = $true
