@@ -51,11 +51,7 @@ if (!$Version) {
   if ($PSVersionTable.PSVersion.Major -lt 6) {
     $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
     $HTMLFile = New-Object -Com HTMLFile
-    try {
-      $HTMLFile.IHTMLDocument2_write($Response.Content)
-    } catch {
-      $HTMLFile.write([System.Text.Encoding]::Unicode.GetBytes($Response.Content))
-    }
+    $HTMLFile.write([System.Text.Encoding]::Unicode.GetBytes($Response.Content))
     $DenoUri = $HTMLFile.getElementsByTagName('a') |
       Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
       ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
