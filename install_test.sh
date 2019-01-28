@@ -18,4 +18,5 @@ rm -rf ~/.deno
 sh ./install.sh
 version=$(~/.deno/bin/deno --version)
 echo "$version"
-echo "$version" | head -n 1 | grep -Eq '^deno: \d+\.\d+\.\d+$'
+version="deno: 0.2.0"
+echo "$version" | head -n 1 | grep -qE '^deno: [0-9]+\.[0-9]+\.[0-9]+$'
