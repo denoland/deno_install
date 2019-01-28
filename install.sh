@@ -32,9 +32,9 @@ chmod +x "$exe"
 
 echo "Deno was installed successfully to $exe"
 if command -v deno >/dev/null; then
-	echo "Run 'deno --help' to get started."
+	echo "Run 'deno --help' to get started"
 else
 	echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
 	echo "  export PATH=\"$bin_dir:\$PATH\""
-	echo "Run '$exe --help' to get started."
+	echo "Run '$exe --help' to get started"
 fi
