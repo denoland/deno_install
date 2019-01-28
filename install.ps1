@@ -59,7 +59,7 @@ $DenoUri = if (!$Version) {
     if ($HTMLFile.IHTMLDocument2_write) {
       $HTMLFile.IHTMLDocument2_write($Response.Content)
     } else {
-      $ResponseBytes = [Text.Encoding]::UTF8.GetBytes($Response.Content)
+      $ResponseBytes = [Text.Encoding]::Unicode.GetBytes($Response.Content)
       $HTMLFile.write($ResponseBytes)
     }
     $HTMLFile.getElementsByTagName('a') |
