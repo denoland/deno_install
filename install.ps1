@@ -8,7 +8,7 @@ if ($args.Length -gt 0) {
   $Version = $args.Get(0)
 }
 
-if ($PSVersionTable.PSVersion.Major -lt 6) {
+if ($PSVersionTable.PSEdition -ne 'Core') {
   $IsWindows = $true
   $IsMacOS = $false
 }
@@ -49,7 +49,7 @@ $OS = if ($IsWindows) {
 
 $DenoUri = if (!$Version) {
   $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
-  if ($Response.Links) {
+  if ($PSVersionTable.PSEdition -eq 'Core') {
     $Response.Links |
       Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
       ForEach-Object { 'https://github.com' + $_.href } |

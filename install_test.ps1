@@ -2,7 +2,7 @@
 
 $ErrorActionPreference = 'Stop'
 
-if ($PSVersionTable.PSVersion.Major -lt 6) {
+if ($PSVersionTable.PSEdition -ne 'Core') {
   $IsWindows = $true
 }
 
