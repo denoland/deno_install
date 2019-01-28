@@ -24,7 +24,7 @@ $BinDir = if ($IsWindows) {
 }
 
 # Test we can install a specific version.
-Remove-Item $BinDir -Recurse
+Remove-Item $BinDir -Recurse -Force
 .\install.ps1 v0.2.0
 $DenoVersion = if ($IsWindows) {
   deno --version
@@ -38,7 +38,7 @@ if (!($DenoVersion[0] -eq 'deno: 0.2.0')) {
 }
 
 # Test we can install the latest version.
-Remove-Item $BinDir -Recurse
+Remove-Item $BinDir -Recurse -Force
 .\install.ps1
 $DenoVersion = if ($IsWindows) {
   deno --version
