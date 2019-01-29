@@ -31,22 +31,15 @@ $DenoVersion = if ($IsWindows) {
 } else {
   ~/.deno/bin/deno --version
 }
-if (!($DenoVersion[0] -eq 'deno: 0.2.0')) {
+if (!($DenoVersion -like '*0.2.0*')) {
   throw $DenoVersion
-} else {
-  Write-Output $DenoVersion
 }
 
 # Test we can install the latest version.
 Remove-Item $BinDir -Recurse -Force -ErrorAction SilentlyContinue
 .\install.ps1
-$DenoVersion = if ($IsWindows) {
+if ($IsWindows) {
   deno --version
 } else {
   ~/.deno/bin/deno --version
-}
-if (!($DenoVersion[0] -match 'deno: \d+\.\d+\.\d+')) {
-  throw $DenoVersion
-} else {
-  Write-Output $DenoVersion
 }
