@@ -8,7 +8,7 @@ if ($args.Length -gt 0) {
   $Version = $args.Get(0)
 }
 
-if ($PSVersionTable.PSVersion.Major -lt 6) {
+if ($PSVersionTable.PSEdition -ne 'Core') {
   $IsWindows = $true
   $IsMacOS = $false
 }
@@ -47,27 +47,28 @@ $OS = if ($IsWindows) {
   }
 }
 
-if (!$Version) {
-  if ($PSVersionTable.PSVersion.Major -lt 6) {
-    $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
+$DenoUri = if (!$Version) {
+  $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
+  if ($PSVersionTable.PSEdition -eq 'Core') {
+    $Response.Links |
+      Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
+      ForEach-Object { 'https://github.com' + $_.href } |
+      Select-Object -First 1
+  } else {
     $HTMLFile = New-Object -Com HTMLFile
     if ($HTMLFile.IHTMLDocument2_write) {
       $HTMLFile.IHTMLDocument2_write($Response.Content)
     } else {
-      $HTMLFile.write([System.Text.Encoding]::Unicode.GetBytes($Response.Content))
+      $ResponseBytes = [Text.Encoding]::Unicode.GetBytes($Response.Content)
+      $HTMLFile.write($ResponseBytes)
     }
-    $DenoUri = $HTMLFile.getElementsByTagName('a') |
+    $HTMLFile.getElementsByTagName('a') |
       Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
       ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
       Select-Object -First 1
-  } else {
-    $DenoUri = (Invoke-WebRequest 'https://github.com/denoland/deno/releases').Links |
-      Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
-      ForEach-Object { 'https://github.com' + $_.href } |
-      Select-Object -First 1
   }
 } else {
-  $DenoUri = "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
+  "https://github.com/denoland/deno/releases/download/$Version/deno_${OS}_x64.$Zip"
 }
 
 if (!(Test-Path $BinDir)) {
@@ -100,6 +101,6 @@ if ($IsWindows) {
   } else {
     Write-Output "Manually add the directory to your `$HOME/.bash_profile (or similar)"
     Write-Output "  export PATH=`"${BinDir}:`$PATH`""
-    Write-Output "Run '~/.deno/bin/deno --help' to get started"
+    Write-Output "Run '$DenoExe --help' to get started"
   }
 }
