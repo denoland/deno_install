@@ -21,11 +21,11 @@ matrix:
           packages:
             - shellcheck
       env:
+        - SHFMT_VERSION=2.6.2
         - PATH=$HOME/bin/:$PATH
-        - SHFMT_VERSION=v2.6.2
-      before_script:
-        - curl -sSL -o "$HOME/bin/shfmt" "https://github.com/mvdan/sh/releases/download/${SHFMT_VERSION}/shfmt_${SHFMT_VERSION}_linux_amd64"
-        - chmod +x "$HOME/bin/shfmt"
+        before_script:
+        - curl -sSL -o $HOME/bin/shfmt https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64
+        - chmod +x $HOME/bin/shfmt
       script:
         - ./install_test.sh
 
@@ -43,24 +43,27 @@ matrix:
     - language: minimal
       os:
         - linux
-      before_script:
-        - wget -q https://packages.microsoft.com/config/ubuntu/14.04/packages-microsoft-prod.deb
-        - sudo dpkg -i packages-microsoft-prod.deb
-        - sudo apt-get update
-        - sudo apt-get install -y powershell
+      env:
+        - PWSH_VERSION=6.1.2
+        - PATH=$HOME/bin/pwsh:$PATH
+        before_script:
+        - mkdir -p $HOME/bin/pwsh
+        - curl -sSL -o $HOME/bin/pwsh/pwsh.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v$PWSH_VERSION/powershell-$PWSH_VERSION-linux-x64.tar.gz
+        - tar -xf $HOME/bin/pwsh/pwsh.tar.gz -C $HOME/bin/pwsh
+        - chmod +x $HOME/bin/pwsh/pwsh
       script:
         - pwsh install_test.ps1
 
     - language: minimal
       os:
         - osx
-      cache:
-        directories:
-          - $HOME/Library/Caches/Homebrew
-      before_cache:
-        - brew cleanup
-      before_script:
-        - brew tap caskroom/cask
-        - brew cask install powershell
+      env:
+        - PWSH_VERSION=6.1.2
+        - PATH=$HOME/bin/pwsh:$PATH
+        before_script:
+        - mkdir -p $HOME/bin/pwsh
+        - curl -sSL -o $HOME/bin/pwsh/pwsh.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v$PWSH_VERSION/powershell-$PWSH_VERSION-osx-x64.tar.gz
+        - tar -xf $HOME/bin/pwsh/pwsh.tar.gz -C $HOME/bin/pwsh
+        - chmod +x $HOME/bin/pwsh/pwsh
       script:
         - pwsh install_test.ps1

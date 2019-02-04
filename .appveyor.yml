@@ -12,12 +12,9 @@ for:
   - matrix:
       only:
         - TYPE: powershell
-    install:
-      - ps: iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
-      - ps: scoop install pwsh
     test_script:
       - ps: .\install_test.ps1
-      - ps: pwsh install_test.ps1
+      - pwsh install_test.ps1
 
   - matrix:
       only:
