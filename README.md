@@ -12,12 +12,6 @@ Downloads the latest Deno binary into `$HOME/.deno/bin`.
 curl -L https://deno.land/x/install/install.sh | sh
 ```
 
-**Install with Python:**
-
-```sh
-curl -L https://deno.land/x/install/install.py | python
-```
-
 **Install with PowerShell:**
 
 ```powershell
@@ -34,12 +28,6 @@ If you need to install specific version of deno, use the following commands:
 
 ```sh
 curl -L https://deno.land/x/install/install.sh | sh -s v0.2.0
-```
-
-**Install with Python:**
-
-```sh
-curl -L https://deno.land/x/install/install.py | python - v0.2.0
 ```
 
 **Install with PowerShell:**
