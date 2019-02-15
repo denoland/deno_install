@@ -80,6 +80,19 @@ def download_with_progress(url):
 
 
 def main():
+    print("=========================================", file=sys.stderr)
+    print("| WARNING: THIS INSTALLER IS DEPRECATED |", file=sys.stderr)
+    print("| AND WILL BE REMOVED ON MARCH 1, 2019. |", file=sys.stderr)
+    print("=========================================\n", file=sys.stderr)
+
+    print("Please use the Shell or Powershell installer instead.\n", file=sys.stderr)
+
+    print("Install Deno via Shell script:", file=sys.stderr)
+    print("  $ curl -fL https://deno.land/x/install/install.sh | sh\n", file=sys.stderr)
+
+    print("Install Deno via PowerShell script:", file=sys.stderr)
+    print("  > iex (iwr https://deno.land/x/install/install.ps1)\n", file=sys.stderr)
+
     bin_dir = deno_bin_dir()
     exe_fn = os.path.join(bin_dir, "deno")
 
