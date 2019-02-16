@@ -1,17 +1,5 @@
 matrix:
   include:
-    - language: python
-      os:
-        - linux
-        # Travis does not support python on osx yet.
-        # see: https://github.com/travis-ci/travis-ci/issues/2312
-        # - osx
-      python:
-        - "2.7"
-        - "3.3"
-      script:
-        - ./install.py
-        - ./install_test.py
 
     - language: bash
       os:
