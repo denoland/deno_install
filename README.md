@@ -1,8 +1,8 @@
 # deno_install
 
-**Cross-platform Deno binary installers.**
+**Cross-platform one-liners to install Deno on your system.**
 
-| **Linux** | **Windows** |
+| **Linux & Mac** | **Windows** |
 |:---------------:|:-----------:|
 | [![Build Status](https://travis-ci.com/denoland/deno_install.svg?branch=master)](https://travis-ci.com/denoland/deno_install) | [![Build status](https://ci.appveyor.com/api/projects/status/gtekeaf7r60xa896?branch=master&svg=true)](https://ci.appveyor.com/project/deno/deno-install) |
 
@@ -34,6 +34,11 @@ curl -L https://deno.land/x/install/install.sh | sh -s v0.2.11
 iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.11
 ```
 
+## Compatibility
+
+- The Shell installer can be used on Windows via the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about).
+- The PowerShell installer can be used on Linux and Mac thanks to [PowerShell Core](https://docs.microsoft.com/en-us/powershell/scripting).
+
 ## Known Issues
 
 ### Could not create SSL/TLS secure channel
@@ -50,7 +55,7 @@ At line:1 char:1
 
 **When does this issue occur?**
 
-If your systems' [ServicePointManager](https://docs.microsoft.com/en-us/dotnet/api/system.net.servicepointmanager.securityprotocol?view=netframework-4.8) is configured to use an out-dated security protocol, such as, TLS 1.0.
+If your systems' [ServicePointManager](https://docs.microsoft.com/en-us/dotnet/api/system.net.servicepointmanager.securityprotocol) is configured to use an out-dated security protocol, such as, TLS 1.0.
 
 **How can this issue be fixed?**
 
@@ -74,7 +79,7 @@ At line:1 char:63
 
 **When does this issue occur?**
 
-If your systems' [ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies?view=powershell-6) is `Undefined` or `Restricted`.
+If your systems' [ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) is `Undefined` or `Restricted`.
 
 **How can this issue be fixed?**
 
