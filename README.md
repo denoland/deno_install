@@ -25,13 +25,13 @@ iwr https://deno.land/x/install/install.ps1 | iex
 **With Shell:**
 
 ```sh
-curl -L https://deno.land/x/install/install.sh | sh -s v0.2.11
+curl -L https://deno.land/x/install/install.sh | sh -s v0.2.10
 ```
 
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.11
+iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.10
 ```
 
 ## Compatibility
