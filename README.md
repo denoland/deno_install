@@ -1,6 +1,6 @@
 # deno_install
 
-**Cross-platform one-liners to install Deno on your system.**
+**One-line commands to install Deno on your system.**
 
 | **Linux & Mac** | **Windows** |
 |:---------------:|:-----------:|
