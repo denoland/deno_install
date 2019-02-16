@@ -1,19 +1,6 @@
 matrix:
   include:
-    - language: python
-      os:
-        - linux
-        # Travis does not support python on osx yet.
-        # see: https://github.com/travis-ci/travis-ci/issues/2312
-        # - osx
-      python:
-        - "2.7"
-        - "3.3"
-      script:
-        - ./install.py
-        - ./install_test.py
-
-    - language: bash
+    - language: sh
       os:
         - linux
       addons:
@@ -22,14 +9,21 @@ matrix:
             - shellcheck
       env:
         - SHFMT_VERSION=2.6.2
-        - PATH=$HOME/bin/:$PATH
+        - PWSH_VERSION=6.1.2
+        - PATH=$HOME/bin/:$HOME/bin/pwsh:$PATH
       before_script:
+        # Install shfmt
         - curl -sSL -o $HOME/bin/shfmt https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64
         - chmod +x $HOME/bin/shfmt
+        # Install pwsh
+        - mkdir -p $HOME/bin/pwsh
+        - curl -sSL -o $HOME/bin/pwsh/pwsh.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v$PWSH_VERSION/powershell-$PWSH_VERSION-linux-x64.tar.gz
+        - tar -xf $HOME/bin/pwsh/pwsh.tar.gz -C $HOME/bin/pwsh
+        - chmod +x $HOME/bin/pwsh/pwsh
       script:
         - ./install_test.sh
-
-    - language: bash
+        - pwsh install_test.ps1
+    - language: sh
       os:
         - osx
       addons:
@@ -37,33 +31,15 @@ matrix:
           packages:
             - shellcheck
             - shfmt
-      script:
-        - ./install_test.sh
-
-    - language: minimal
-      os:
-        - linux
       env:
         - PWSH_VERSION=6.1.2
         - PATH=$HOME/bin/pwsh:$PATH
       before_script:
-        - mkdir -p $HOME/bin/pwsh
-        - curl -sSL -o $HOME/bin/pwsh/pwsh.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v$PWSH_VERSION/powershell-$PWSH_VERSION-linux-x64.tar.gz
-        - tar -xf $HOME/bin/pwsh/pwsh.tar.gz -C $HOME/bin/pwsh
-        - chmod +x $HOME/bin/pwsh/pwsh
-      script:
-        - pwsh install_test.ps1
-
-    - language: minimal
-      os:
-        - osx
-      env:
-        - PWSH_VERSION=6.1.2
-        - PATH=$HOME/bin/pwsh:$PATH
-      before_script:
+        # Install pwsh
         - mkdir -p $HOME/bin/pwsh
         - curl -sSL -o $HOME/bin/pwsh/pwsh.tar.gz https://github.com/PowerShell/PowerShell/releases/download/v$PWSH_VERSION/powershell-$PWSH_VERSION-osx-x64.tar.gz
         - tar -xf $HOME/bin/pwsh/pwsh.tar.gz -C $HOME/bin/pwsh
         - chmod +x $HOME/bin/pwsh/pwsh
       script:
+        - ./install_test.sh
         - pwsh install_test.ps1

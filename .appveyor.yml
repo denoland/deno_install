@@ -1,25 +1,4 @@
-environment:
-  matrix:
-    - TYPE: powershell
-    - TYPE: python
-      PYTHON_DIR: "C:\\Python27"
-    - TYPE: python
-      PYTHON_DIR: "C:\\Python33"
-
 build: off
-
-for:
-  - matrix:
-      only:
-        - TYPE: powershell
-    test_script:
-      - ps: .\install_test.ps1
-      - pwsh install_test.ps1
-
-  - matrix:
-      only:
-        - TYPE: python
-    install:
-      - "%PYTHON_DIR%\\python.exe install.py"
-    test_script:
-      - "%PYTHON_DIR%\\python.exe install_test.py"
+test_script:
+  - ps: .\install_test.ps1
+  - pwsh install_test.ps1
