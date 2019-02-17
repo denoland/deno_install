@@ -11,7 +11,7 @@
 **With Shell:**
 
 ```sh
-curl -L https://deno.land/x/install/install.sh | sh
+curl -fsSL https://deno.land/x/install/install.sh | sh
 ```
 
 **With PowerShell:**
@@ -25,7 +25,7 @@ iwr https://deno.land/x/install/install.ps1 | iex
 **With Shell:**
 
 ```sh
-curl -L https://deno.land/x/install/install.sh | sh -s v0.2.10
+curl -fsSL https://deno.land/x/install/install.sh | sh -s v0.2.10
 ```
 
 **With PowerShell:**
