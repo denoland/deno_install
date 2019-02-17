@@ -34,6 +34,20 @@ curl -L https://deno.land/x/install/install.sh | sh -s v0.2.10
 iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.10
 ```
 
+## Install via Package Manager
+
+**With [Scoop](https://scoop.sh):**
+
+```powershell
+scoop install deno
+```
+
+**With [Homebrew](https://brew.sh/):**
+
+_Cooming soon!_
+
+See [denoland/deno#1486](https://github.com/denoland/deno/issues/1486).
+
 ## Compatibility
 
 - The Shell installer can be used on Windows via the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about).
