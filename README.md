@@ -11,7 +11,7 @@
 **With Shell:**
 
 ```sh
-curl -L https://deno.land/x/install/install.sh | sh
+curl -fsSL https://deno.land/x/install/install.sh | sh
 ```
 
 **With PowerShell:**
@@ -25,7 +25,7 @@ iwr https://deno.land/x/install/install.ps1 | iex
 **With Shell:**
 
 ```sh
-curl -L https://deno.land/x/install/install.sh | sh -s v0.2.10
+curl -fsSL https://deno.land/x/install/install.sh | sh -s v0.2.10
 ```
 
 **With PowerShell:**
@@ -33,6 +33,20 @@ curl -L https://deno.land/x/install/install.sh | sh -s v0.2.10
 ```powershell
 iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.10
 ```
+
+## Install via Package Manager
+
+**With [Scoop](https://scoop.sh):**
+
+```powershell
+scoop install deno
+```
+
+**With [Homebrew](https://brew.sh/):**
+
+_Cooming soon!_
+
+See [denoland/deno#1486](https://github.com/denoland/deno/issues/1486).
 
 ## Compatibility
 
