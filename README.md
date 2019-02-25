@@ -44,7 +44,7 @@ scoop install deno
 
 **With [Homebrew](https://brew.sh/):**
 
-_Cooming soon!_
+_Coming soon!_
 
 See [denoland/deno#1486](https://github.com/denoland/deno/issues/1486).
 
