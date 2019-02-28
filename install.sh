@@ -15,7 +15,7 @@ x86_64) arch="x86_64" ;;
 esac
 
 if [ "$arch" = "other" ]; then
-	echo "Unsuported architecture"
+	echo "Unsuported architecture $arch. Only x64 binariesa are available."
 	exit
 fi
 
