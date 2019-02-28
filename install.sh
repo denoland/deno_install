@@ -14,10 +14,10 @@ x86_64) arch="x86_64" ;;
 *) arch="other" ;;
 esac
 
-if [ "$arch" = "other" ]; then 
-        echo "Unsuported architecture"
-        exit
-fi;
+if [ "$arch" = "other" ]; then
+	echo "Unsuported architecture"
+	exit
+fi
 
 if [ $# -eq 0 ]; then
 	deno_asset_path=$(curl -sSf https://github.com/denoland/deno/releases |
