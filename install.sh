@@ -9,6 +9,16 @@ Darwin) os="osx" ;;
 *) os="linux" ;;
 esac
 
+case $(uname -m) in
+x86_64) arch="x86_64" ;;
+*) arch="other" ;;
+esac
+
+if [ "$arch" = "other" ]; then
+	echo "Unsuported architecture $(uname -m). Only x64 binaries are available."
+	exit
+fi
+
 if [ $# -eq 0 ]; then
 	deno_asset_path=$(curl -sSf https://github.com/denoland/deno/releases |
 		grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\\.gz" |
