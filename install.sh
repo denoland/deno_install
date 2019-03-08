@@ -44,7 +44,21 @@ echo "Deno was installed successfully to $exe"
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
 else
-	echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
-	echo "  export PATH=\"$bin_dir:\$PATH\""
-	echo "Run '$exe --help' to get started"
+	# Determine shell configuration file
+	RC=""
+	if [[ $SHELL == *"bash" ]]; then
+		RC="$HOME/.bash_profile"
+	elif [[ $SHELL == *"zsh" ]]; then
+		RC="$HOME/.zprofile"
+	fi
+
+	# Add path
+	if [ ! -z "$RC" ]; then
+		echo "export PATH=\"$bin_dir:\$PATH\"" >> "$RC"
+		echo "Run 'deno --help' to get started(Do not forget to run 'source $RC' before running deno)"
+	else
+		echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
+		echo "  export PATH=\"$bin_dir:\$PATH\""
+		echo "Run '$exe --help' to get started"
+	fi
 fi
