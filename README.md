@@ -17,7 +17,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 | iex
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12; iwr https://deno.land/x/install/install.ps1 | iex
 ```
 
 ## Install Specific Version
