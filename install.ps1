@@ -75,7 +75,7 @@ if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
 }
 
-Invoke-WebRequest $DenoUri -Out $DenoZip
+Invoke-WebRequest $DenoUri -OutFile $DenoZip
 
 if ($IsWindows) {
   Expand-Archive $DenoZip -Destination $BinDir -Force
