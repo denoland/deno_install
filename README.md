@@ -116,12 +116,12 @@ At line:1 char:1
 
 **When does this issue occur?**
 
-If you have never used Internet Explorer or finished the first-launch configuration
+If you have never used Internet Explorer or finished the first-launch configuration.
 
 **How can this issue be fixed?**
 
 
-(1) Run the install command without using the Internet Explorer engine.
+(1) Run the install command with the `-UseBasicParsing` flag.
 
 ```powershell
 iwr https://deno.land/x/install/install.ps1 -UseBasicParsing | iex
