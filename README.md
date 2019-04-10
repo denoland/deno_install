@@ -106,7 +106,8 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 ### Response content cannot be parsed
 
 ```
-PS C:\> iwr : The response content cannot be parsed because the Internet Explorer engine is not available, or Internet Explorer's first-launch configuration is not complete. Specify the UseBasicParsing parameter and try again.
+PS C:\> iwr https://deno.land/x/install/install.ps1 | iex
+iwr : The response content cannot be parsed because the Internet Explorer engine is not available, or Internet Explorer's first-launch configuration is not complete. Specify the UseBasicParsing parameter and try again.
 At line:1 char:1
 + iwr https://deno.land/x/install/install.ps1 | iex
 + ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
