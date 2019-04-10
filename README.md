@@ -102,3 +102,29 @@ Allow scripts that are downloaded from the internet to be executed by setting th
 ```powershell
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
 ```
+
+### Response content cannot be parsed
+
+```
+PS C:\> iwr : The response content cannot be parsed because the Internet Explorer engine is not available, or Internet Explorer's first-launch configuration is not complete. Specify the UseBasicParsing parameter and try again.
+At line:1 char:1
++ iwr https://deno.land/x/install/install.ps1 | iex
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotImplemented: (:) [Invoke-WebRequest], NotSupportedException
+    + FullyQualifiedErrorId : WebCmdletIEDomNotSupportedException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
+```
+
+**When does this issue occur?**
+
+If you have never used Internet Explorer or finished the first-launch configuration
+
+**How can this issue be fixed?**
+
+
+(1) Run the install command without using the Internet Explorer engine.
+
+```powershell
+iwr https://deno.land/x/install/install.ps1 -UseBasicParsing | iex
+```
+
+(2) Or open Internet Explorer and finish the first-launch configuration.
