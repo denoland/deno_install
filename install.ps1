@@ -48,7 +48,7 @@ $OS = if ($IsWindows) {
 }
 
 $DenoUri = if (!$Version) {
-  $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases'
+  $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases' -UseBasicParsing
   if ($PSVersionTable.PSEdition -eq 'Core') {
     $Response.Links |
       Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno_${OS}_x64.$Zip" } |
@@ -75,7 +75,7 @@ if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
 }
 
-Invoke-WebRequest $DenoUri -OutFile $DenoZip
+Invoke-WebRequest $DenoUri -OutFile $DenoZip -UseBasicParsing
 
 if ($IsWindows) {
   Expand-Archive $DenoZip -Destination $BinDir -Force

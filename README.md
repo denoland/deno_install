@@ -17,7 +17,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 | iex
+iwr https://deno.land/x/install/install.ps1 -useb | iex
 ```
 
 ## Install Specific Version
@@ -31,7 +31,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh -s v0.2.10
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.10
+iwr https://deno.land/x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.2.10
 ```
 
 ## Install via Package Manager
@@ -58,11 +58,11 @@ See [denoland/deno#1486](https://github.com/denoland/deno/issues/1486).
 ### Could not create SSL/TLS secure channel
 
 ```
-PS C:\> iwr https://deno.land/x/install/install.ps1 | iex
+PS C:\> iwr https://deno.land/x/install/install.ps1 -useb | iex
 iwr : The request was aborted: Could not create SSL/TLS secure channel.
 At line:1 char:1
-+ iwr https://deno.land/x/install/install.ps1 | iex
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++ iwr https://deno.land/x/install/install.ps1 -useb | iex
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
     + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
     + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
 ```
@@ -82,10 +82,10 @@ Configure your system to use an up-to-date security protocol, such as, TLS 1.2:
 ### Running scripts is disabled
 
 ```
-PS C:\> iwr https://deno.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.10
+PS C:\> iwr https://deno.land/x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.2.10
 .\install.ps1 : File C:\install.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
-At line:1 char:63
-+ ... no.land/x/install/install.ps1 -out install.ps1; .\install.ps1 v0.2.10
+At line:1 char:71
++ ... /x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.2.10
 +                                                     ~~~~~~~~~~~~~
     + CategoryInfo          : SecurityError: (:) [], ParentContainsErrorRecordException
     + FullyQualifiedErrorId : UnauthorizedAccess
