@@ -25,13 +25,13 @@ $BinDir = if ($IsWindows) {
 
 # Test we can install a specific version.
 Remove-Item $BinDir -Recurse -Force -ErrorAction SilentlyContinue
-.\install.ps1 v0.2.10
+.\install.ps1 v0.3.10
 $DenoVersion = if ($IsWindows) {
-  deno --version
+  deno version
 } else {
-  ~/.deno/bin/deno --version
+  ~/.deno/bin/deno version
 }
-if (!($DenoVersion -like '*0.2.10*')) {
+if (!($DenoVersion -like '*0.3.10*')) {
   throw $DenoVersion
 }
 
@@ -39,7 +39,7 @@ if (!($DenoVersion -like '*0.2.10*')) {
 Remove-Item $BinDir -Recurse -Force -ErrorAction SilentlyContinue
 .\install.ps1
 if ($IsWindows) {
-  deno --version
+  deno version
 } else {
-  ~/.deno/bin/deno --version
+  ~/.deno/bin/deno version
 }
