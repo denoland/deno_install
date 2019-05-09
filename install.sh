@@ -15,7 +15,7 @@ x86_64) arch="x86_64" ;;
 esac
 
 if [ "$arch" = "other" ]; then
-	echo "Unsuported architecture $(uname -m). Only x64 binaries are available."
+	echo "Unsupported architecture $(uname -m). Only x64 binaries are available."
 	exit
 fi
 
