@@ -55,30 +55,6 @@ brew install deno
 
 ## Known Issues
 
-### Could not create SSL/TLS secure channel
-
-```
-PS C:\> iwr https://deno.land/x/install/install.ps1 -useb | iex
-iwr : The request was aborted: Could not create SSL/TLS secure channel.
-At line:1 char:1
-+ iwr https://deno.land/x/install/install.ps1 -useb | iex
-+ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-    + CategoryInfo          : InvalidOperation: (System.Net.HttpWebRequest:HttpWebRequest) [Invoke-WebRequest], WebException
-    + FullyQualifiedErrorId : WebCmdletWebResponseException,Microsoft.PowerShell.Commands.InvokeWebRequestCommand
-```
-
-**When does this issue occur?**
-
-If your systems' [ServicePointManager](https://docs.microsoft.com/en-us/dotnet/api/system.net.servicepointmanager.securityprotocol) is configured to use an out-dated security protocol, such as, TLS 1.0.
-
-**How can this issue be fixed?**
-
-Configure your system to use an up-to-date security protocol, such as, TLS 1.2:
-
-```powershell
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-```
-
 ### Running scripts is disabled
 
 ```

@@ -47,6 +47,9 @@ $OS = if ($IsWindows) {
   }
 }
 
+# GitHub requires TLS 1.2
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+
 $DenoUri = if (!$Version) {
   $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases' -UseBasicParsing
   if ($PSVersionTable.PSEdition -eq 'Core') {
