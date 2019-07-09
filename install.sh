@@ -1,5 +1,5 @@
 #!/bin/sh
-# Copyright 2018 the Deno authors. All rights reserved. MIT license.
+# Copyright 2019 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
 
 set -e
@@ -20,16 +20,19 @@ if [ "$arch" = "other" ]; then
 fi
 
 if [ $# -eq 0 ]; then
-	deno_asset_path=$(curl -sSf https://github.com/denoland/deno/releases |
-		grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\\.gz" |
-		head -n 1)
+	deno_asset_path=$(
+		command curl -sSf https://github.com/denoland/deno/releases |
+			command grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\\.gz" |
+			command head -n 1
+	)
 	if [ ! "$deno_asset_path" ]; then exit 1; fi
 	deno_uri="https://github.com${deno_asset_path}"
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
 fi
 
-bin_dir="$HOME/.deno/bin"
+deno_dir=${DENO_DIR:-$HOME/.deno}
+bin_dir="${deno_dir}/bin"
 exe="$bin_dir/deno"
 
 if [ ! -d "$bin_dir" ]; then
