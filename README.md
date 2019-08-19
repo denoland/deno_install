@@ -48,6 +48,10 @@ scoop install deno
 brew install deno
 ```
 
+## Environment Variables
+
+- `DENO_INSTALL` - The directory in which to install Deno. This defaults to `$HOME/.deno`. Not yet supported in the PowerShell installer ([#76](https://github.com/denoland/deno_install/issues/76)).
+
 ## Compatibility
 
 - The Shell installer can be used on Windows via the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about).
