@@ -51,7 +51,7 @@ brew install deno
 ## Environment Variables
 
 - `DENO_INSTALL` - The directory in which to install Deno. This defaults to `$HOME/.deno`.
-Not yet supported in the PowerShell installer ([#76](https://github.com/denoland/deno_install/issues/76)).
+  Not yet supported in the PowerShell installer (#76).
 
 
 ## Compatibility
