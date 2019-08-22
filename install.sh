@@ -31,8 +31,8 @@ else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
 fi
 
-deno_dir=${DENO_DIR:-$HOME/.deno}
-bin_dir="${deno_dir}/bin"
+deno_install=${DENO_INSTALL:-$HOME/.deno}
+bin_dir="${deno_install}/bin"
 exe="$bin_dir/deno"
 
 if [ ! -d "$bin_dir" ]; then
@@ -48,6 +48,7 @@ if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
 else
 	echo "Manually add the directory to your \$HOME/.bash_profile (or similar)"
-	echo "  export PATH=\"$bin_dir:\$PATH\""
+	echo "  export DENO_INSTALL=\"$deno_install\""
+	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
 	echo "Run '$exe --help' to get started"
 fi
