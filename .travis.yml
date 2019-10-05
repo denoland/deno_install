@@ -9,7 +9,7 @@ matrix:
             - shellcheck
       env:
         - SHFMT_VERSION=2.6.2
-        - PWSH_VERSION=6.1.2
+        - PWSH_VERSION=6.2.3
         - PATH=$HOME/bin/pwsh:$HOME/bin:$PATH
       before_script:
         - curl -sSL -o $HOME/bin/shfmt https://github.com/mvdan/sh/releases/download/v${SHFMT_VERSION}/shfmt_v${SHFMT_VERSION}_linux_amd64
@@ -31,7 +31,7 @@ matrix:
             - shellcheck
             - shfmt
       env:
-        - PWSH_VERSION=6.1.2
+        - PWSH_VERSION=6.2.3
         - PATH=$HOME/bin/pwsh:$PATH
       before_script:
         - mkdir -p $HOME/bin/pwsh
