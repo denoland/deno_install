@@ -1,4 +1,3 @@
 build: off
 test_script:
   - ps: .\install_test.ps1
-  - pwsh install_test.ps1
