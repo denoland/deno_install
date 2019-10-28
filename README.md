@@ -48,6 +48,22 @@ scoop install deno
 brew install deno
 ```
 
+## Install and Manage Multiple Versions
+
+**With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
+
+```sh
+asdf plugin-add deno https://github.com/asdf-community/asdf-deno.git
+
+asdf install deno 0.2.10
+
+# Activate globally with:
+asdf global deno 0.2.10
+
+# Activate locally in the current folder with:
+asdf local deno 0.2.10
+```
+
 ## Environment Variables
 
 - `DENO_INSTALL` - The directory in which to install Deno. This defaults to `$HOME/.deno`.
