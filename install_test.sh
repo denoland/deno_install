@@ -4,7 +4,6 @@ set -e
 
 # Lint.
 shellcheck -s sh ./*.sh
-shfmt -d .
 
 # Test we can install a specific version.
 rm -rf ~/.deno
