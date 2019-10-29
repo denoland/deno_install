@@ -20,18 +20,12 @@ jobs:
           brew install shfmt
           shfmt -d .
 
-      - name: tests shell unix
+      - name: tests shell
         if: matrix.os != 'windows-latest'
         shell: bash
         run: ./install_test.sh
 
-      - name: tests powershell unix
-        if: matrix.os != 'windows-latest'
+      - name: tests powershell
         shell: pwsh
         run: ./install_test.ps1
-
-      - name: tests windows
-        if: matrix.os == 'windows-latest'
-        shell: pwsh
-        run: .\install_test.ps1
 
