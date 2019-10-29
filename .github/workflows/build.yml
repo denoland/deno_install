@@ -1,0 +1,68 @@
+name: build
+
+on: [push, pull_request]
+
+jobs:
+  install-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macOS-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Tests Shell for *nix Machines
+        if: matrix.os != 'windows-latest'
+        shell: bash
+        run: ./install_test.sh
+
+      - name: Tests PowerShell for *nix Machines
+        if: matrix.os != 'windows-latest'
+        shell: pwsh
+        run: ./install_test.ps1
+
+      - name: Tests for Windows Machines
+        if: matrix.os == 'windows-latest'
+        shell: pwsh
+        run: .\install_test.ps1
+
+  shellcheck:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Run ShellCheck
+        run: shellcheck -s sh ./*.sh
+
+  shfmt:
+    runs-on: macOS-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install shfmt
+        run: brew install shfmt
+
+      - name: Run shfmt
+        run: shfmt -d .
+
+  ps-script-analyzer:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v1
+
+      - name: Install PSScriptAnalyzer
+        shell: pwsh
+        run: Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
+
+      - name: Run PSScriptAnalyzer
+        shell: pwsh
+        run: Invoke-ScriptAnalyzer *.ps1 -EnableExit -Exclude PSAvoidAssignmentToAutomaticVariable
