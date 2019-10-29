@@ -3,8 +3,7 @@
 set -e
 
 # Lint.
-shellcheck -s sh ./*.sh
-shfmt -d .
+# TODO(ry) shellcheck -s sh ./*.sh
 
 # Test we can install a specific version.
 rm -rf ~/.deno
