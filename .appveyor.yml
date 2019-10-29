@@ -1,3 +1,0 @@
-build: off
-test_script:
-  - ps: .\install_test.ps1

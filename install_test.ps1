@@ -6,17 +6,6 @@ if ($PSVersionTable.PSEdition -ne 'Core') {
   $IsWindows = $true
 }
 
-if (!(Get-PSRepository)) {
-  Register-PSRepository -Default
-}
-
-if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
-  Install-Module PSScriptAnalyzer -Scope CurrentUser -Force
-}
-
-# Lint.
-Invoke-ScriptAnalyzer *.ps1 -EnableExit -Exclude PSAvoidAssignmentToAutomaticVariable
-
 $BinDir = if ($IsWindows) {
   "$Home\.deno\bin"
 } else {

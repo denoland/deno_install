@@ -2,9 +2,7 @@
 
 **One-line commands to install Deno on your system.**
 
-| **Linux & Mac** | **Windows** |
-|:---------------:|:-----------:|
-| [![Build Status](https://travis-ci.com/denoland/deno_install.svg?branch=master)](https://travis-ci.com/denoland/deno_install) | [![Build status](https://ci.appveyor.com/api/projects/status/gtekeaf7r60xa896?branch=master&svg=true)](https://ci.appveyor.com/project/deno/deno-install) |
+[![Build Status](https://github.com/denoland/deno_install/workflows/build/badge.svg?branch=master)](https://github.com/denoland/deno_install/actions)
 
 ## Install Latest Version
 
@@ -74,7 +72,6 @@ asdf local deno 0.2.10
   ```
 
   Not yet supported in the PowerShell installer (#76).
-
 
 ## Compatibility
 
