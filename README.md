@@ -46,6 +46,12 @@ scoop install deno
 brew install deno
 ```
 
+**With [Chocolatey](https://chocolatey.org/packages/deno):**
+
+```powershell
+choco install deno
+```
+
 ## Install and Manage Multiple Versions
 
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
