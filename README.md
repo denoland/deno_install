@@ -74,7 +74,7 @@ asdf local deno 0.2.10
   One application of this is a system-wide Shell installation to [`/opt/deno`](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s13.html):
 
   ```sh
-  curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/opt/deno sh -s v0.2.10
+  curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL=/opt/deno sh
   ```
 
   Not yet supported in the PowerShell installer (#76).
