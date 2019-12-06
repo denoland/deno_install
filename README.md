@@ -77,7 +77,7 @@ asdf local deno 0.2.10
   curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL=/opt/deno sh
   ```
 
-  Not yet supported in the PowerShell installer (#76).
+  Not yet supported in the PowerShell installer ([#76](https://github.com/denoland/deno_install/issues/76)).
 
 
 ## Compatibility
