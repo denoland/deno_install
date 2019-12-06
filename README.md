@@ -71,13 +71,13 @@ asdf local deno 0.2.10
 ## Environment Variables
 
 - `DENO_INSTALL` - The directory in which to install Deno. This defaults to `$HOME/.deno`.
-  One application of this is a system-wide Shell installation to [`/opt/deno`](https://refspecs.linuxfoundation.org/FHS_3.0/fhs/ch03s13.html):
+  One application of this is a system-wide Shell installation to `/usr/local`:
 
   ```sh
-  curl -fsSL https://deno.land/x/install/install.sh | DENO_INSTALL=/opt/deno sh -s v0.2.10
+  curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL=/usr/local sh
   ```
 
-  Not yet supported in the PowerShell installer (#76).
+  Not yet supported in the PowerShell installer ([#76](https://github.com/denoland/deno_install/issues/76)).
 
 
 ## Compatibility

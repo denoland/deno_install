@@ -7,10 +7,10 @@ set -e
 
 # Test we can install a specific version.
 rm -rf ~/.deno
-DENO_INSTALL='' ./install.sh v0.3.10
-~/.deno/bin/deno version | grep 0.3.10
+DENO_INSTALL='' ./install.sh v0.13.0
+~/.deno/bin/deno --version | grep 0.13.0
 
 # Test we can install the latest version.
 rm -rf ~/.deno
 DENO_INSTALL="$HOME/.deno-test" sh ./install.sh
-~/.deno-test/bin/deno version
+~/.deno-test/bin/deno --version
