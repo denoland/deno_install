@@ -70,7 +70,7 @@ asdf local deno 0.2.10
 
 ## Environment Variables
 
-- `DENO_INSTALL` - The directory in which to install Deno. This defaults to `$HOME/.deno`.
+- `DENO_INSTALL` - The directory in which to install Deno. On Linux, this defaults to `$HOME/.local`.
   One application of this is a system-wide Shell installation to `/usr/local`:
 
   ```sh

@@ -31,8 +31,8 @@ else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
 fi
 
-deno_install=${DENO_INSTALL:-$HOME/.deno}
-bin_dir="${deno_install}/bin"
+deno_install="${DENO_INSTALL:-$HOME/.local}"
+bin_dir="$deno_install/bin"
 exe="$bin_dir/deno"
 
 if [ ! -d "$bin_dir" ]; then

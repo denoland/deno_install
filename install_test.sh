@@ -5,12 +5,12 @@ set -e
 # Lint.
 # TODO(ry) shellcheck -s sh ./*.sh
 
-# Test we can install a specific version.
-rm -rf ~/.deno
-DENO_INSTALL='' ./install.sh v0.13.0
-~/.deno/bin/deno --version | grep 0.13.0
+# Test that we can install the latest version at the default location.
+unset DENO_INSTALL
+sh ./install.sh
+~/.local/bin/deno --version
 
-# Test we can install the latest version.
-rm -rf ~/.deno
-DENO_INSTALL="$HOME/.deno-test" sh ./install.sh
-~/.deno-test/bin/deno --version
+# Test that we can install a specific version at a custom location.
+export DENO_INSTALL="$HOME/deno-0.13.0"
+./install.sh v0.13.0
+~/deno-0.13.0/bin/deno --version | grep 0.13.0
