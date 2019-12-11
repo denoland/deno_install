@@ -68,7 +68,7 @@ asdf global deno 0.2.10
 asdf local deno 0.2.10
 ```
 
-**With [Scoop](https://scoop.sh):**
+**With [Scoop](https://github.com/lukesampson/scoop/wiki/Switching-Ruby-And-Python-Versions):**
 
 ```sh
 # Install a specific version of deno:
