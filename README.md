@@ -68,6 +68,19 @@ asdf global deno 0.2.10
 asdf local deno 0.2.10
 ```
 
+**With [Scoop](https://scoop.sh):**
+
+```sh
+# Install a specific version of deno:
+scoop install deno@0.22.0
+
+# Switch to v0.22.0
+scoop reset deno@0.22.0
+
+# Switch to the latest version
+scoop reset deno
+```
+
 ## Environment Variables
 
 - `DENO_INSTALL` - The directory in which to install Deno. On Linux, this defaults to `$HOME/.local`.
