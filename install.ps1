@@ -13,10 +13,17 @@ if ($PSVersionTable.PSEdition -ne 'Core') {
   $IsMacOS = $false
 }
 
-$BinDir = if ($IsWindows) {
+$DenoInstall = $env:DENO_INSTALL
+$BinDir = if ($DenoInstall) {
+  if ($IsWindows) {
+    "$DenoInstall\bin"
+  } else {
+    "$DenoInstall/bin"
+  }
+} elseif ($IsWindows) {
   "$Home\.deno\bin"
 } else {
-  "$Home/.deno/bin"
+  "$Home/.local/bin"
 }
 
 $Zip = if ($IsWindows) {
