@@ -42,6 +42,8 @@ scoop install deno
 
 **With [Homebrew](https://brew.sh/):**
 
+This installs an older version `0.34.0` of deno. For more info see #93.
+
 ```sh
 brew install deno
 ```
