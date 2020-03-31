@@ -26,6 +26,7 @@ jobs:
         run: ./install_test.sh
 
       - name: tests powershell
+        if: matrix.os == 'windows-latest'
         shell: pwsh
         run: ./install_test.ps1
 

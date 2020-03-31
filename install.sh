@@ -5,16 +5,11 @@
 set -e
 
 case $(uname -s) in
-Darwin) os="osx" ;;
-*) os="linux" ;;
+Darwin) target="x86_64-apple-darwin" ;;
+*) target="x86_64-unknown-linux-gnu" ;;
 esac
 
-case $(uname -m) in
-x86_64) arch="x86_64" ;;
-*) arch="other" ;;
-esac
-
-if [ "$arch" = "other" ]; then
+if [ $(uname -m) != "x86_64" ]; then
 	echo "Unsupported architecture $(uname -m). Only x64 binaries are available."
 	exit
 fi
@@ -22,13 +17,13 @@ fi
 if [ $# -eq 0 ]; then
 	deno_asset_path=$(
 		command curl -sSf https://github.com/denoland/deno/releases |
-			command grep -o "/denoland/deno/releases/download/.*/deno_${os}_x64\\.gz" |
+			command grep -o "/denoland/deno/releases/download/.*/deno-${target}\\.zip" |
 			command head -n 1
 	)
 	if [ ! "$deno_asset_path" ]; then exit 1; fi
 	deno_uri="https://github.com${deno_asset_path}"
 else
-	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno_${os}_x64.gz"
+	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
 fi
 
 deno_install="${DENO_INSTALL:-$HOME/.local}"
@@ -39,9 +34,11 @@ if [ ! -d "$bin_dir" ]; then
 	mkdir -p "$bin_dir"
 fi
 
-curl -fL# -o "$exe.gz" "$deno_uri"
-gunzip -df "$exe.gz"
+curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"
+cd "$bin_dir"
+unzip "$exe.zip"
 chmod +x "$exe"
+rm "$exe.zip"
 
 echo "Deno was installed successfully to $exe"
 if command -v deno >/dev/null; then
