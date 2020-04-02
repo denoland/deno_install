@@ -36,7 +36,7 @@ fi
 
 curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"
 cd "$bin_dir"
-unzip "$exe.zip"
+unzip -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
