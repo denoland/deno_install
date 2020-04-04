@@ -45,7 +45,7 @@ $DenoUri = if (!$Version) {
       $HTMLFile.write($ResponseBytes)
     }
     $HTMLFile.getElementsByTagName('a') |
-      Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno_${Target}.zip" } |
+      Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno-${Target}.zip" } |
       ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
       Select-Object -First 1
   }
