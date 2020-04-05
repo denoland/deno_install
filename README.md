@@ -126,8 +126,8 @@ If your systems' [ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/m
 
 **How can this issue be fixed?**
 
-Allow scripts that are downloaded from the internet to be executed by setting the execution policy to `RemoteSigned`:
+Allow scripts that are downloaded from the internet to be executed by setting the execution policy to `RemoteSigned` for your terminal session:
 
 ```powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
+Set-ExecutionPolicy RemoteSigned -Scope Process -Force
 ```
