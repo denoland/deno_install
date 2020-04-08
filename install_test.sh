@@ -6,10 +6,10 @@ set -e
 # TODO(ry) shellcheck -s sh ./*.sh
 
 # Test that we can install the latest version at the default location.
-rm -f ~/.local/bin/deno
+rm -f ~/.deno/bin/deno
 unset DENO_INSTALL
 sh ./install.sh
-~/.local/bin/deno --version
+~/.deno/bin/deno --version
 
 # Test that we can install a specific version at a custom location.
 rm -rf ~/deno-0.38.0

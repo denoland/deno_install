@@ -84,9 +84,8 @@ scoop reset deno
 ## Environment Variables
 
 - `DENO_INSTALL` - The directory in which to install Deno. This defaults to
-  `$HOME/.local` on Linux/macOS and `$HOME/.deno` on Windows. The executable
-  is placed in `$DENO_INSTALL/bin`. One application of this is a system-wide
-  installation:
+  `$HOME/.deno`. The executable is placed in `$DENO_INSTALL/bin`. One
+  application of this is a system-wide installation:
 
   **With Shell (`/usr/local`):**
 
