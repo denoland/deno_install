@@ -26,7 +26,7 @@ else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
 fi
 
-deno_install="${DENO_INSTALL:-$HOME/.local}"
+deno_install="${DENO_INSTALL:-$HOME/.deno}"
 bin_dir="$deno_install/bin"
 exe="$bin_dir/deno"
 
