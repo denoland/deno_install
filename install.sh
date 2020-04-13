@@ -4,9 +4,11 @@
 
 set -e
 
+win_target="x86_64-pc-windows-msvc"
 case $(uname -s) in
 Darwin) target="x86_64-apple-darwin" ;;
-*) target="x86_64-unknown-linux-gnu" ;;
+Linux) target="x86_64-unknown-linux-gnu" ;;
+*) target=$win_target ;;
 esac
 
 if [ $(uname -m) != "x86_64" ]; then
@@ -31,7 +33,11 @@ fi
 
 deno_install="${DENO_INSTALL:-$HOME/.deno}"
 bin_dir="$deno_install/bin"
-exe="$bin_dir/deno"
+
+case $target in
+$win_target) exe="$bin_dir/deno.exe" ;;
+*) exe="$bin_dir/deno" ;;
+esac
 
 if [ ! -d "$bin_dir" ]; then
 	mkdir -p "$bin_dir"
