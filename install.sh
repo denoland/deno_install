@@ -20,7 +20,10 @@ if [ $# -eq 0 ]; then
 			command grep -o "/denoland/deno/releases/download/.*/deno-${target}\\.zip" |
 			command head -n 1
 	)
-	if [ ! "$deno_asset_path" ]; then exit 1; fi
+	if [ ! "$deno_asset_path" ]; then
+		echo "Error: deno_asset_path not found."
+		exit 1;
+	fi
 	deno_uri="https://github.com${deno_asset_path}"
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
