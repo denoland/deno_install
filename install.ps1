@@ -13,7 +13,7 @@ if ($PSVersionTable.PSEdition -ne 'Core') {
   $IsMacOS = $false
 }
 
-$DenoInstall = $env:DENO_INSTALL
+$DenoInstall = $env:DENO_INSTALL_ROOT
 $BinDir = if ($DenoInstall) {
     "$DenoInstall\bin"
 } elseif ($IsWindows) {
