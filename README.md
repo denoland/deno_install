@@ -115,7 +115,7 @@ unzip is required to install deno
 ```
 
 #### When does this occur
-During the `instal.sh` process, `unzip` is used to extract the zip archive.
+During the `install.sh` process, `unzip` is used to extract the zip archive.
 
 **How can this issue be fixed?**
 You can install unzip `brew install unzip` or `apt-get install unzip -y`
