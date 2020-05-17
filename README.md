@@ -111,8 +111,7 @@ scoop reset deno
 
 ```sh
 $ curl -fsSL https://deno.land/x/install/install.sh | sh
-######################################################################## 100.0%##O#- #
-sh: 39: unzip: not found
+unzip is required to install deno
 ```
 
 #### When does this occur
