@@ -106,7 +106,7 @@ scoop reset deno
 - The Shell installer can be used on Windows via the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about).
 
 ## Known Issues
-- The program `unzip` is a requirement for the deno install process
+- The program `unzip` is a requirement for the Shell installer
 
 ### Running scripts is disabled
 
