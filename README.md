@@ -106,7 +106,21 @@ scoop reset deno
 - The Shell installer can be used on Windows via the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about).
 
 ## Known Issues
-- The program `unzip` is a requirement for the Shell installer
+
+### The program [`unzip`](https://linux.die.net/man/1/unzip) is a requirement for the Shell installer
+
+```sh
+$ curl -fsSL https://deno.land/x/install/install.sh | sh
+######################################################################## 100.0%##O#- #
+sh: 39: unzip: not found
+```
+
+#### When does this occur
+During the `instal.sh` process, `unzip` is used to extract the zip archive.
+
+#### How can this be fixed
+You can install unzip `brew install unzip` or `apt-get install unzip -y`
+
 
 ### Running scripts is disabled
 
