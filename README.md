@@ -108,20 +108,21 @@ scoop reset deno
 ## Known Issues
 
 ### unzip is required
-The program [`unzip`](https://linux.die.net/man/1/unzip) is a requirement for the Shell installer
 
+The program [`unzip`](https://linux.die.net/man/1/unzip) is a requirement for the Shell installer.
 
 ```sh
 $ curl -fsSL https://deno.land/x/install/install.sh | sh
-unzip is required to install deno - https://github.com/denoland/deno_install#unzip-is-required
+Error: unzip is required to install Deno (see: https://github.com/denoland/deno_install#unzip-is-required).
 ```
 
 **When does this issue occur?**
+
 During the `install.sh` process, `unzip` is used to extract the zip archive.
 
 **How can this issue be fixed?**
-You can install unzip `brew install unzip` or `apt-get install unzip -y`
 
+You can install unzip `brew install unzip` or `apt-get install unzip -y`
 
 ### Running scripts is disabled
 
