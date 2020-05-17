@@ -114,7 +114,7 @@ $ curl -fsSL https://deno.land/x/install/install.sh | sh
 unzip is required to install deno
 ```
 
-#### When does this occur
+**When does this issue occur?**
 During the `install.sh` process, `unzip` is used to extract the zip archive.
 
 **How can this issue be fixed?**
