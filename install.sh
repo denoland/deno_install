@@ -5,7 +5,7 @@
 set -e
 
 if ! command -v unzip >/dev/null; then
-	echo "unzip is required to install deno"
+	echo "unzip is required to install deno - https://github.com/denoland/deno_install#unzip-is-required"
 	exit 1
 fi
 

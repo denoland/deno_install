@@ -107,11 +107,13 @@ scoop reset deno
 
 ## Known Issues
 
-### The program [`unzip`](https://linux.die.net/man/1/unzip) is a requirement for the Shell installer
+### unzip is required
+The program [`unzip`](https://linux.die.net/man/1/unzip) is a requirement for the Shell installer
+
 
 ```sh
 $ curl -fsSL https://deno.land/x/install/install.sh | sh
-unzip is required to install deno
+unzip is required to install deno - https://github.com/denoland/deno_install#unzip-is-required
 ```
 
 **When does this issue occur?**
