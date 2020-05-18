@@ -14,7 +14,7 @@ if [ "$(uname -m)" != "x86_64" ]; then
 	exit
 fi
 
-if [ "$#" -eq 0 ]; then
+if [ $# -eq 0 ]; then
 	deno_asset_path="$(
 		command curl -sSf https://github.com/denoland/deno/releases |
 			command grep -o "/denoland/deno/releases/download/.*/deno-${target}\\.zip" |
