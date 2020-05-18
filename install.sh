@@ -4,23 +4,25 @@
 
 set -e
 
-case $(uname -s) in
-Darwin) target="x86_64-apple-darwin" ;;
-*) target="x86_64-unknown-linux-gnu" ;;
+case "$(uname -s)" in
+	Darwin) target="x86_64-apple-darwin" ;;
+	*) target="x86_64-unknown-linux-gnu" ;;
 esac
 
-if [ $(uname -m) != "x86_64" ]; then
+if [ "$(uname -m)" != "x86_64" ]; then
 	echo "Unsupported architecture $(uname -m). Only x64 binaries are available."
 	exit
 fi
 
-if [ $# -eq 0 ]; then
-	deno_asset_path=$(
+if [ "$#" -eq 0 ]; then
+	deno_asset_path="$(
 		command curl -sSf https://github.com/denoland/deno/releases |
 			command grep -o "/denoland/deno/releases/download/.*/deno-${target}\\.zip" |
 			command head -n 1
-	)
-	if [ ! "$deno_asset_path" ]; then exit 1; fi
+	)"
+	if [ ! "$deno_asset_path" ]; then
+		exit 1
+	fi
 	deno_uri="https://github.com${deno_asset_path}"
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
