@@ -5,8 +5,8 @@
 set -e
 
 case "$(uname -s)" in
-	Darwin) target="x86_64-apple-darwin" ;;
-	*) target="x86_64-unknown-linux-gnu" ;;
+Darwin) target="x86_64-apple-darwin" ;;
+*) target="x86_64-unknown-linux-gnu" ;;
 esac
 
 if [ "$(uname -m)" != "x86_64" ]; then
