@@ -8,22 +8,15 @@ if ($v -ne $null) {
   $Version = $v
 }
 
-if ($PSVersionTable.PSEdition -ne 'Core') {
-  $IsWindows = $true
-  $IsMacOS = $false
-}
-
 $DenoInstall = $env:DENO_INSTALL
 $BinDir = if ($DenoInstall) {
     "$DenoInstall\bin"
-} elseif ($IsWindows) {
+} else {
   "$Home\.deno\bin"
 }
 
 $DenoZip = "$BinDir\deno.zip"
-
 $DenoExe = "$BinDir\deno.exe"
-
 $Target = 'x86_64-pc-windows-msvc'
 
 # GitHub requires TLS 1.2
@@ -58,7 +51,6 @@ if (!(Test-Path $BinDir)) {
 }
 
 Invoke-WebRequest $DenoUri -OutFile $DenoZip -UseBasicParsing
-
 Expand-Archive $DenoZip -Destination $BinDir -Force
 Remove-Item $DenoZip
 
@@ -68,5 +60,6 @@ if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
   [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User)
   $Env:Path += ";$BinDir"
 }
+
 Write-Output "Deno was installed successfully to $DenoExe"
 Write-Output "Run 'deno --help' to get started"
