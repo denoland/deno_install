@@ -11,7 +11,10 @@ if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
 }
 
 # Lint.
-Invoke-ScriptAnalyzer install.ps1 -EnableExit
+
+# "$v -ne $null" is a correct comparison with $null since $v is not an array.
+Invoke-ScriptAnalyzer install.ps1 -EnableExit -Exclude PSPossibleIncorrectComparisonWithNull
+
 # The linter doesn't know that $v is used in .\install.ps1 so it wrongly concludes that it is assigned but never used.
 Invoke-ScriptAnalyzer install_test.ps1 -EnableExit -Exclude PSUseDeclaredVarsMoreThanAssignment
 
