@@ -2,8 +2,6 @@
 
 $ErrorActionPreference = 'Stop'
 
-Set-PSDebug -Trace 2
-
 if (!(Get-PSRepository)) {
   Register-PSRepository -Default
 }
@@ -31,5 +29,10 @@ Remove-Item "~\deno-0.38.0" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-0.38.0"
 
 $v="v0.38.0"; .\install.ps1
+Set-PSDebug -Trace 1
+~\deno-0.38.0\bin\deno.exe --version
 $DenoVersion = ~\deno-0.38.0\bin\deno.exe --version
+Write-Host $LASTEXITCODE
+Write-Host $DenoVersion
 if (!($DenoVersion -like '*0.38.0*')) { throw $DenoVersion }
+Write-Host $LASTEXITCODE
