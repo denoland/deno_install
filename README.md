@@ -52,6 +52,12 @@ brew install deno
 choco install deno
 ```
 
+**With [Yay (AUR)](https://aur.archlinux.org/packages/deno):**
+
+```sh
+yay -S deno
+```
+
 ## Install and Manage Multiple Versions
 
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
