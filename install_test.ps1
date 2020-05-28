@@ -11,7 +11,9 @@ if (!(Get-Module PSScriptAnalyzer -ListAvailable)) {
 }
 
 # Lint.
-Invoke-ScriptAnalyzer *.ps1 -EnableExit -Exclude PSAvoidAssignmentToAutomaticVariable
+Invoke-ScriptAnalyzer install.ps1 -EnableExit
+# The linter doesn't know that $v is used in .\install.ps1 so it wrongly concludes that it is assigned but never used.
+Invoke-ScriptAnalyzer install_test.ps1 -EnableExit -Exclude PSUseDeclaredVarsMoreThanAssignment
 
 # Test that we can install the latest version at the default location.
 Remove-Item "~\.deno" -Recurse -Force -ErrorAction SilentlyContinue
