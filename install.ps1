@@ -4,8 +4,8 @@
 
 $ErrorActionPreference = 'Stop'
 
-if ($args.Length -gt 0) {
-  $Version = $args.Get(0)
+if ($v -ne $null) {
+  $Version = $v
 }
 
 if ($PSVersionTable.PSEdition -ne 'Core') {
