@@ -2,6 +2,8 @@
 
 $ErrorActionPreference = 'Stop'
 
+Set-PSDebug -Trace 2
+
 if (!(Get-PSRepository)) {
   Register-PSRepository -Default
 }
@@ -30,6 +32,4 @@ $env:DENO_INSTALL = "$Home\deno-0.38.0"
 
 $v="v0.38.0"; .\install.ps1
 $DenoVersion = ~\deno-0.38.0\bin\deno.exe --version
-if (!($DenoVersion -like '*0.38.0*')) {
-  throw $DenoVersion
-}
+if (!($DenoVersion -like '*0.38.0*')) { throw $DenoVersion }
