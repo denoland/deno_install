@@ -52,6 +52,12 @@ brew install deno
 choco install deno
 ```
 
+**With [Yay (AUR)](https://aur.archlinux.org/packages/deno):**
+
+```sh
+yay -S deno
+```
+
 ## Install and Manage Multiple Versions
 
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
@@ -59,23 +65,23 @@ choco install deno
 ```sh
 asdf plugin-add deno https://github.com/asdf-community/asdf-deno.git
 
-asdf install deno 0.38.0
+asdf install deno 1.0.0
 
 # Activate globally with:
-asdf global deno 0.38.0
+asdf global deno 1.0.0
 
 # Activate locally in the current folder with:
-asdf local deno 0.38.0
+asdf local deno 1.0.0
 ```
 
 **With [Scoop](https://github.com/lukesampson/scoop/wiki/Switching-Ruby-And-Python-Versions):**
 
 ```sh
 # Install a specific version of deno:
-scoop install deno@0.22.0
+scoop install deno@1.0.0
 
-# Switch to v0.22.0
-scoop reset deno@0.22.0
+# Switch to v1.0.0
+scoop reset deno@1.0.0
 
 # Switch to the latest version
 scoop reset deno
