@@ -130,18 +130,6 @@ During the `install.sh` process, `unzip` is used to extract the zip archive.
 
 You can install unzip via `brew install unzip` on MacOS or `apt-get install unzip -y` on Linux.
 
-### Running scripts is disabled
-
-```
-PS C:\> iwr https://deno.land/x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.38.0
-.\install.ps1 : File C:\install.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
-At line:1 char:71
-+ ... /x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.38.0
-+                                                     ~~~~~~~~~~~~~
-    + CategoryInfo          : SecurityError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : UnauthorizedAccess
-```
-
 **When does this issue occur?**
 
 If your systems' [ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) is `Undefined` or `Restricted`.
