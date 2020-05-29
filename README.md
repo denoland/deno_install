@@ -23,13 +23,13 @@ iwr https://deno.land/x/install/install.ps1 -useb | iex
 **With Shell:**
 
 ```sh
-curl -fsSL https://deno.land/x/install/install.sh | sh -s v0.38.0
+curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.0.0
 ```
 
 **With PowerShell:**
 
 ```powershell
-$v="v0.38.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
+$v="v1.0.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
 ```
 
 ## Install via Package Manager

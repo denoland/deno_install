@@ -9,11 +9,11 @@ $env:DENO_INSTALL = ""
 ~\.deno\bin\deno.exe --version
 
 # Test that we can install a specific version at a custom location.
-Remove-Item "~\deno-0.38.0" -Recurse -Force -ErrorAction SilentlyContinue
-$env:DENO_INSTALL = "$Home\deno-0.38.0"
+Remove-Item "~\deno-1.0.0" -Recurse -Force -ErrorAction SilentlyContinue
+$env:DENO_INSTALL = "$Home\deno-1.0.0"
 
-$v = "v0.38.0"; .\install.ps1
-$DenoVersion = ~\deno-0.38.0\bin\deno.exe --version
-if (!($DenoVersion -like '*0.38.0*')) {
+$v = "v1.0.0"; .\install.ps1
+$DenoVersion = ~\deno-1.0.0\bin\deno.exe --version
+if (!($DenoVersion -like '*1.0.0*')) {
   throw $DenoVersion
 }
