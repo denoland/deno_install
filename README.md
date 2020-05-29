@@ -29,7 +29,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh -s v0.38.0
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.38.0
+$v="v0.38.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
 ```
 
 ## Install via Package Manager
