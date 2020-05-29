@@ -29,6 +29,7 @@ Remove-Item "~\deno-0.38.0" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-0.38.0"
 
 $v="v0.38.0"; .\install.ps1
+Set-PSDebug -Trace 1
 ~\deno-0.38.0\bin\deno.exe --version
 $DenoVersion = ~\deno-0.38.0\bin\deno.exe --version
 if (!($DenoVersion -like '*0.38.0*')) {
