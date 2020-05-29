@@ -29,7 +29,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh -s v0.38.0
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.38.0
+$v="v0.38.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
 ```
 
 ## Install via Package Manager
@@ -110,29 +110,3 @@ scoop reset deno
 ## Compatibility
 
 - The Shell installer can be used on Windows via the [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about).
-
-## Known Issues
-
-### Running scripts is disabled
-
-```
-PS C:\> iwr https://deno.land/x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.38.0
-.\install.ps1 : File C:\install.ps1 cannot be loaded because running scripts is disabled on this system. For more information, see about_Execution_Policies at https:/go.microsoft.com/fwlink/?LinkID=135170.
-At line:1 char:71
-+ ... /x/install/install.ps1 -useb -outf install.ps1; .\install.ps1 v0.38.0
-+                                                     ~~~~~~~~~~~~~
-    + CategoryInfo          : SecurityError: (:) [], ParentContainsErrorRecordException
-    + FullyQualifiedErrorId : UnauthorizedAccess
-```
-
-**When does this issue occur?**
-
-If your systems' [ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) is `Undefined` or `Restricted`.
-
-**How can this issue be fixed?**
-
-Allow scripts that are downloaded from the internet to be executed by setting the execution policy to `RemoteSigned`:
-
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-```
