@@ -14,11 +14,6 @@ if ! command -v unzip >/dev/null; then
 	exit 1
 fi
 
-if ! command -v curl >/dev/null; then
-	echo "Error: curl is required to install Deno." 1>&2
-	exit 1
-fi
-
 case $(uname -s) in
 Darwin) target="x86_64-apple-darwin" ;;
 *) target="x86_64-unknown-linux-gnu" ;;
