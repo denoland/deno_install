@@ -36,4 +36,7 @@ if (!($DenoVersion -like '*0.38.0*')) {
   throw $DenoVersion
 }
 
-exit 0
+Write-Host $LASTEXITCODE
+$LASTEXITCODE = 0
+Write-Host $LASTEXITCODE
+exit $LASTEXITCODE
