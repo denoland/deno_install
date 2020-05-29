@@ -52,10 +52,13 @@ brew install deno
 choco install deno
 ```
 
-**With [Yay (AUR)](https://aur.archlinux.org/packages/deno):**
+**With Yay (AUR) ([deno](https://aur.archlinux.org/packages/deno) and [deno-bin](https://aur.archlinux.org/packages/deno-bin)):**
 
 ```sh
+# From source
 yay -S deno
+# Pre-compiled
+yay -S deno-bin
 ```
 
 ## Install and Manage Multiple Versions
