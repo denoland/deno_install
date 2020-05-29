@@ -3,7 +3,7 @@
 set -e
 
 # Lint.
-# TODO(ry) shellcheck -s sh ./*.sh
+shellcheck -s sh ./*.sh
 
 # Test that we can install the latest version at the default location.
 rm -f ~/.deno/bin/deno
