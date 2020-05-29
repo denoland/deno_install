@@ -129,15 +129,3 @@ During the `install.sh` process, `unzip` is used to extract the zip archive.
 **How can this issue be fixed?**
 
 You can install unzip via `brew install unzip` on MacOS or `apt-get install unzip -y` on Linux.
-
-**When does this issue occur?**
-
-If your systems' [ExecutionPolicy](https://docs.microsoft.com/en-us/powershell/module/microsoft.powershell.core/about/about_execution_policies) is `Undefined` or `Restricted`.
-
-**How can this issue be fixed?**
-
-Allow scripts that are downloaded from the internet to be executed by setting the execution policy to `RemoteSigned`:
-
-```powershell
-Set-ExecutionPolicy RemoteSigned -Scope CurrentUser -Force
-```
