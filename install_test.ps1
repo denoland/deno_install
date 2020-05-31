@@ -12,7 +12,7 @@ $env:DENO_INSTALL = ""
 Remove-Item "~\deno-1.0.0" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-1.0.0"
 
-$v = "v1.0.0"; .\install.ps1
+$v="1.0.0"; .\install.ps1
 $DenoVersion = ~\deno-1.0.0\bin\deno.exe --version
 if (!($DenoVersion -like '*1.0.0*')) {
   throw $DenoVersion
