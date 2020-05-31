@@ -58,6 +58,6 @@ else
 	esac
 	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 	echo "  export DENO_INSTALL=\"$deno_install\""
-	echo '  export PATH="$DENO_INSTALL/bin:$PATH"'
+	echo "  export PATH=\"$DENO_INSTALL/bin:$PATH\""
 	echo "Run '$exe --help' to get started"
 fi
