@@ -39,7 +39,7 @@ $DenoUri = if (!$v) {
       Select-Object -First 1
   }
 } else {
-  "https://github.com/denoland/deno/releases/download/${v}/deno-${Target}.zip"
+  "https://github.com/denoland/deno/releases/download/v${v}/deno-${Target}.zip"
 }
 
 if (!(Test-Path $BinDir)) {
