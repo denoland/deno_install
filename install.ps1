@@ -4,9 +4,16 @@
 
 $ErrorActionPreference = 'Stop'
 
+if ($v) {
+  $Version = "v${v}"
+}
+if ($args.Length -eq 1) {
+  $Version = $args.Get(0)
+}
+
 $DenoInstall = $env:DENO_INSTALL
 $BinDir = if ($DenoInstall) {
-    "$DenoInstall\bin"
+  "$DenoInstall\bin"
 } else {
   "$Home\.deno\bin"
 }
@@ -18,7 +25,7 @@ $Target = 'x86_64-pc-windows-msvc'
 # GitHub requires TLS 1.2
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$DenoUri = if (!$v) {
+$DenoUri = if (!$Version) {
   $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases' -UseBasicParsing
   if ($PSVersionTable.PSEdition -eq 'Core') {
     $Response.Links |
@@ -39,7 +46,7 @@ $DenoUri = if (!$v) {
       Select-Object -First 1
   }
 } else {
-  "https://github.com/denoland/deno/releases/download/v${v}/deno-${Target}.zip"
+  "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
 }
 
 if (!(Test-Path $BinDir)) {
