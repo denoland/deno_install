@@ -23,7 +23,7 @@ if [ $# -eq 0 ]; then
 			command head -n 1
 	)
 	if [ ! "$deno_asset_path" ]; then
-		echo "Error: deno_asset_path not found."
+		echo "Error: Unable to find latest Deno release on GitHub."
 		exit 1;
 	fi
 	deno_uri="https://github.com${deno_asset_path}"
