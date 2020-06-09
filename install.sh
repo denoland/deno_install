@@ -59,5 +59,7 @@ else
 	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 	echo "  export DENO_INSTALL=\"$deno_install\""
 	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
+	echo "After you have added the directories, run the following command:"
+	echo "  source ~/$shell_profile"
 	echo "Run '$exe --help' to get started"
 fi
