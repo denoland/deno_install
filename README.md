@@ -46,6 +46,12 @@ scoop install deno
 brew install deno
 ```
 
+**With [Macports](https://ports.macports.org/port/deno/summary):**
+
+```sh
+sudo port install deno
+```
+
 **With [Chocolatey](https://chocolatey.org/packages/deno):**
 
 ```powershell
