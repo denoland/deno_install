@@ -34,7 +34,7 @@ $v="1.0.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
 
 ## Install via Package Manager
 
-**With [Scoop](https://scoop.sh):**
+**With [Scoop](https://github.com/ScoopInstaller/Main/blob/master/bucket/deno.json):**
 
 ```powershell
 scoop install deno
