@@ -1,78 +1,99 @@
 #!/usr/bin/env pwsh
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
+param(
+  [string]$Version,
+  [string]$Token
+)
 
-$ErrorActionPreference = 'Stop'
-
-if ($v) {
-  $Version = "v${v}"
+if (-not [string]::IsNullOrEmpty($Version)) {
+  if ($Version[0] -ne "v") {
+    $Version = "v$Version";
+  }
 }
-if ($args.Length -eq 1) {
-  $Version = $args.Get(0)
-}
+$ErrorActionPreference = 'Stop';
 
-$DenoInstall = $env:DENO_INSTALL
-$BinDir = if ($DenoInstall) {
-  "$DenoInstall\bin"
-} else {
-  "$Home\.deno\bin"
-}
+$DenoInstall = $env:DENO_INSTALL;
 
-$DenoZip = "$BinDir\deno.zip"
-$DenoExe = "$BinDir\deno.exe"
-$Target = 'x86_64-pc-windows-msvc'
+$Target = switch -Wildcard ($PSVersionTable.PSEdition) {
+  "Desktop" { "x86_64-pc-windows-msvc" }
+  "Core" {
+    switch -Wildcard ($PSVersionTable.OS) {
+      "*Windows*" { "x86_64-pc-windows-msvc" }
+      "*Linux*" { "x86_64-unknown-linux-gnu" }
+      "*Darwin*" { "x86_64-apple-darwin" }
+      Default { throw "The system you are using is currently not supported." }
+    }
+  }
+  Default { throw "The system you are using is currently not supported." }
+}
+$IsWin = switch -Wildcard ($PSVersionTable.PSEdition) {
+  "Desktop" { $true }
+  "Core" {
+    switch -Wildcard ($PSVersionTable.OS) {
+      "*Windows*" { $true }
+      Default { $false }
+    }
+  }
+}
+$BinDir = if (-not [string]::IsNullOrEmpty($DenoInstall)) {
+  [System.IO.Path]::Combine($DenoInstall, "bin")
+} 
+else {
+  [System.IO.Path]::Combine($Home, ".deno", "bin")
+}
 
 # GitHub requires TLS 1.2
-[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+[Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12;
 
-$DenoUri = if (!$Version) {
-  $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases' -UseBasicParsing
-  if ($PSVersionTable.PSEdition -eq 'Core') {
-    $Response.Links |
-      Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno-${Target}.zip" } |
-      ForEach-Object { 'https://github.com' + $_.href } |
-      Select-Object -First 1
-  } else {
-    $HTMLFile = New-Object -Com HTMLFile
-    if ($HTMLFile.IHTMLDocument2_write) {
-      $HTMLFile.IHTMLDocument2_write($Response.Content)
-    } else {
-      $ResponseBytes = [Text.Encoding]::Unicode.GetBytes($Response.Content)
-      $HTMLFile.write($ResponseBytes)
-    }
-    $HTMLFile.getElementsByTagName('a') |
-      Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno-${Target}.zip" } |
-      ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
-      Select-Object -First 1
-  }
-} else {
+$DenoUri = if ([string]::IsNullOrEmpty($Version)) {
+  $response1 = Invoke-WebRequest 'https://api.github.com/repos/denoland/deno/releases/latest' -UseBasicParsing -Headers @{Authorization ="token $Token"};
+  $json = $response1.Content | ConvertFrom-Json;
+  $release = $json.assets | Where-Object { $_.name -like "*$Target*" } | Select-Object -First 1;
+  $release.browser_download_url
+}
+else {
   "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
 }
 
 if (!(Test-Path $BinDir)) {
-  New-Item $BinDir -ItemType Directory | Out-Null
+  New-Item $BinDir -ItemType Directory | Out-Null;
 }
 
-Invoke-WebRequest $DenoUri -OutFile $DenoZip -UseBasicParsing
-
-if (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
-  Expand-Archive $DenoZip -Destination $BinDir -Force
-} else {
-  if (Test-Path $DenoExe) {
-    Remove-Item $DenoExe
-  }
-  Add-Type -AssemblyName System.IO.Compression.FileSystem
-  [IO.Compression.ZipFile]::ExtractToDirectory($DenoZip, $BinDir)
+$response2 = Invoke-WebRequest $DenoUri -UseBasicParsing;
+$zipFileStream = $response2.RawContentStream;
+if ($PSVersionTable.PSEdition -eq "Desktop") {
+  Add-Type -AssemblyName "System.IO.Compression";
 }
+$zip = New-Object System.IO.Compression.ZipArchive $zipFileStream;
+$zipEntry = $zip.Entries[0];
+$fileName = $zipEntry.Name;
+$length = $zipEntry.Length;
+$data = [System.Array]::CreateInstance([byte], $length);
+$zipEntry.Open().Read($data, 0, $length) | Out-Null;
+$zip.Dispose();
+$zipFileStream.Dispose();
+[System.IO.File]::WriteAllBytes([System.IO.Path]::Combine($BinDir, $fileName), $data);
 
-Remove-Item $DenoZip
 
-$User = [EnvironmentVariableTarget]::User
-$Path = [Environment]::GetEnvironmentVariable('Path', $User)
+$Path = [Environment]::GetEnvironmentVariable("Path");
 if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
-  [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User)
-  $Env:Path += ";$BinDir"
+  if ($IsWin) {
+    [Environment]::SetEnvironmentVariable("Path", "$Path;$BinDir", [System.EnvironmentVariableTarget]::Machine);
+    $Env:Path += ";$BinDir"
+    Write-Output "Added $BinDir to Path.";
+  }else {
+    if ($IsLinux) {
+      New-Item -ItemType SymbolicLink -Path "/usr/bin/deno" -Target "$BinDir/deno" -Force|Out-Null;
+      sudo chmod 777 /usr/bin/deno;
+      Write-Output "Created a SymbolicLink to $BinDir/deno at /usr/bin/deno.";
+    }else {
+      sudo ln -s $BinDir/deno /usr/local/bin/deno;
+      sudo chmod 777 /usr/local/bin/deno;
+      Write-Output "Created a SymbolicLink to $BinDir/deno at /usr/local/bin/deno.";
+    }
+  }
 }
 
-Write-Output "Deno was installed successfully to $DenoExe"
-Write-Output "Run 'deno --help' to get started"
+Write-Output "Deno was installed successfully";
+Write-Output "Run 'deno --help' to get started.";
