@@ -88,7 +88,7 @@ if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
       sudo chmod 777 /usr/bin/deno;
       Write-Output "Created a SymbolicLink to $BinDir/deno at /usr/bin/deno.";
     }else {
-      sudo ln -s $BinDir/deno /usr/local/bin/deno;
+      sudo ln -s -f $BinDir/deno /usr/local/bin/deno;
       sudo chmod 777 /usr/local/bin/deno;
       Write-Output "Created a SymbolicLink to $BinDir/deno at /usr/local/bin/deno.";
     }
