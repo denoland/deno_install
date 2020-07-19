@@ -14,10 +14,14 @@ if ! command -v unzip >/dev/null; then
 	exit 1
 fi
 
-case $(uname -s) in
-Darwin) target="x86_64-apple-darwin" ;;
-*) target="x86_64-unknown-linux-gnu" ;;
-esac
+if [ "$OS" = "Windows_NT" ]; then
+	target="x86_64-pc-windows-msvc"
+else
+	case $(uname -s) in
+	Darwin) target="x86_64-apple-darwin" ;;
+	*) target="x86_64-unknown-linux-gnu" ;;
+	esac
+fi
 
 if [ $# -eq 0 ]; then
 	deno_asset_path=$(

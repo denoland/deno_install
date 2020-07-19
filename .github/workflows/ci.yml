@@ -20,8 +20,16 @@ jobs:
           brew install shfmt shellcheck
           shfmt -d .
 
+      - name: shellcheck
+        if: matrix.os == 'windows-latest'
+        run: |
+          curl -LO https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.zip
+          mkdir ~/.shellcheck
+          unzip shellcheck-stable.zip -d ~/.shellcheck
+          mv ~/.shellcheck/shellcheck-stable.exe ~/.shellcheck/shellcheck.exe
+          echo "::add-path::$HOME/.shellcheck"
+
       - name: tests shell
-        if: matrix.os != 'windows-latest'
         shell: bash
         run: ./install_test.sh
 
