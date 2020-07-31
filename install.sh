@@ -61,13 +61,8 @@ else
 	*) shell_profile=".bash_profile" ;;
 	esac
 
-	if command -v read >/dev/null; then
-		# shellcheck disable=SC2039
-		read -p "Install Deno into your PATH? [y/N]: " -r REPLY
-	else
-		# don't ask the user for input if `read` isn't available
-		REPLY="N"
-	fi
+	# shellcheck disable=SC2039
+	read -p "Install Deno into your PATH? [y/N]: " -r REPLY || REPLY="N"
 
 	if [ "$REPLY" = "Y" ] || [ "$REPLY" = "y" ]; then
 		{
