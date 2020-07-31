@@ -61,12 +61,18 @@ else
 	*) shell_profile=".bash_profile" ;;
 	esac
 
-	read -p "Install Deno into your PATH? [y/N]: " -r REPLY
+	if command -v read >/dev/null; then
+		read -p "Install Deno into your PATH? [y/N]: " -r REPLY
+	else
+		# don't ask the user for input if `read` isn't available
+		REPLY="N"
+	fi
+
 	if [ "$REPLY" = "Y" ] || [ "$REPLY" = "y" ]; then
-		echo "" >> $HOME/$shell_profile
-		echo "# automatically added by deno_install" >> $HOME/$shell_profile
-		echo "export DENO_INSTALL=\"$deno_install\"" >> $HOME/$shell_profile
-		echo "export PATH=\"\$DENO_INSTALL/bin:\$PATH\"" >> $HOME/$shell_profile
+		echo "" >> ""$HOME/$shell_profile""
+		echo "# automatically added by deno_install" >> ""$HOME/$shell_profile""
+		echo "export DENO_INSTALL=\"$deno_install\"" >> ""$HOME/$shell_profile""
+		echo "export PATH=\"\$DENO_INSTALL/bin:\$PATH\"" >> ""$HOME/$shell_profile""
 	else
 		echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 		echo "  export DENO_INSTALL=\"$deno_install\""
