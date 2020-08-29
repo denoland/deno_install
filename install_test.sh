@@ -16,3 +16,8 @@ rm -rf ~/deno-1.0.0
 export DENO_INSTALL="$HOME/deno-1.0.0"
 ./install.sh v1.0.0
 ~/deno-1.0.0/bin/deno --version | grep 1.0.0
+
+# Test that we can install at a relative custom location.
+export DENO_INSTALL="."
+./install.sh v1.1.0
+bin/deno --version | grep 1.1.0

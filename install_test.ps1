@@ -17,6 +17,15 @@ if (!($DenoVersion -like '*1.0.0*')) {
   throw $DenoVersion
 }
 
+# Test that we can install at a relative custom location.
+Remove-Item "bin" -Recurse -Force -ErrorAction SilentlyContinue
+$env:DENO_INSTALL = "."
+$v = "1.1.0"; .\install.ps1
+$DenoVersion = bin\deno.exe --version
+if (!($DenoVersion -like '*1.1.0*')) {
+  throw $DenoVersion
+}
+
 # Test that the old temp file installer still works.
 Remove-Item "~\deno-1.0.1" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-1.0.1"

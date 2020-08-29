@@ -47,8 +47,7 @@ if [ ! -d "$bin_dir" ]; then
 fi
 
 curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"
-cd "$bin_dir"
-unzip -o "$exe.zip"
+unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
