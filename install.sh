@@ -70,7 +70,7 @@ else
 		# automatically added by deno_install
 		export DENO_INSTALL="'"$deno_install"'";
 		export PATH="'"$"'DENO_INSTALL/bin:'"$"'PATH";
-		' >> \$HOME/$shell_profile
+		' >>"$HOME/$shell_profile"
 	else
 		echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 		echo "  export DENO_INSTALL=\"$deno_install\""
