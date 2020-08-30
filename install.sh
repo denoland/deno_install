@@ -65,12 +65,12 @@ else
 	read -p "Install Deno into your PATH? [y/N]: " -r REPLY || REPLY="N"
 
 	if [ "$REPLY" = "Y" ] || [ "$REPLY" = "y" ]; then
-		{
-			echo ""
-			echo "# automatically added by deno_install"
-			echo "export DENO_INSTALL=\"$deno_install\""
-			echo "export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
-		} >>"$HOME"/"$shell_profile"
+		echo '
+		
+		# automatically added by deno_install
+		export DENO_INSTALL="$deno_install";
+		export PATH="\$DENO_INSTALL/bin:\$PATH";
+		' >> \$HOME/$shell_profile
 	else
 		echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 		echo "  export DENO_INSTALL=\"$deno_install\""
