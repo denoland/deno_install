@@ -27,7 +27,7 @@ jobs:
           mkdir ~/.shellcheck
           unzip shellcheck-stable.zip -d ~/.shellcheck
           mv ~/.shellcheck/shellcheck-stable.exe ~/.shellcheck/shellcheck.exe
-          echo "::add-path::$HOME/.shellcheck"
+          echo "${HOME}/.shellcheck" >> ${GITHUB_PATH}
 
       - name: tests shell
         shell: bash
