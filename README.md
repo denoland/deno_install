@@ -52,6 +52,12 @@ brew install deno
 choco install deno
 ```
 
+**With [Snap](https://snapcraft.io/deno):**
+
+```sh
+sudo snap install deno
+```
+
 **With Yay (AUR) ([deno](https://aur.archlinux.org/packages/deno) and [deno-bin](https://aur.archlinux.org/packages/deno-bin)):**
 
 ```sh
