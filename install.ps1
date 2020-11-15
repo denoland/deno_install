@@ -26,25 +26,7 @@ $Target = 'x86_64-pc-windows-msvc'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $DenoUri = if (!$Version) {
-  $Response = Invoke-WebRequest 'https://github.com/denoland/deno/releases' -UseBasicParsing
-  if ($PSVersionTable.PSEdition -eq 'Core') {
-    $Response.Links |
-      Where-Object { $_.href -like "/denoland/deno/releases/download/*/deno-${Target}.zip" } |
-      ForEach-Object { 'https://github.com' + $_.href } |
-      Select-Object -First 1
-  } else {
-    $HTMLFile = New-Object -Com HTMLFile
-    if ($HTMLFile.IHTMLDocument2_write) {
-      $HTMLFile.IHTMLDocument2_write($Response.Content)
-    } else {
-      $ResponseBytes = [Text.Encoding]::Unicode.GetBytes($Response.Content)
-      $HTMLFile.write($ResponseBytes)
-    }
-    $HTMLFile.getElementsByTagName('a') |
-      Where-Object { $_.href -like "about:/denoland/deno/releases/download/*/deno-${Target}.zip" } |
-      ForEach-Object { $_.href -replace 'about:', 'https://github.com' } |
-      Select-Object -First 1
-  }
+  "https://github.com/denoland/deno/releases/latest/download/deno-${Target}.zip"
 } else {
   "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
 }

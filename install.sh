@@ -24,16 +24,7 @@ else
 fi
 
 if [ $# -eq 0 ]; then
-	deno_asset_path=$(
-		curl -sSf https://github.com/denoland/deno/releases |
-			grep -o "/denoland/deno/releases/download/.*/deno-${target}\\.zip" |
-			head -n 1
-	)
-	if [ ! "$deno_asset_path" ]; then
-		echo "Error: Unable to find latest Deno release on GitHub." 1>&2
-		exit 1
-	fi
-	deno_uri="https://github.com${deno_asset_path}"
+	deno_uri="https://github.com/denoland/deno/releases/latest/download/deno-${target}.zip"
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
 fi
