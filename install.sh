@@ -38,6 +38,10 @@ unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
+echo 'export PATH=$HOME/.deno/bin:$PATH' >>$HOME/.bash_profile
+echo 'export PATH=$HOME/.deno/bin:$PATH' >>$HOME/.zshrc
+echo 'export PATH=$HOME/.deno/bin:$PATH' >>$HOME/.bashrc
+
 echo "Deno was installed successfully to $exe"
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
