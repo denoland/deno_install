@@ -38,9 +38,9 @@ unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
-touch -p "\$HOME/.bash_profile"
-touch -p "\$HOME/.zshrc"
-touch -p "\$HOME/.bashrc"
+touch "\$HOME/.bash_profile"
+touch "\$HOME/.zshrc"
+touch "\$HOME/.bashrc"
 
 echo "export PATH=$HOME/.deno/bin:$PATH" >>"\$HOME/.bash_profile"
 echo "export PATH=$HOME/.deno/bin:$PATH" >>"\$HOME/.zshrc"
