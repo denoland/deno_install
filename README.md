@@ -67,6 +67,12 @@ yay -S deno
 yay -S deno-bin
 ```
 
+**With [Cargo](https://lib.rs/crates/deno):**
+
+```sh
+cargo install deno
+```
+
 ## Install and Manage Multiple Versions
 
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
