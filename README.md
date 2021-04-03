@@ -67,7 +67,7 @@ yay -S deno
 yay -S deno-bin
 ```
 
-**With [Cargo](https://lib.rs/crates/deno):**
+**Build and install from source using [Cargo](https://lib.rs/crates/deno):**
 
 ```sh
 cargo install deno
