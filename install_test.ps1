@@ -1,6 +1,6 @@
 #!/usr/bin/env pwsh
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = "Stop"
 
 # Test that we can install the latest version at the default location.
 Remove-Item "~\.deno" -Recurse -Force -ErrorAction SilentlyContinue
@@ -13,7 +13,7 @@ Remove-Item "~\deno-1.0.0" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-1.0.0"
 $v = "1.0.0"; .\install.ps1
 $DenoVersion = ~\deno-1.0.0\bin\deno.exe --version
-if (!($DenoVersion -like '*1.0.0*')) {
+if (!($DenoVersion -like "*1.0.0*")) {
   throw $DenoVersion
 }
 
@@ -22,7 +22,7 @@ Remove-Item "bin" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "."
 $v = "1.1.0"; .\install.ps1
 $DenoVersion = bin\deno.exe --version
-if (!($DenoVersion -like '*1.1.0*')) {
+if (!($DenoVersion -like "*1.1.0*")) {
   throw $DenoVersion
 }
 
@@ -31,6 +31,6 @@ Remove-Item "~\deno-1.0.1" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-1.0.1"
 $v = $null; .\install.ps1 v1.0.1
 $DenoVersion = ~\deno-1.0.1\bin\deno.exe --version
-if (!($DenoVersion -like '*1.0.1*')) {
+if (!($DenoVersion -like "*1.0.1*")) {
   throw $DenoVersion
 }

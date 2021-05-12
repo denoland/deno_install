@@ -2,7 +2,7 @@
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
 
-$ErrorActionPreference = 'Stop'
+$ErrorActionPreference = "Stop"
 
 if ($v) {
   $Version = "v${v}"
@@ -20,7 +20,7 @@ $BinDir = if ($DenoInstall) {
 
 $DenoZip = "$BinDir\deno.zip"
 $DenoExe = "$BinDir\deno.exe"
-$Target = 'x86_64-pc-windows-msvc'
+$Target = "x86_64-pc-windows-msvc"
 
 # GitHub requires TLS 1.2
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
@@ -50,9 +50,9 @@ if (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
 Remove-Item $DenoZip
 
 $User = [EnvironmentVariableTarget]::User
-$Path = [Environment]::GetEnvironmentVariable('Path', $User)
+$Path = [Environment]::GetEnvironmentVariable("Path", $User)
 if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
-  [Environment]::SetEnvironmentVariable('Path', "$Path;$BinDir", $User)
+  [Environment]::SetEnvironmentVariable("Path", "$Path;$BinDir", $User)
   $Env:Path += ";$BinDir"
 }
 
