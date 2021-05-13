@@ -2,18 +2,18 @@
 # Copyright 2018 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
 
+param(
+  [String]$Version = "latest" # This is the default value for the version parameter
+)
+
 $ErrorActionPreference = "Stop"
 
-if ($v) {
-  $Version = "v${v}"
-}
-if ($args.Length -eq 1) {
-  $Version = $args.Get(0)
-}
+# Support the legacy $v
+if($v) {$Version = $v}
 
-$DenoInstall = $env:DENO_INSTALL
-$BinDir = if ($DenoInstall) {
-  "$DenoInstall\bin"
+
+$BinDir = if ($env:DENO_INSTALL) {
+  "$env:DENO_INSTALL\bin"
 } else {
   "$Home\.deno\bin"
 }
@@ -25,7 +25,10 @@ $Target = "x86_64-pc-windows-msvc"
 # GitHub requires TLS 1.2
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
-$DenoUri = if (!$Version) {
+# Set Version to v\d.\d.\d if a \d.\d.\d value is entered
+$Version = if($Version -match "^(\d{1,}\.){2}\d{1,}$") {"v$Version"} else {$Version}
+
+$DenoUri = if ($Version -eq "latest") {
   "https://github.com/denoland/deno/releases/latest/download/deno-${Target}.zip"
 } else {
   "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
@@ -56,5 +59,5 @@ if (!(";$Path;".ToLower() -like "*;$BinDir;*".ToLower())) {
   $Env:Path += ";$BinDir"
 }
 
-Write-Output "Deno was installed successfully to $DenoExe"
-Write-Output "Run 'deno --help' to get started"
+Write-Host -ForeGroundColor Green "Deno was installed successfully to $DenoExe"
+Write-Host "Run 'deno --help' to get started"
