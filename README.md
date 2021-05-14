@@ -58,13 +58,10 @@ sudo port install deno
 choco install deno
 ```
 
-**With Yay (AUR) ([deno](https://aur.archlinux.org/packages/deno) and [deno-bin](https://aur.archlinux.org/packages/deno-bin)):**
+**With [Pacman](https://www.archlinux.org/pacman/):**
 
 ```sh
-# From source
-yay -S deno
-# Pre-compiled
-yay -S deno-bin
+pacman -S deno
 ```
 
 **Build and install from source using [Cargo](https://lib.rs/crates/deno):**
