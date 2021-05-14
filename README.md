@@ -75,8 +75,22 @@ cargo install deno
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
 
 ```sh
-asdf plugin-add deno https://github.com/asdf-community/asdf-deno.git
+asdf plugin add deno
 
+# Get latest version of deno available
+DENO_LATEST=$(asdf latest deno)
+
+asdf install deno $DENO_LATEST
+
+# Activate globally with:
+asdf global deno $DENO_LATEST
+
+# Activate locally in the current folder with:
+asdf local deno $DENO_LATEST
+
+#======================================================
+# If you want to install specific version of deno then use that version instead
+# of DENO_LATEST variable example
 asdf install deno 1.0.0
 
 # Activate globally with:
