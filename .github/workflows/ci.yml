@@ -26,7 +26,7 @@ jobs:
           curl -LO https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.zip
           mkdir ~/.shellcheck
           unzip shellcheck-stable.zip -d ~/.shellcheck
-          mv ~/.shellcheck/shellcheck-stable.exe ~/.shellcheck/shellcheck.exe
+          mv ~/.shellcheck/shellcheck.exe ~/.shellcheck/shellcheck.exe
           echo "$HOME/.shellcheck" >> $env:GITHUB_PATH
 
       - name: tests shell
