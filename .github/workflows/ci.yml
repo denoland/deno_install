@@ -14,20 +14,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v1
 
-      - name: shfmt
+      - name: lint
         if: matrix.os == 'macOS-latest'
         run: |
           brew install shfmt shellcheck
           shfmt -d .
-
-      - name: shellcheck
-        if: matrix.os == 'windows-latest'
-        run: |
-          curl -LO https://github.com/koalaman/shellcheck/releases/download/stable/shellcheck-stable.zip
-          mkdir ~/.shellcheck
-          unzip shellcheck-stable.zip -d ~/.shellcheck
-          mv ~/.shellcheck/shellcheck-stable.exe ~/.shellcheck/shellcheck.exe
-          echo "$HOME/.shellcheck" >> $env:GITHUB_PATH
+          shellcheck -s sh *.sh
 
       - name: tests shell
         shell: bash
