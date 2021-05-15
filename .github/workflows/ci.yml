@@ -15,8 +15,9 @@ jobs:
         uses: actions/checkout@v1
 
       - name: lint
-        if: matrix.os == 'ubuntu-latest'
+        if: matrix.os == 'macOS-latest'
         run: |
+          brew install shfmt shellcheck
           shfmt -d .
           shellcheck -s sh *.sh
 
