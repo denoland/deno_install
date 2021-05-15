@@ -4,11 +4,6 @@
 
 set -e
 
-if [ "$(uname -m)" != "x86_64" ]; then
-	echo "Error: Unsupported architecture $(uname -m). Only x64 binaries are available." 1>&2
-	exit 1
-fi
-
 if ! command -v unzip >/dev/null; then
 	echo "Error: unzip is required to install Deno (see: https://github.com/denoland/deno_install#unzip-is-required)." 1>&2
 	exit 1
@@ -17,23 +12,15 @@ fi
 if [ "$OS" = "Windows_NT" ]; then
 	target="x86_64-pc-windows-msvc"
 else
-	case $(uname -s) in
-	Darwin) target="x86_64-apple-darwin" ;;
+	case $(uname -sm) in
+	"Darwin x86_64") target="x86_64-apple-darwin" ;;
+	"Darwin arm64") target="aarch64-apple-darwin" ;;
 	*) target="x86_64-unknown-linux-gnu" ;;
 	esac
 fi
 
 if [ $# -eq 0 ]; then
-	deno_asset_path=$(
-		curl -sSf https://github.com/denoland/deno/releases |
-			grep -o "/denoland/deno/releases/download/.*/deno-${target}\\.zip" |
-			head -n 1
-	)
-	if [ ! "$deno_asset_path" ]; then
-		echo "Error: Unable to find latest Deno release on GitHub." 1>&2
-		exit 1
-	fi
-	deno_uri="https://github.com${deno_asset_path}"
+	deno_uri="https://github.com/denoland/deno/releases/latest/download/deno-${target}.zip"
 else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
 fi

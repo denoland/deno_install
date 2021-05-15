@@ -46,6 +46,12 @@ scoop install deno
 brew install deno
 ```
 
+**With [Macports](https://ports.macports.org/port/deno/summary):**
+
+```sh
+sudo port install deno
+```
+
 **With [Chocolatey](https://chocolatey.org/packages/deno):**
 
 ```powershell
@@ -58,13 +64,16 @@ choco install deno
 sudo snap install deno
 ```
 
-**With Yay (AUR) ([deno](https://aur.archlinux.org/packages/deno) and [deno-bin](https://aur.archlinux.org/packages/deno-bin)):**
+**With [Pacman](https://www.archlinux.org/pacman/):**
 
 ```sh
-# From source
-yay -S deno
-# Pre-compiled
-yay -S deno-bin
+pacman -S deno
+```
+
+**Build and install from source using [Cargo](https://lib.rs/crates/deno):**
+
+```sh
+cargo install deno
 ```
 
 ## Install and Manage Multiple Versions
@@ -72,8 +81,22 @@ yay -S deno-bin
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
 
 ```sh
-asdf plugin-add deno https://github.com/asdf-community/asdf-deno.git
+asdf plugin add deno
 
+# Get latest version of deno available
+DENO_LATEST=$(asdf latest deno)
+
+asdf install deno $DENO_LATEST
+
+# Activate globally with:
+asdf global deno $DENO_LATEST
+
+# Activate locally in the current folder with:
+asdf local deno $DENO_LATEST
+
+#======================================================
+# If you want to install specific version of deno then use that version instead
+# of DENO_LATEST variable example
 asdf install deno 1.0.0
 
 # Activate globally with:
