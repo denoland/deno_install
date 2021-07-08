@@ -11,7 +11,7 @@ if ($args.Length -eq 1) {
   $Version = $args.Get(0)
 }
 
-$DenoInstall = $env:DENO_INSTALL
+$DenoInstall = $env:DENO_INSTALL_ROOT
 $BinDir = if ($DenoInstall) {
   "$DenoInstall\bin"
 } else {

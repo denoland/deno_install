@@ -25,7 +25,7 @@ else
 	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
 fi
 
-deno_install="${DENO_INSTALL:-$HOME/.deno}"
+deno_install="${DENO_INSTALL_ROOT:-$HOME/.deno}"
 bin_dir="$deno_install/bin"
 exe="$bin_dir/deno"
 
@@ -47,7 +47,7 @@ else
 	*) shell_profile=".bash_profile" ;;
 	esac
 	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
-	echo "  export DENO_INSTALL=\"$deno_install\""
-	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
+	echo "  export DENO_INSTALL_ROOT=\"$deno_install\""
+	echo "  export PATH=\"\$DENO_INSTALL_ROOT/bin:\$PATH\""
 	echo "Run '$exe --help' to get started"
 fi

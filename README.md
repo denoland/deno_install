@@ -115,21 +115,21 @@ scoop reset deno
 
 ## Environment Variables
 
-- `DENO_INSTALL` - The directory in which to install Deno. This defaults to
-  `$HOME/.deno`. The executable is placed in `$DENO_INSTALL/bin`. One
+- `DENO_INSTALL_ROOT` - The directory in which to install Deno. This defaults to
+  `$HOME/.deno`. The executable is placed in `$DENO_INSTALL_ROOT/bin`. One
   application of this is a system-wide installation:
 
   **With Shell (`/usr/local`):**
 
   ```sh
-  curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL=/usr/local sh
+  curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL_ROOT=/usr/local sh
   ```
 
   **With PowerShell (`C:\Program Files\deno`):**
 
   ```powershell
   # Run as administrator:
-  $env:DENO_INSTALL = "C:\Program Files\deno"
+  $env:DENO_INSTALL_ROOT = "C:\Program Files\deno"
   iwr https://deno.land/x/install/install.ps1 -useb | iex
   ```
 
