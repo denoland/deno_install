@@ -4,8 +4,8 @@
 
 $ErrorActionPreference = 'Stop'
 
-if ($v) {
-  $Version = "v${v}"
+if ($h) {
+  $Version = "${h}"
 }
 if ($args.Length -eq 1) {
   $Version = $args.Get(0)
@@ -26,6 +26,7 @@ $Target = 'x86_64-pc-windows-msvc'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $DenoUri = if (!$Version) {
+  [string]$deno_canary_hash = (iwr https://dl.deno.land/canary-latest.txt) -Replace "`n",''
   "https://github.com/denoland/deno/releases/latest/download/deno-${Target}.zip"
 } else {
   "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"

@@ -18,6 +18,20 @@ curl -fsSL https://deno.land/x/install/install.sh | sh
 iwr https://deno.land/x/install/install.ps1 -useb | iex
 ```
 
+## Install Latest Canary Version
+
+**With Shell:**
+
+```sh
+curl -fsSL https://deno.land/x/install/install_canary.sh | sh
+```
+
+**With PowerShell:**
+
+```powershell
+iwr https://deno.land/x/install/install_canary.ps1 -useb | iex
+```
+
 ## Install Specific Version
 
 **With Shell:**
@@ -30,6 +44,22 @@ curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.0.0
 
 ```powershell
 $v="1.0.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
+```
+
+## Install Specific Canary Version
+
+**With Shell:**
+
+```sh
+# At https://github.com/denoland/deno/commit/74c7559d2029539eb6ab7459c06061c00b3e0c1a
+curl -fsSL https://deno.land/x/install/install_canary.sh | sh -s 74c7559d2029539eb6ab7459c06061c00b3e0c1a
+```
+
+**With PowerShell:**
+
+```powershell
+# At https://github.com/denoland/deno/commit/74c7559d2029539eb6ab7459c06061c00b3e0c1a
+$h="74c7559d2029539eb6ab7459c06061c00b3e0c1a"; iwr https://deno.land/x/install/install_canary.ps1 -useb | iex
 ```
 
 ## Install via Package Manager
