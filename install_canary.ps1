@@ -26,10 +26,10 @@ $Target = 'x86_64-pc-windows-msvc'
 [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
 
 $DenoUri = if (!$Version) {
-  [string]$deno_canary_hash = (iwr https://dl.deno.land/canary-latest.txt) -Replace "`n",''
-  "https://github.com/denoland/deno/releases/latest/download/deno-${Target}.zip"
+  [string]$Deno_canary_hash = (iwr https://dl.deno.land/canary-latest.txt) -Replace "`n",''
+  "https://dl.deno.land/canary/${Deno_canary_hash}/deno-${Target}.zip"
 } else {
-  "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
+  "https://dl.deno.land/canary/${Version}/deno-${Target}.zip"
 }
 
 if (!(Test-Path $BinDir)) {

@@ -62,7 +62,7 @@ if (!($DenoVersion -like '*1.0.1*')) {
 # Test that the canary old temp file installer still works.
 Remove-Item "~\deno-1.10.0" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-1.10.1"
-$h = $null; .\install.ps1 57927781ed7eb8bb088d656768dc295716407c7a
+$h = $null; .\install_canary.ps1 57927781ed7eb8bb088d656768dc295716407c7a
 $DenoVersion = ~\deno-1.10.1\bin\deno.exe --version
 if (!($DenoVersion -like '*1.10.1*')) {
   throw $DenoVersion
