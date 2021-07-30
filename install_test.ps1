@@ -64,6 +64,6 @@ Remove-Item "~\deno-1.10.0" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-1.10.1"
 $h = $null; .\install_canary.ps1 57927781ed7eb8bb088d656768dc295716407c7a
 $DenoVersion = ~\deno-1.10.1\bin\deno.exe --version
-if (!($DenoVersion -like '*1.10.1*')) {
+if (!($DenoVersion -like '*1.10.0*')) {
   throw $DenoVersion
 }
