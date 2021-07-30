@@ -24,7 +24,7 @@ export DENO_INSTALL="$HOME/deno-1.0.0"
 rm -rf ~/deno-74c7559d2029539eb6ab7459c06061c00b3e0c1a
 export DENO_INSTALL="$HOME/deno-74c7559d2029539eb6ab7459c06061c00b3e0c1a"
 ./install_canary.sh 74c7559d2029539eb6ab7459c06061c00b3e0c1a
-~/deno-1.0.0/bin/deno --version | grep 1.12.1
+~/deno-74c7559d2029539eb6ab7459c06061c00b3e0c1a/bin/deno --version | grep 1.12.1
 
 # Test that we can install at a relative custom location.
 export DENO_INSTALL="."
