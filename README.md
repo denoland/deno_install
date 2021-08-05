@@ -58,6 +58,12 @@ sudo port install deno
 choco install deno
 ```
 
+**With [Snap](https://snapcraft.io/deno):**
+
+```sh
+sudo snap install deno
+```
+
 **With [Pacman](https://www.archlinux.org/pacman/):**
 
 ```sh
