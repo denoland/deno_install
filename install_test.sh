@@ -2,9 +2,6 @@
 
 set -e
 
-# Lint.
-shellcheck -s sh ./*.sh
-
 # Test that we can install the latest version at the default location.
 rm -f ~/.deno/bin/deno
 unset DENO_INSTALL
