@@ -9,6 +9,11 @@ if ! command -v unzip >/dev/null; then
 	exit 1
 fi
 
+if [[ "$(uname -sm)" =~ .*"arm".* ]] || [[ "$(uname -sm)" =~ .*"aarch".* ]]; then
+	echo "Error: Deno does not publish ARM builds yet." 1>&2
+	exit 1
+fi
+
 if [ "$OS" = "Windows_NT" ]; then
 	target="x86_64-pc-windows-msvc"
 else
