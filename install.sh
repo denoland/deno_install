@@ -12,17 +12,25 @@ fi
 if [ "$OS" = "Windows_NT" ]; then
 	target="x86_64-pc-windows-msvc"
 else
+	repository="denoland/deno"
 	case $(uname -sm) in
 	"Darwin x86_64") target="x86_64-apple-darwin" ;;
 	"Darwin arm64") target="aarch64-apple-darwin" ;;
+	"Linux aarch64")
+		if [ "$1" != "-y" ] && [ "$2" != "-y" ]; then
+			echo "Error: Official Deno builds for Linux aarch64 are not available, by passing the '-y' flag third party builds can be installed.\n(Builds provided by: https://github.com/LukeChannings/deno-arm64)" 1>&2
+			exit 1
+		fi
+		repository="LukeChannings/deno-arm64"
+		target="linux-arm64" ;;
 	*) target="x86_64-unknown-linux-gnu" ;;
 	esac
 fi
 
-if [ $# -eq 0 ]; then
-	deno_uri="https://github.com/denoland/deno/releases/latest/download/deno-${target}.zip"
+if [ $# -eq 0 ] || [ "$1" = "-y" ]; then
+	deno_uri="https://github.com/${repository}/releases/latest/download/deno-${target}.zip"
 else
-	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
+	deno_uri="https://github.com/${repository}/releases/download/${1}/deno-${target}.zip"
 fi
 
 deno_install="${DENO_INSTALL:-$HOME/.deno}"
