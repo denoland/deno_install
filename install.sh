@@ -44,7 +44,7 @@ if command -v deno >/dev/null; then
 else
 	case $SHELL in
 	/bin/zsh) shell_profile=".zshrc" ;;
-	*) shell_profile=".bash_profile" ;;
+	*) shell_profile=".bashrc" ;;
 	esac
 	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
 	echo "  export DENO_INSTALL=\"$deno_install\""
