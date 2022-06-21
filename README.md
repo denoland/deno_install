@@ -15,7 +15,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 -useb | iex
+irm https://deno.land/x/install/install.ps1 | iex
 ```
 
 ## Install Specific Version
@@ -29,7 +29,7 @@ curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.0.0
 **With PowerShell:**
 
 ```powershell
-$v="1.0.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
+$v="1.0.0"; irm https://deno.land/x/install/install.ps1 | iex
 ```
 
 ## Install via Package Manager
@@ -136,7 +136,7 @@ scoop reset deno
   ```powershell
   # Run as administrator:
   $env:DENO_INSTALL = "C:\Program Files\deno"
-  iwr https://deno.land/x/install/install.ps1 -useb | iex
+  irm https://deno.land/x/install/install.ps1 | iex
   ```
 
 ## Compatibility
