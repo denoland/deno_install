@@ -35,17 +35,9 @@ if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
 }
 
-Invoke-WebRequest $DenoUri -OutFile $DenoZip -UseBasicParsing
+curl.exe -Lo $DenoZip $DenoUri
 
-if (Get-Command Expand-Archive -ErrorAction SilentlyContinue) {
-  Expand-Archive $DenoZip -Destination $BinDir -Force
-} else {
-  if (Test-Path $DenoExe) {
-    Remove-Item $DenoExe
-  }
-  Add-Type -AssemblyName System.IO.Compression.FileSystem
-  [IO.Compression.ZipFile]::ExtractToDirectory($DenoZip, $BinDir)
-}
+tar.exe xf $DenoZip -C $BinDir
 
 Remove-Item $DenoZip
 
