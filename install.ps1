@@ -35,9 +35,9 @@ if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
 }
 
-Invoke-WebRequest $DenoUri -OutFile $DenoZip -UseBasicParsing
+curl.exe -Lo $DenoZip $DenoUri
 
-Expand-Archive $DenoZip -Destination $BinDir -Force
+tar.exe xf $DenoZip -C $BinDir
 
 Remove-Item $DenoZip
 
