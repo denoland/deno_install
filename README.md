@@ -9,13 +9,13 @@
 **With Shell:**
 
 ```sh
-curl -fsSL https://deno.land/x/install/install.sh | sh
+curl -fsSL https://deno.land/install.sh | sh
 ```
 
 **With PowerShell:**
 
 ```powershell
-iwr https://deno.land/x/install/install.ps1 -useb | iex
+irm https://deno.land/install.ps1 | iex
 ```
 
 ## Install Specific Version
@@ -23,13 +23,13 @@ iwr https://deno.land/x/install/install.ps1 -useb | iex
 **With Shell:**
 
 ```sh
-curl -fsSL https://deno.land/x/install/install.sh | sh -s v1.0.0
+curl -fsSL https://deno.land/install.sh | sh -s v1.0.0
 ```
 
 **With PowerShell:**
 
 ```powershell
-$v="1.0.0"; iwr https://deno.land/x/install/install.ps1 -useb | iex
+$v="1.0.0"; irm https://deno.land/install.ps1 | iex
 ```
 
 ## Install via Package Manager
@@ -128,7 +128,7 @@ scoop reset deno
   **With Shell (`/usr/local`):**
 
   ```sh
-  curl -fsSL https://deno.land/x/install/install.sh | sudo DENO_INSTALL=/usr/local sh
+  curl -fsSL https://deno.land/install.sh | sudo DENO_INSTALL=/usr/local sh
   ```
 
   **With PowerShell (`C:\Program Files\deno`):**
@@ -136,7 +136,7 @@ scoop reset deno
   ```powershell
   # Run as administrator:
   $env:DENO_INSTALL = "C:\Program Files\deno"
-  iwr https://deno.land/x/install/install.ps1 -useb | iex
+  irm https://deno.land/install.ps1 | iex
   ```
 
 ## Compatibility
@@ -150,7 +150,7 @@ scoop reset deno
 The program [`unzip`](https://linux.die.net/man/1/unzip) is a requirement for the Shell installer.
 
 ```sh
-$ curl -fsSL https://deno.land/x/install/install.sh | sh
+$ curl -fsSL https://deno.land/install.sh | sh
 Error: unzip is required to install Deno (see: https://github.com/denoland/deno_install#unzip-is-required).
 ```
 
