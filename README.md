@@ -70,6 +70,12 @@ sudo snap install deno
 pacman -S deno
 ```
 
+**With [Zypper](https://software.opensuse.org/package/deno):**
+
+```sh
+zypper install deno
+```
+
 **Build and install from source using [Cargo](https://lib.rs/crates/deno):**
 
 ```sh
