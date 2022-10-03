@@ -47,3 +47,4 @@ if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
 
 Write-Output "Deno was installed successfully to ${DenoExe}"
 Write-Output "Run 'deno --help' to get started"
+Write-Output "Stuck? Join our Discord https://discord.gg/deno"

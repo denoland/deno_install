@@ -55,3 +55,5 @@ else
 	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
 	echo "Run '$exe --help' to get started"
 fi
+echo
+echo "Stuck? Join our Discord https://discord.gg/deno"
