@@ -5,7 +5,7 @@
 set -e
 
 if ! command -v unzip >/dev/null; then
-	echo "Error: unzip is required to install Deno (see: https://github.com/denoland/deno_install#unzip-is-required)." 1>&2
+	echo "Error: unzip is required to install Deno (see: https://github.com/denoland/deno_install#unzip-is-required )." 1>&2
 	exit 1
 fi
 
@@ -16,7 +16,7 @@ else
 	"Darwin x86_64") target="x86_64-apple-darwin" ;;
 	"Darwin arm64") target="aarch64-apple-darwin" ;;
 	"Linux aarch64")
-		echo "Error: Official Deno builds for Linux aarch64 are not available. (https://github.com/denoland/deno/issues/1846)" 1>&2
+		echo "Error: Official Deno builds for Linux aarch64 are not available. (see: https://github.com/denoland/deno/issues/1846 )" 1>&2
 		exit 1
 		;;
 	*) target="x86_64-unknown-linux-gnu" ;;
