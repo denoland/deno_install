@@ -42,17 +42,35 @@ unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
+if [ "$(uname)" = "Darwin" ]; then
+	shell_name=$(dscl . -read ~/ UserShell | awk '{print $2}') # get the default shell for the user
+	shell_name=$(basename "$shell_name") # דet the shell name
+else
+	shell_name=$(getent passwd "$(id -un)" | cut -d: -f7) # get the default shell for the user
+	shell_name=$(basename "$shell_name") # דet the shell name
+fi
+
+
 echo "Deno was installed successfully to $exe"
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
 else
-	case $SHELL in
-	/bin/zsh) shell_profile=".zshrc" ;;
-	*) shell_profile=".bashrc" ;;
+	case $shell_name in
+	zsh) shell_profile=".zshrc" ;;
+	bash) shell_profile=".bashrc" ;;
+	fish) shell_profile=".config/fish/config.fish" ;;
+	*) shell_profile=".profile" ;;
 	esac
+
 	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
-	echo "  export DENO_INSTALL=\"$deno_install\""
-	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
+
+	if [ "$shell_name" = "fish" ]; then
+		echo "  set -U fish_user_paths \$fish_user_paths $bin_dir"
+		echo "  set -Ux DENO_INSTALL \"$deno_install\""
+	else
+		echo "  export DENO_INSTALL=\"$deno_install\""
+		echo "  export PATH=\"\$PATH:$bin_dir\""
+	fi
 	echo "Run '$exe --help' to get started"
 fi
 echo
