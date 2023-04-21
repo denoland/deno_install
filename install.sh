@@ -42,12 +42,13 @@ unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
+# get the default shell for the user
 if [ "$(uname)" = "Darwin" ]; then
-	shell_name=$(dscl . -read ~/ UserShell | awk '{print $2}') # get the default shell for the user
-	shell_name=$(basename "$shell_name") # דet the shell name
+	shell_name=$(dscl . -read ~/ UserShell | awk '{print $2}')
+	shell_name=$(basename "$shell_name")
 else
-	shell_name=$(getent passwd "$(id -un)" | cut -d: -f7) # get the default shell for the user
-	shell_name=$(basename "$shell_name") # דet the shell name
+	shell_name=$(getent passwd "$(id -un)" | cut -d: -f7) 
+	shell_name=$(basename "$shell_name")
 fi
 
 
