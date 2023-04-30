@@ -41,15 +41,10 @@ if [ ! -d "$bin_dir" ]; then
 	mkdir -p "$bin_dir"
 fi
 
-if has curl; then 
-	curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"
-elif has wget; then # basic ubuntu only has wget
-	wget --output-document="$exe.zip" "$deno_uri"
-else
-	echo "When installing deno, I looked for the 'curl' and for 'wget' commands but I didn't see either of them."
-	echo "Please install one of them"
-	echo "Otherwise I have no way to install Deno"
-fi
+curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri" || \
+	wget --output-document="$exe.zip" "$deno_uri" || \
+	echo "When installing deno, I looked for the 'curl' and for 'wget' commands but I didn't see either of them. Please install one of them, otherwise I have no way to install Deno" 
+
 unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
