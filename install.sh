@@ -4,7 +4,11 @@
 
 set -e
 
-if ! command -v unzip >/dev/null; then
+has() {
+	command -v "$1" >/dev/null
+}
+
+if ! has unzip; then
 	echo "Error: unzip is required to install Deno (see: https://github.com/denoland/deno_install#unzip-is-required )." 1>&2
 	exit 1
 fi
@@ -37,13 +41,16 @@ if [ ! -d "$bin_dir" ]; then
 	mkdir -p "$bin_dir"
 fi
 
-curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"
+curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri" || \
+	wget --output-document="$exe.zip" "$deno_uri" || \
+	echo "When installing deno, I looked for the 'curl' and for 'wget' commands but I didn't see either of them. Please install one of them, otherwise I have no way to install Deno" 
+
 unzip -d "$bin_dir" -o "$exe.zip"
 chmod +x "$exe"
 rm "$exe.zip"
 
 echo "Deno was installed successfully to $exe"
-if command -v deno >/dev/null; then
+if has deno; then
 	echo "Run 'deno --help' to get started"
 else
 	case $SHELL in

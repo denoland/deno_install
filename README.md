@@ -9,7 +9,7 @@
 **With Shell:**
 
 ```sh
-curl -fsSL https://deno.land/install.sh | sh
+s=https://deno.land/install.sh;sh <<<"$(curl -fsSL $s || wget -qO- $s)"
 ```
 
 **With PowerShell:**
@@ -23,7 +23,7 @@ irm https://deno.land/install.ps1 | iex
 **With Shell:**
 
 ```sh
-curl -fsSL https://deno.land/install.sh | sh -s v1.0.0
+s=https://deno.land/install.sh;sh -s v1.0.0 <<<"$(curl -fsSL $s || wget -qO- $s)"
 ```
 
 **With PowerShell:**
