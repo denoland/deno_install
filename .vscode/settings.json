@@ -1,0 +1,7 @@
+{
+    "vim.autoSwitchInputMethod.enable": true,
+    "vim.camelCaseMotion.enable": true,
+    "vim.easymotion": true,
+    "powershell.suppressAdditionalExeNotFoundWarning": true,
+    "javascript.referencesCodeLens.enabled": true
+}
