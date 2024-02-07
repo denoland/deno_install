@@ -9,6 +9,12 @@ if ! command -v unzip >/dev/null; then
 	exit 1
 fi
 
+function version { echo "$@" | awk -F. '{ printf("%d%03d%03d%03d\n", $1,$2,$3,$4); }'; }
+
+if [ $# -gt 0 ]; then
+    deno_version=$1
+fi
+
 if [ "$OS" = "Windows_NT" ]; then
 	target="x86_64-pc-windows-msvc"
 else
@@ -16,17 +22,20 @@ else
 	"Darwin x86_64") target="x86_64-apple-darwin" ;;
 	"Darwin arm64") target="aarch64-apple-darwin" ;;
 	"Linux aarch64")
-		echo "Error: Official Deno builds for Linux aarch64 are not available. (see: https://github.com/denoland/deno/issues/1846 )" 1>&2
-		exit 1
-		;;
+		if [ -n "$deno_version" ] && [ $(version "${deno_version:1}") -lt $(version "1.40.3") ]; then
+			echo "Error: Official Deno builds for Linux aarch64 are available from v1.40.3. (see: https://github.com/denoland/deno/issues/1846 )" 1>&2
+			exit 1
+		else
+			target="aarch64-unknown-linux-gnu"
+		fi ;;
 	*) target="x86_64-unknown-linux-gnu" ;;
 	esac
 fi
 
-if [ $# -eq 0 ]; then
+if [ -z "$deno_version" ]; then
 	deno_uri="https://github.com/denoland/deno/releases/latest/download/deno-${target}.zip"
 else
-	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
+	deno_uri="https://github.com/denoland/deno/releases/download/${deno_version}/deno-${target}.zip"
 fi
 
 deno_install="${DENO_INSTALL:-$HOME/.deno}"
