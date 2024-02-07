@@ -153,7 +153,7 @@ scoop reset deno
 
 ### either unzip or 7z is required
 
-The program [`unzip`](https://linux.die.net/man/1/unzip) or [`7z`](https://linux.die.net/man/1/7z) is a requirement for the Shell installer.
+To decompress the `deno` archive, one of either [`unzip`](https://linux.die.net/man/1/unzip) or [`7z`](https://linux.die.net/man/1/7z) must be available on the target system.
 
 ```sh
 $ curl -fsSL https://deno.land/install.sh | sh
