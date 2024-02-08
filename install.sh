@@ -15,10 +15,7 @@ else
 	case $(uname -sm) in
 	"Darwin x86_64") target="x86_64-apple-darwin" ;;
 	"Darwin arm64") target="aarch64-apple-darwin" ;;
-	"Linux aarch64")
-		echo "Error: Official Deno builds for Linux aarch64 are not available. (see: https://github.com/denoland/deno/issues/1846 )" 1>&2
-		exit 1
-		;;
+	"Linux aarch64") target="aarch64-unknown-linux-gnu" ;;
 	*) target="x86_64-unknown-linux-gnu" ;;
 	esac
 fi
