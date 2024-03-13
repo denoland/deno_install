@@ -34,6 +34,12 @@ $v="1.0.0"; irm https://deno.land/install.ps1 | iex
 
 ## Install via Package Manager
 
+**With [winget](https://github.com/microsoft/winget-pkgs/tree/master/manifests/d/DenoLand/Deno):**
+
+```powershell
+winget install deno
+```
+
 **With [Scoop](https://github.com/ScoopInstaller/Main/blob/master/bucket/deno.json):**
 
 ```powershell
