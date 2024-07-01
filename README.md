@@ -18,6 +18,14 @@ curl -fsSL https://deno.land/install.sh | sh
 irm https://deno.land/install.ps1 | iex
 ```
 
+## Install Globally
+
+**With PowerShell:**
+
+```powershell
+$g; irm https://deno.land/install.ps1 | iex
+```
+
 ## Install Specific Version
 
 **With Shell:**
