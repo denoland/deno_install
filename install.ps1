@@ -4,11 +4,6 @@
 
 $ErrorActionPreference = 'Stop'
 
-param (
-  [string]$v,
-  [switch]$g
-)
-
 if ($v) {
   $Version = "v${v}"
 } elseif ($Args.Length -eq 1) {
@@ -18,6 +13,8 @@ if ($v) {
 $DenoInstall = $env:DENO_INSTALL
 $BinDir = if ($DenoInstall) {
   "${DenoInstall}\bin"
+} elseif (Test-Path variable:\g) {
+  "${Env:ProgramFiles}\deno\bin"
 } else {
   "${Home}\.deno\bin"
 }
@@ -42,7 +39,7 @@ tar.exe xf $DenoZip -C $BinDir
 
 Remove-Item $DenoZip
 
-$EnvTarget = if ($g) {
+$EnvTarget = if (Test-Path variable:\g) {
   [System.EnvironmentVariableTarget]::Machine
 } else {
   [System.EnvironmentVariableTarget]::User
