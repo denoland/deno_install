@@ -4,11 +4,15 @@
 
 $ErrorActionPreference = 'Stop'
 
+param (
+  [string]$v,
+  [switch]$g
+)
+
 if ($v) {
   $Version = "v${v}"
-}
-if ($Args.Length -eq 1) {
-  $Version = $Args.Get(0)
+} elseif ($Args.Length -eq 1) {
+  $Version = $Args[0]
 }
 
 $DenoInstall = $env:DENO_INSTALL
@@ -38,10 +42,15 @@ tar.exe xf $DenoZip -C $BinDir
 
 Remove-Item $DenoZip
 
-$User = [System.EnvironmentVariableTarget]::User
-$Path = [System.Environment]::GetEnvironmentVariable('Path', $User)
+$EnvTarget = if ($g) {
+  [System.EnvironmentVariableTarget]::Machine
+} else {
+  [System.EnvironmentVariableTarget]::User
+}
+
+$Path = [System.Environment]::GetEnvironmentVariable('Path', $EnvTarget)
 if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
-  [System.Environment]::SetEnvironmentVariable('Path', "${Path};${BinDir}", $User)
+  [System.Environment]::SetEnvironmentVariable('Path', "${Path};${BinDir}", $EnvTarget)
   $Env:Path += ";${BinDir}"
 }
 
