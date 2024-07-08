@@ -18,14 +18,6 @@ curl -fsSL https://deno.land/install.sh | sh
 irm https://deno.land/install.ps1 | iex
 ```
 
-## Install Globally
-
-**With PowerShell:**
-
-```powershell
-$g; irm https://deno.land/install.ps1 | iex
-```
-
 ## Install Specific Version
 
 **With Shell:**
@@ -99,6 +91,14 @@ brew install protobuf # macOS
 
 # Build and install Deno
 cargo install deno
+```
+
+## Install Globally
+
+**With PowerShell:**
+
+```powershell
+$denoGlobalInstall; irm https://deno.land/install.ps1 | iex
 ```
 
 ## Install and Manage Multiple Versions
