@@ -186,3 +186,4 @@ During the `install.sh` process, `unzip` or `7z` is used to extract the zip arch
 **How can this issue be fixed?**
 
 You can install unzip via `brew install unzip` on MacOS or `apt-get install unzip -y` on Linux.
+
