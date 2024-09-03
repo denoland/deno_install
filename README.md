@@ -93,6 +93,14 @@ brew install protobuf # macOS
 cargo install deno
 ```
 
+## Install Globally
+
+**With PowerShell:**
+
+```powershell
+$denoGlobalInstall; irm https://deno.land/install.ps1 | iex
+```
+
 ## Install and Manage Multiple Versions
 
 **With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
@@ -178,3 +186,4 @@ During the `install.sh` process, `unzip` or `7z` is used to extract the zip arch
 **How can this issue be fixed?**
 
 You can install unzip via `brew install unzip` on MacOS or `apt-get install unzip -y` on Linux.
+
