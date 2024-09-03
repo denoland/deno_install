@@ -22,11 +22,13 @@ $DenoZip = "$BinDir\deno.zip"
 $DenoExe = "$BinDir\deno.exe"
 $Target = 'x86_64-pc-windows-msvc'
 
-$DownloadUrl = if (!$Version) {
-  "https://github.com/denoland/deno/releases/latest/download/deno-${Target}.zip"
+$Version = if (!$Version) {
+  curl.exe -s "https://dl.deno.land/release-latest.txt"  
 } else {
-  "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
+  $Version
 }
+
+$DownloadUrl = "https://dl.deno.land/release/${Version}/deno-${Target}.zip"
 
 if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null

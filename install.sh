@@ -21,11 +21,12 @@ else
 fi
 
 if [ $# -eq 0 ]; then
-	deno_uri="https://github.com/denoland/deno/releases/latest/download/deno-${target}.zip"
+	deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"
 else
-	deno_uri="https://github.com/denoland/deno/releases/download/${1}/deno-${target}.zip"
+	deno_version=$1
 fi
 
+deno_uri="https://dl.deno.land/release/${deno_version}/deno-${target}.zip"
 deno_install="${DENO_INSTALL:-$HOME/.deno}"
 bin_dir="$deno_install/bin"
 exe="$bin_dir/deno"
