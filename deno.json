@@ -1,0 +1,7 @@
+{
+  "imports": {
+    "@david/which": "jsr:@david/which@^0.4.1",
+    "@std/assert": "jsr:@std/assert@^1.0.4",
+    "@std/path": "jsr:@std/path@^1.0.4"
+  }
+}

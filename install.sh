@@ -45,17 +45,13 @@ chmod +x "$exe"
 rm "$exe.zip"
 
 echo "Deno was installed successfully to $exe"
-if command -v deno >/dev/null; then
-	echo "Run 'deno --help' to get started"
-else
-	case $SHELL in
-	/bin/zsh) shell_profile=".zshrc" ;;
-	*) shell_profile=".bashrc" ;;
-	esac
-	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
-	echo "  export DENO_INSTALL=\"$deno_install\""
-	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
-	echo "Run '$exe --help' to get started"
-fi
+$exe run --allow-sys=homedir --allow-run=zsh --allow-read --allow-env --allow-write="$deno_install" ./main.ts "$deno_install"
+echo "Run '$exe --help' to get started"
+# if command -v deno >/dev/null; then
+# 	echo "Run 'deno --help' to get started"
+# else
+# 	$exe run --allow-sys=homedir --allow-read ./main.ts "$deno_install"
+# 	echo "Run '$exe --help' to get started"
+# fi
 echo
 echo "Stuck? Join our Discord https://discord.gg/deno"
