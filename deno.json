@@ -1,4 +1,7 @@
 {
+  "name": "@nathanwhit/deno-shell-setup",
+  "version": "0.1.0",
+  "exports": "./main.ts",
   "imports": {
     "@david/which": "jsr:@david/which@^0.4.1",
     "@std/assert": "jsr:@std/assert@^1.0.4",
