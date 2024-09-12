@@ -1,5 +1,11 @@
 import { system } from "./system.ts";
-import * as path from "@std/path";
+
+const {
+  joinPaths,
+  dirname,
+} = system;
+
+// import * as path from "@std/path";
 
 const homeDir = system.getHomeDir();
 
@@ -32,7 +38,7 @@ class ShellScript {
   }
 
   async write(denoInstallDir: string): Promise<boolean> {
-    const envFilePath = path.join(denoInstallDir, this.name);
+    const envFilePath = joinPaths(denoInstallDir, this.name);
     try {
       await system.writeTextFile(envFilePath, this.contents);
       return true;
@@ -86,7 +92,7 @@ class Posix implements UnixShell {
     return true;
   }
   rcfiles(): string[] {
-    return [path.join(homeDir, ".profile")];
+    return [joinPaths(homeDir, ".profile")];
   }
   rcsToUpdate(): string[] {
     return this.rcfiles();
@@ -100,7 +106,7 @@ class Bash implements UnixShell {
   }
   rcfiles(): string[] {
     return [".bash_profile", ".bash_login", ".bashrc"]
-      .map((rc) => path.join(homeDir, rc));
+      .map((rc) => joinPaths(homeDir, rc));
   }
   rcsToUpdate(): Promise<string[]> {
     return filterAsync(this.rcfiles(), system.isExistingFile);
@@ -134,7 +140,7 @@ class Zsh implements UnixShell {
   async rcfiles(): Promise<string[]> {
     const zshDotDir = await this.getZshDotDir();
     return [zshDotDir, homeDir].map((dir) =>
-      dir ? path.join(dir, ".zshenv") : undefined
+      dir ? joinPaths(dir, ".zshenv") : undefined
     ).filter((dir) => dir !== undefined);
   }
   async rcsToUpdate(): Promise<string[]> {
@@ -163,9 +169,9 @@ class Fish implements UnixShell {
     const conf = "fish/conf.d/deno.fish";
     const first = withEnvVar("XDG_CONFIG_HOME", (p) => {
       if (!p) return undefined;
-      return path.join(p, conf);
+      return joinPaths(p, conf);
     });
-    return [first ?? path.join(homeDir, ".config", conf)];
+    return [first ?? joinPaths(homeDir, ".config", conf)];
   }
 
   rcsToUpdate(): string[] {
@@ -244,8 +250,8 @@ async function addToPath(availableShells: UnixShell[], installDir: string) {
       } catch (_error) {
         // nothing
       }
-
-      const rcDir = path.dirname(rc);
+      const rcDir = dirname(rc);
+      console.log("rcDir", rcDir, rc);
       if (!(await system.isExistingDir(rcDir))) {
         await system.mkdir(rcDir, {
           recursive: true,

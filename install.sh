@@ -44,8 +44,20 @@ fi
 chmod +x "$exe"
 rm "$exe.zip"
 
+allow_sys_perm="--allow-sys"
+allow_write_perm=--allow-write="$deno_install"
+
+if ! echo | $exe run --allow-sys=homedir - >/dev/null 2>&1; then
+	allow_sys_perm=""
+fi
+if ! echo | $exe run --no-prompt -; then
+	echo 'bad'
+	allow_write_perm="--allow-all"
+fi
+
 echo "Deno was installed successfully to $exe"
-$exe run --allow-sys=homedir --allow-run=zsh --allow-read --allow-env --allow-write="$deno_install" ./main.ts "$deno_install"
+# $exe run $allow_sys_perm --allow-run=zsh --allow-read --allow-env "$allow_write_perm" https://jsr.io/@nathanwhit/deno-shell-setup/0.4.0/main.ts "$deno_install"
+$exe run $allow_sys_perm --allow-run=zsh --allow-read --allow-env "$allow_write_perm" main.ts "$deno_install"
 echo "Run '$exe --help' to get started"
 # if command -v deno >/dev/null; then
 # 	echo "Run 'deno --help' to get started"
