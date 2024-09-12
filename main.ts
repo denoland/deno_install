@@ -1,13 +1,21 @@
-import { system } from "./system.ts";
-
+import { environment } from "./environment.ts";
 const {
   joinPaths,
   dirname,
-} = system;
+  getHomeDir,
+  getEnv,
+  runCmd,
+  findCmd,
+  mkdir,
+  isExistingDir,
+  isExistingFile,
+  readTextFile,
+  writeTextFile,
+} = environment;
 
 // import * as path from "@std/path";
 
-const homeDir = system.getHomeDir();
+const homeDir = getHomeDir();
 
 function withContext(ctx: string, error?: unknown) {
   return new Error(ctx, { cause: error });
@@ -22,7 +30,7 @@ async function filterAsync<T>(
 }
 
 function withEnvVar<T>(name: string, f: (value: string | undefined) => T): T {
-  const value = system.getEnv(name);
+  const value = getEnv(name);
   return f(value);
 }
 
@@ -40,7 +48,7 @@ class ShellScript {
   async write(denoInstallDir: string): Promise<boolean> {
     const envFilePath = joinPaths(denoInstallDir, this.name);
     try {
-      await system.writeTextFile(envFilePath, this.contents);
+      await writeTextFile(envFilePath, this.contents);
       return true;
     } catch (error) {
       if (error instanceof Deno.errors.PermissionDenied) {
@@ -109,7 +117,7 @@ class Bash implements UnixShell {
       .map((rc) => joinPaths(homeDir, rc));
   }
   rcsToUpdate(): Promise<string[]> {
-    return filterAsync(this.rcfiles(), system.isExistingFile);
+    return filterAsync(this.rcfiles(), isExistingFile);
   }
 }
 
@@ -117,7 +125,7 @@ class Zsh implements UnixShell {
   name = "zsh";
   async exists(): Promise<boolean> {
     if (
-      shellEnvContains("zsh") || (await system.findCmd("zsh"))
+      shellEnvContains("zsh") || (await findCmd("zsh"))
     ) {
       return true;
     }
@@ -128,9 +136,12 @@ class Zsh implements UnixShell {
     if (
       withEnvVar("SHELL", (sh) => sh && sh.includes("zsh"))
     ) {
-      zshDotDir = system.getEnv("ZDOTDIR");
+      zshDotDir = getEnv("ZDOTDIR");
     } else {
-      const output = await system.runCmd("zsh", ["-c", "echo -n $ZDOTDIR"]);
+      const output = await runCmd("zsh", [
+        "-c",
+        "echo -n $ZDOTDIR",
+      ]);
       const stdout = new TextDecoder().decode(output.stdout).trim();
       zshDotDir = stdout;
     }
@@ -144,7 +155,10 @@ class Zsh implements UnixShell {
     ).filter((dir) => dir !== undefined);
   }
   async rcsToUpdate(): Promise<string[]> {
-    let out = await filterAsync(await this.rcfiles(), system.isExistingFile);
+    let out = await filterAsync(
+      await this.rcfiles(),
+      isExistingFile,
+    );
     if (out.length === 0) {
       out = await this.rcfiles();
     }
@@ -157,7 +171,7 @@ class Fish implements UnixShell {
   async exists(): Promise<boolean> {
     if (
       shellEnvContains("fish") ||
-      (await system.findCmd("fish"))
+      (await findCmd("fish"))
     ) {
       return true;
     }
@@ -240,7 +254,7 @@ async function addToPath(availableShells: UnixShell[], installDir: string) {
     for (const rc of await shell.rcsToUpdate(installDir)) {
       let cmdToWrite = sourceCmd;
       try {
-        const contents = await system.readTextFile(rc);
+        const contents = await readTextFile(rc);
         if (contents.includes(sourceCmd)) {
           continue;
         }
@@ -252,14 +266,14 @@ async function addToPath(availableShells: UnixShell[], installDir: string) {
       }
       const rcDir = dirname(rc);
       console.log("rcDir", rcDir, rc);
-      if (!(await system.isExistingDir(rcDir))) {
-        await system.mkdir(rcDir, {
+      if (!(await isExistingDir(rcDir))) {
+        await mkdir(rcDir, {
           recursive: true,
         });
       }
 
       try {
-        await system.writeTextFile(rc, cmdToWrite, {
+        await writeTextFile(rc, cmdToWrite, {
           append: true,
         });
       } catch (error) {
