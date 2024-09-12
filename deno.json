@@ -1,7 +1,7 @@
 {
   "name": "@nathanwhit/deno-shell-setup",
-  "version": "0.4.0",
-  "exports": "./main.ts",
+  "version": "0.5.0",
+  "exports": "./src/main.ts",
   "imports": {
     "@david/which": "jsr:@david/which@^0.4.1",
     "@fallback-std/path": "https://jsr.io/@std/path/1.0.4/mod.ts",
@@ -11,8 +11,7 @@
   },
   "publish": {
     "include": [
-      "main.ts",
-      "system.ts",
+      "src/*",
       "deno.json",
       "deno.lock",
       "README.md",
