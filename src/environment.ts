@@ -71,6 +71,22 @@ const pathMethods = await tryOrFallback(async () => {
   return { joinPaths: join, dirname };
 }, { joinPaths: fallback.joinPaths, dirname: fallback.dirname });
 
+const getHomeDir: () => string = await tryOrFallback(
+  async () => {
+    if (Number(Deno.version.deno.split(".")[1]) <= 6) {
+      throw null;
+    }
+    const { homedir } = await import("node:os");
+    if (typeof homedir === "function") {
+      return homedir;
+    }
+    throw null;
+  },
+  fallback.getHomeDir,
+);
+
+const homeDir = getHomeDir();
+
 export const environment = {
   writeTextFile: Deno.writeTextFile,
   readTextFile: Deno.readTextFile,
@@ -91,23 +107,7 @@ export const environment = {
     }
   },
   mkdir: Deno.mkdir,
-  getHomeDir: await tryOrFallback(
-    async () => {
-      if (Number(Deno.version.deno.split(".")[1]) <= 6) {
-        throw null;
-      }
-      // a little hack, deno 1.6.0 and below hard error
-      // on the "node:os" import, but pulling it into a variable
-      // prevents it from being statically analyzed
-      const spec = "node:os";
-      const { homedir } = await import(spec);
-      if (typeof homedir === "function") {
-        return homedir;
-      }
-      throw null;
-    },
-    fallback.getHomeDir,
-  ),
+  homeDir,
   findCmd: await tryOrFallback(
     async () => (await import("@david/which")).which,
     fallback.findCmd,
