@@ -52,7 +52,7 @@ case ":\${PATH}:" in
     *:"${installDir}/bin":*)
         ;;
     *)
-        # Prepending path in case a system-installed rustc needs to be overridden
+        # Prepending path in case a system-installed deno executable needs to be overridden
         export PATH="${installDir}/bin:$PATH"
         ;;
 esac
@@ -70,15 +70,19 @@ export type MaybePromise<T> = Promise<T> | T;
 
 export interface UnixShell {
   name: string;
+  supportsCompletion: boolean;
   exists(installDir: string): MaybePromise<boolean>;
   rcfiles(installDir: string): MaybePromise<string[]>;
   rcsToUpdate(installDir: string): MaybePromise<string[]>;
   envScript?(installDir: string): ShellScript;
   sourceString?(installDir: string): MaybePromise<string>;
+  completionsFilePath?(installDir: string): MaybePromise<string>;
+  completionsSourceString?(installDir: string): MaybePromise<string>;
 }
 
 export class Posix implements UnixShell {
   name = "sh";
+  supportsCompletion = false;
   exists(): boolean {
     return true;
   }
@@ -92,6 +96,7 @@ export class Posix implements UnixShell {
 
 export class Bash implements UnixShell {
   name = "bash";
+  supportsCompletion = true;
   async exists(): Promise<boolean> {
     return (await this.rcsToUpdate()).length > 0;
   }
@@ -102,10 +107,17 @@ export class Bash implements UnixShell {
   rcsToUpdate(): Promise<string[]> {
     return filterAsync(this.rcfiles(), isExistingFile);
   }
+  completionsFilePath(): string {
+    return "/usr/local/etc/bash_completion.d/deno.bash";
+  }
+  completionsSourceString(): string {
+    return `source ${this.completionsFilePath()}`;
+  }
 }
 
 export class Zsh implements UnixShell {
   name = "zsh";
+  supportsCompletion = true;
   async exists(): Promise<boolean> {
     if (
       shellEnvContains("zsh") || (await findCmd("zsh"))
@@ -134,7 +146,7 @@ export class Zsh implements UnixShell {
   async rcfiles(): Promise<string[]> {
     const zshDotDir = await this.getZshDotDir();
     return [zshDotDir, homeDir].map((dir) =>
-      dir ? joinPaths(dir, ".zshenv") : undefined
+      dir ? joinPaths(dir, ".zshrc") : undefined
     ).filter((dir) => dir !== undefined);
   }
   async rcsToUpdate(): Promise<string[]> {
@@ -147,10 +159,23 @@ export class Zsh implements UnixShell {
     }
     return out;
   }
+  async completionsFilePath(): Promise<string> {
+    let zshDotDir = await this.getZshDotDir();
+    if (!zshDotDir) {
+      zshDotDir = joinPaths(homeDir, ".zsh");
+    }
+    return joinPaths(zshDotDir, "completions", "_deno.zsh");
+  }
+  async completionsSourceString(): Promise<string> {
+    const filePath = await this.completionsFilePath();
+    const completionDir = environment.dirname(filePath);
+    return `if [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`;
+  }
 }
 
 export class Fish implements UnixShell {
   name = "fish";
+  supportsCompletion = true;
   async exists(): Promise<boolean> {
     if (
       shellEnvContains("fish") ||
@@ -161,14 +186,18 @@ export class Fish implements UnixShell {
     return false;
   }
 
+  fishConfigDir(): string {
+    const first = withEnvVar("XDG_CONFIG_HOME", (p) => {
+      if (!p) return;
+      return joinPaths(p, "fish");
+    });
+    return first ?? joinPaths(homeDir, ".config", "fish");
+  }
+
   rcfiles(): string[] {
     // XDG_CONFIG_HOME/fish/conf.d or ~/.config/fish/conf.d
-    const conf = "fish/conf.d/deno.fish";
-    const first = withEnvVar("XDG_CONFIG_HOME", (p) => {
-      if (!p) return undefined;
-      return joinPaths(p, conf);
-    });
-    return [first ?? joinPaths(homeDir, ".config", conf)];
+    const conf = "conf.d/deno.fish";
+    return [joinPaths(this.fishConfigDir(), conf)];
   }
 
   rcsToUpdate(): string[] {
@@ -189,4 +218,10 @@ end
   sourceString(installDir: string): MaybePromise<string> {
     return `source "${installDir}/env.fish"`;
   }
+
+  completionsFilePath(): string {
+    return joinPaths(this.fishConfigDir(), "completions", "deno.fish");
+  }
+
+  // no further config needed for completions
 }

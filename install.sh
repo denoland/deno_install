@@ -56,7 +56,7 @@ fi
 
 echo "Deno was installed successfully to $exe"
 # $exe run $allow_sys_perm --allow-run=zsh --allow-read --allow-env "$allow_write_perm" https://jsr.io/@nathanwhit/deno-shell-setup/0.5.0/main.ts "$deno_install"
-$exe run $allow_sys_perm --no-check --allow-run=zsh --allow-read --allow-env "$allow_write_perm" https://jsr.io/@nathanwhit/deno-shell-setup/0.5.0/main.ts "$deno_install"
+$exe run $allow_sys_perm --no-check --allow-run=zsh --allow-read --allow-env "$allow_write_perm" ./src/main.ts "$deno_install"
 echo "Run '$exe --help' to get started"
 # if command -v deno >/dev/null; then
 # 	echo "Run 'deno --help' to get started"
