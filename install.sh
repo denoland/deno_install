@@ -53,9 +53,6 @@ if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2
 		allow_sys_perm="--allow-sys"
 	fi
 	$exe run $allow_sys_perm --no-check --allow-run="zsh,$exe" --allow-read --allow-env --allow-write="$deno_install" ./src/main.ts "$deno_install"
-	if [ -f "$deno_install/env" ]; then
-		. "$deno_install/env"
-	fi
 fi
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
