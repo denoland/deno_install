@@ -3,11 +3,9 @@
   "version": "0.6.0",
   "exports": "./src/main.ts",
   "imports": {
+    "@david/dax": "jsr:@david/dax@^0.42.0",
     "@david/which": "jsr:@david/which@^0.4.1",
-    "@fallback-std/path": "https://jsr.io/@std/path/1.0.4/mod.ts",
-    "@std/assert": "jsr:@std/assert@^1.0.4",
-    "@std/path": "jsr:@std/path@^1.0.4",
-    "@std/testing": "jsr:@std/testing@^1.0.2"
+    "@std/path": "jsr:@std/path@^1.0.4"
   },
   "publish": {
     "include": [

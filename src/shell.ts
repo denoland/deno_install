@@ -1,4 +1,6 @@
 import { environment } from "./environment.ts";
+import { join } from "@std/path/join";
+import { dirname } from "@std/path/dirname";
 import {
   filterAsync,
   shellEnvContains,
@@ -6,7 +8,6 @@ import {
   withEnvVar,
 } from "./util.ts";
 const {
-  joinPaths,
   isExistingFile,
   writeTextFile,
   homeDir,
@@ -23,7 +24,7 @@ export class ShellScript {
   }
 
   async write(denoInstallDir: string): Promise<boolean> {
-    const envFilePath = joinPaths(denoInstallDir, this.name);
+    const envFilePath = join(denoInstallDir, this.name);
     try {
       await writeTextFile(envFilePath, this.contents);
       return true;
@@ -68,6 +69,8 @@ export const shSourceString = (installDir: string) => {
 
 export type MaybePromise<T> = Promise<T> | T;
 
+export type SourceStringInfo = { content: string; prepend?: boolean };
+
 export interface UnixShell {
   name: string;
   supportsCompletion: boolean;
@@ -77,7 +80,9 @@ export interface UnixShell {
   envScript?(installDir: string): ShellScript;
   sourceString?(installDir: string): MaybePromise<string>;
   completionsFilePath?(installDir: string): MaybePromise<string>;
-  completionsSourceString?(installDir: string): MaybePromise<string>;
+  completionsSourceString?(
+    installDir: string,
+  ): MaybePromise<string | SourceStringInfo>;
 }
 
 export class Posix implements UnixShell {
@@ -87,7 +92,7 @@ export class Posix implements UnixShell {
     return true;
   }
   rcfiles(): string[] {
-    return [joinPaths(homeDir, ".profile")];
+    return [join(homeDir, ".profile")];
   }
   rcsToUpdate(): string[] {
     return this.rcfiles();
@@ -102,7 +107,7 @@ export class Bash implements UnixShell {
   }
   rcfiles(): string[] {
     return [".bash_profile", ".bash_login", ".bashrc"]
-      .map((rc) => joinPaths(homeDir, rc));
+      .map((rc) => join(homeDir, rc));
   }
   rcsToUpdate(): Promise<string[]> {
     return filterAsync(this.rcfiles(), isExistingFile);
@@ -146,7 +151,7 @@ export class Zsh implements UnixShell {
   async rcfiles(): Promise<string[]> {
     const zshDotDir = await this.getZshDotDir();
     return [zshDotDir, homeDir].map((dir) =>
-      dir ? joinPaths(dir, ".zshrc") : undefined
+      dir ? join(dir, ".zshrc") : undefined
     ).filter((dir) => dir !== undefined);
   }
   async rcsToUpdate(): Promise<string[]> {
@@ -162,14 +167,18 @@ export class Zsh implements UnixShell {
   async completionsFilePath(): Promise<string> {
     let zshDotDir = await this.getZshDotDir();
     if (!zshDotDir) {
-      zshDotDir = joinPaths(homeDir, ".zsh");
+      zshDotDir = join(homeDir, ".zsh");
     }
-    return joinPaths(zshDotDir, "completions", "_deno.zsh");
+    return join(zshDotDir, "completions", "_deno.zsh");
   }
-  async completionsSourceString(): Promise<string> {
+  async completionsSourceString(): Promise<SourceStringInfo> {
     const filePath = await this.completionsFilePath();
-    const completionDir = environment.dirname(filePath);
-    return `if [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`;
+    const completionDir = dirname(filePath);
+    return {
+      content:
+        `if [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`,
+      prepend: true,
+    };
   }
 }
 
@@ -189,15 +198,15 @@ export class Fish implements UnixShell {
   fishConfigDir(): string {
     const first = withEnvVar("XDG_CONFIG_HOME", (p) => {
       if (!p) return;
-      return joinPaths(p, "fish");
+      return join(p, "fish");
     });
-    return first ?? joinPaths(homeDir, ".config", "fish");
+    return first ?? join(homeDir, ".config", "fish");
   }
 
   rcfiles(): string[] {
     // XDG_CONFIG_HOME/fish/conf.d or ~/.config/fish/conf.d
     const conf = "conf.d/deno.fish";
-    return [joinPaths(this.fishConfigDir(), conf)];
+    return [join(this.fishConfigDir(), conf)];
   }
 
   rcsToUpdate(): string[] {
@@ -220,7 +229,7 @@ end
   }
 
   completionsFilePath(): string {
-    return joinPaths(this.fishConfigDir(), "completions", "deno.fish");
+    return join(this.fishConfigDir(), "completions", "deno.fish");
   }
 
   // no further config needed for completions

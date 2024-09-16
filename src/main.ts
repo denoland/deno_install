@@ -1,4 +1,6 @@
 import { environment } from "./environment.ts";
+import { dirname } from "@std/path";
+import $ from "@david/dax";
 import {
   Bash,
   Fish,
@@ -6,12 +8,12 @@ import {
   type ShellScript,
   shEnvScript,
   shSourceString,
+  type SourceStringInfo,
   type UnixShell,
   Zsh,
 } from "./shell.ts";
 import { withContext } from "./util.ts";
 const {
-  dirname,
   mkdir,
   isExistingDir,
   readTextFile,
@@ -55,7 +57,6 @@ async function writeCompletionFiles(
         continue;
       }
       await ensureExists(dirname(completionFilePath));
-      console.log("running deno completinos for ", shell.name);
       const output = await runCmd(Deno.execPath(), ["completions", shell.name]);
       if (!output.success) {
         throw new Error(
@@ -155,12 +156,22 @@ async function getAvailableShells(installDir: string): Promise<UnixShell[]> {
   return present;
 }
 
-async function updateRcFile(rc: string, cmd: string): Promise<boolean> {
+async function updateRcFile(
+  rc: string,
+  sourceString: string | SourceStringInfo,
+): Promise<boolean> {
+  const cmd = typeof sourceString === "string"
+    ? sourceString
+    : sourceString.content;
+  const prepend = typeof sourceString === "string"
+    ? false
+    : sourceString.prepend ?? false;
   const cmdWithNewline = cmd.startsWith("\n") ? cmd : `\n${cmd}`;
 
   let cmdToWrite = cmd;
+  let contents: string | undefined;
   try {
-    const contents = await readTextFile(rc);
+    contents = await readTextFile(rc);
     if (contents.includes(cmd)) {
       return false;
     }
@@ -173,9 +184,16 @@ async function updateRcFile(rc: string, cmd: string): Promise<boolean> {
   await ensureExists(dirname(rc));
 
   try {
-    await writeTextFile(rc, cmdToWrite, {
-      append: true,
-    });
+    if (prepend) {
+      await writeTextFile(rc, contents ?? "" + cmdWithNewline, {
+        create: true,
+      });
+    } else {
+      await writeTextFile(rc, cmdToWrite, {
+        create: true,
+        append: true,
+      });
+    }
     return true;
   } catch (error) {
     if (error instanceof Deno.errors.PermissionDenied) {
@@ -199,13 +217,20 @@ async function setupShells(installDir: string) {
   const availableShells = await getAvailableShells(installDir);
 
   await writeEnvFiles(availableShells, installDir);
-  await addToPath(availableShells, installDir);
 
-  const ans = prompt(
-    "Would you like to install shell completions for deno? (y/n)\n",
-    "n",
-  ) ?? "n";
-  if (ans.toLowerCase().trim() === "y") {
+  if (await $.confirm(`Edit shell configs to add deno to the PATH?`)) {
+    await addToPath(availableShells, installDir);
+  }
+
+  const shellsWithCompletion = availableShells.filter((s) =>
+    s.supportsCompletion
+  ).map((s) => s.name).join(", ");
+
+  if (
+    await $.confirm(
+      `Set up completions for the following shells? ${shellsWithCompletion}`,
+    )
+  ) {
     const results = await writeCompletionFiles(availableShells, installDir);
     await writeCompletionRcCommands(
       shells.filter((_s, i) => results[i] !== "fail"),

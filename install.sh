@@ -44,25 +44,23 @@ fi
 chmod +x "$exe"
 rm "$exe.zip"
 
-allow_sys_perm="--allow-sys"
-allow_write_perm=--allow-write="$deno_install"
-
-if ! echo | $exe run --allow-sys=homedir - >/dev/null 2>&1; then
-	allow_sys_perm=""
-fi
-if ! echo | $exe run --no-prompt - >/dev/null 2>&1; then
-	allow_write_perm="--allow-all"
-fi
-
 echo "Deno was installed successfully to $exe"
-# $exe run $allow_sys_perm --allow-run=zsh --allow-read --allow-env "$allow_write_perm" https://jsr.io/@nathanwhit/deno-shell-setup/0.5.0/main.ts "$deno_install"
-$exe run $allow_sys_perm --no-check --allow-run=zsh --allow-read --allow-env "$allow_write_perm" ./src/main.ts "$deno_install"
-echo "Run '$exe --help' to get started"
-# if command -v deno >/dev/null; then
-# 	echo "Run 'deno --help' to get started"
-# else
-# 	$exe run --allow-sys=homedir --allow-read ./main.ts "$deno_install"
-# 	echo "Run '$exe --help' to get started"
-# fi
+if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
+
+	allow_sys_perm="--allow-sys=homedir"
+
+	if ! echo | $exe run --allow-sys=homedir - >/dev/null 2>&1; then
+		allow_sys_perm="--allow-sys"
+	fi
+	$exe run $allow_sys_perm --no-check --allow-run="zsh,$exe" --allow-read --allow-env --allow-write="$deno_install" ./src/main.ts "$deno_install"
+	if [ -f "$deno_install/env" ]; then
+		. "$deno_install/env"
+	fi
+fi
+if command -v deno >/dev/null; then
+	echo "Run 'deno --help' to get started"
+else
+	echo "Run '$exe --help' to get started"
+fi
 echo
 echo "Stuck? Join our Discord https://discord.gg/deno"
