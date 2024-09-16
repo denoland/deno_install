@@ -155,7 +155,7 @@ export class Zsh implements UnixShell {
         "echo -n $ZDOTDIR",
       ]);
       const stdout = new TextDecoder().decode(output.stdout).trim();
-      zshDotDir = stdout;
+      zshDotDir = stdout.length > 0 ? stdout : undefined;
     }
 
     return zshDotDir;
@@ -189,7 +189,7 @@ export class Zsh implements UnixShell {
     const fpathSetup =
       `# Add deno completions to search path\nif [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`;
 
-    const zshDotDir = await this.getZshDotDir() ?? homeDir;
+    const zshDotDir = (await this.getZshDotDir()) ?? homeDir;
     // try to figure out whether the user already has `compinit` being called
 
     let append: string | undefined;
