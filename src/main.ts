@@ -20,7 +20,7 @@ const {
   writeTextFile,
 } = environment;
 
-type CompletionWriteResult = "fail" | "success" | "up-to-date" | null;
+type CompletionWriteResult = "fail" | "success" | null;
 
 async function writeCompletionFiles(
   availableShells: UnixShell[],
@@ -74,10 +74,8 @@ async function writeCompletionFiles(
           );
         }
         await writeTextFile(completionFilePath, completionFileContents);
-        results.push("success");
-      } else {
-        results.push("up-to-date");
       }
+      results.push("success");
       written.add(completionFilePath);
     } catch (error) {
       warn(`Failed to install completions for ${shell.name}: ${error}`);
@@ -150,7 +148,6 @@ async function updateRcFile(
   sourceString: string | SourceStringInfo,
   backups: Backups,
 ): Promise<boolean> {
-  console.log("updating rc", rc);
   let prepend: string | undefined;
   let append: string | undefined;
   if (typeof sourceString === "string") {

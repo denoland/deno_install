@@ -187,7 +187,7 @@ export class Zsh implements UnixShell {
     const filePath = await this.completionsFilePath();
     const completionDir = dirname(filePath);
     const fpathSetup =
-      `if [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`;
+      `# Add deno completions to search path\nif [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`;
 
     const zshDotDir = await this.getZshDotDir() ?? homeDir;
     // try to figure out whether the user already has `compinit` being called
@@ -199,7 +199,8 @@ export class Zsh implements UnixShell {
         (f) => pathExists(join(zshDotDir, f)),
       )).length == 0
     ) {
-      append = "autoload -Uz compinit\ncompinit";
+      append =
+        "# Initialize zsh completions (added by deno install script)\nautoload -Uz compinit\ncompinit";
     }
     return {
       prepend: fpathSetup,
