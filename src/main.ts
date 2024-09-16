@@ -1,6 +1,7 @@
 import { environment } from "./environment.ts";
-import { dirname } from "@std/path";
+import { basename, dirname, join } from "@std/path";
 import $ from "@david/dax";
+
 import {
   Bash,
   Fish,
@@ -87,8 +88,29 @@ async function writeCompletionFiles(
   return results;
 }
 
+class Backups {
+  backedUp = new Set<string>();
+  constructor(public backupDir: string) {}
+
+  async add(path: string, contents: string): Promise<void> {
+    if (this.backedUp.has(path)) {
+      return;
+    }
+    const now = Date.now();
+    const dest = join(this.backupDir, basename(path)) + `.bak.${now}`;
+    console.log(
+      `%cinfo%c: backing '${path}' up to '${dest}'`,
+      "color: green",
+      "color: inherit",
+    );
+    await Deno.writeTextFile(dest, contents);
+    this.backedUp.add(path);
+  }
+}
+
 async function writeCompletionRcCommands(
   availableShells: UnixShell[],
+  backups: Backups,
 ) {
   for (const shell of availableShells) {
     if (!shell.supportsCompletion) continue;
@@ -97,7 +119,7 @@ async function writeCompletionRcCommands(
     if (!rcCmd) continue;
 
     for (const rc of await shell.rcsToUpdate()) {
-      await updateRcFile(rc, rcCmd);
+      await updateRcFile(rc, rcCmd, backups);
     }
   }
 }
@@ -126,7 +148,9 @@ async function writeEnvFiles(availableShells: UnixShell[], installDir: string) {
 async function updateRcFile(
   rc: string,
   sourceString: string | SourceStringInfo,
+  backups: Backups,
 ): Promise<boolean> {
+  console.log("updating rc", rc);
   let prepend: string | undefined;
   let append: string | undefined;
   if (typeof sourceString === "string") {
@@ -138,6 +162,14 @@ async function updateRcFile(
   if (!prepend && !append) {
     return false;
   }
+  let prependWithNewline: string | undefined;
+  let appendWithNewline: string | undefined;
+  if (prepend) {
+    prependWithNewline = prepend.endsWith("\n") ? prepend : prepend + "\n";
+  }
+  if (append) {
+    appendWithNewline = append.startsWith("\n") ? append : "\n" + append;
+  }
 
   let doPrepend: string | undefined;
   let doAppend: string | undefined;
@@ -145,21 +177,27 @@ async function updateRcFile(
   try {
     contents = await readTextFile(rc);
     if (prepend && !contents.includes(prepend)) {
-      doPrepend = prepend.endsWith("\n") ? prepend : prepend + "\n";
+      doPrepend = prependWithNewline;
     }
     if (append && !contents.includes(append)) {
       if (contents.endsWith("\n")) {
         doAppend = append;
       } else {
-        doAppend = append.startsWith("\n") ? append : "\n" + append;
+        doAppend = appendWithNewline;
       }
     }
   } catch (_error) {
-    // nothing
+    doPrepend = prependWithNewline;
+    doAppend = appendWithNewline;
   }
   if (!doPrepend && !doAppend) {
     return false;
   }
+
+  if (contents !== undefined) {
+    await backups.add(rc, contents);
+  }
+
   await ensureExists(dirname(rc));
 
   try {
@@ -183,12 +221,16 @@ async function updateRcFile(
   }
 }
 
-async function addToPath(availableShells: UnixShell[], installDir: string) {
+async function addToPath(
+  availableShells: UnixShell[],
+  installDir: string,
+  backups: Backups,
+) {
   for (const shell of availableShells) {
     const sourceCmd = await (shell.sourceString ?? shSourceString)(installDir);
 
     for (const rc of await shell.rcsToUpdate()) {
-      await updateRcFile(rc, sourceCmd);
+      await updateRcFile(rc, sourceCmd, backups);
     }
   }
 }
@@ -211,13 +253,16 @@ async function getAvailableShells(): Promise<UnixShell[]> {
   return present;
 }
 
-async function setupShells(installDir: string) {
+async function setupShells(installDir: string, backupDir: string) {
   const availableShells = await getAvailableShells();
 
   await writeEnvFiles(availableShells, installDir);
 
+  const backups = new Backups(backupDir);
+
   if (await $.confirm(`Edit shell configs to add deno to the PATH?`)) {
-    await addToPath(availableShells, installDir);
+    await ensureExists(backupDir);
+    await addToPath(availableShells, installDir, backups);
   }
 
   const shellsWithCompletion = availableShells.filter((s) =>
@@ -234,9 +279,11 @@ async function setupShells(installDir: string) {
   if (
     completionsToSetup.length > 0
   ) {
+    await ensureExists(backupDir);
     const results = await writeCompletionFiles(completionsToSetup);
     await writeCompletionRcCommands(
       completionsToSetup.filter((_s, i) => results[i] !== "fail"),
+      backups,
     );
   }
 }
@@ -254,7 +301,9 @@ async function main() {
   }
 
   const installDir = Deno.args[0].trim();
-  await setupShells(installDir);
+
+  const backupDir = join(installDir, ".shellRcBackups");
+  await setupShells(installDir, backupDir);
 }
 
 if (import.meta.main) {
