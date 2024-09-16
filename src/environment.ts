@@ -1,24 +1,35 @@
 import { which } from "@david/which";
 import { homedir as getHomeDir } from "node:os";
 
+async function tryStat(path: string): Promise<Deno.FileInfo | undefined> {
+  try {
+    return await Deno.stat(path);
+  } catch (error) {
+    if (
+      error instanceof Deno.errors.NotFound ||
+      (error instanceof Deno.errors.PermissionDenied &&
+        (await Deno.permissions.query({ name: "read", path })).state ==
+          "granted")
+    ) {
+      return;
+    }
+    throw error;
+  }
+}
+
 export const environment = {
   writeTextFile: Deno.writeTextFile,
   readTextFile: Deno.readTextFile,
   async isExistingFile(path: string): Promise<boolean> {
-    try {
-      const fileInfo = await Deno.stat(path);
-      return fileInfo.isFile;
-    } catch (_error) {
-      return false;
-    }
+    const info = await tryStat(path);
+    return info?.isFile ?? false;
   },
   async isExistingDir(path: string): Promise<boolean> {
-    try {
-      const fileInfo = await Deno.stat(path);
-      return fileInfo.isDirectory;
-    } catch (_error) {
-      return false;
-    }
+    const info = await tryStat(path);
+    return info?.isDirectory ?? false;
+  },
+  pathExists(path: string): Promise<boolean> {
+    return tryStat(path).then((info) => info !== undefined);
   },
   mkdir: Deno.mkdir,
   homeDir: getHomeDir(),

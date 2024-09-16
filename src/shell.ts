@@ -1,3 +1,8 @@
+/**
+ * Shell-specific handling. Largely adapted from rustup
+ * (https://github.com/rust-lang/rustup/blob/ccc668ccf852b7f37a4072150a6dd2aac5844d38/src/cli/self_update/shell.rs)
+ */
+
 import { environment } from "./environment.ts";
 import { join } from "@std/path/join";
 import { dirname } from "@std/path/dirname";
@@ -14,6 +19,7 @@ const {
   findCmd,
   runCmd,
   getEnv,
+  pathExists,
 } = environment;
 
 export class ShellScript {
@@ -69,20 +75,26 @@ export const shSourceString = (installDir: string) => {
 
 export type MaybePromise<T> = Promise<T> | T;
 
-export type SourceStringInfo = { content: string; prepend?: boolean };
+export type SourceStringInfo = { prepend?: string; append?: string };
 
+/** Abstraction of a Unix-y shell. */
 export interface UnixShell {
   name: string;
   supportsCompletion: boolean;
-  exists(installDir: string): MaybePromise<boolean>;
-  rcfiles(installDir: string): MaybePromise<string[]>;
-  rcsToUpdate(installDir: string): MaybePromise<string[]>;
+  /** Does the shell exist on the system? */
+  exists(): MaybePromise<boolean>;
+  /** List of potential config files for the shell */
+  rcfiles(): MaybePromise<string[]>;
+  /** List of config files to update */
+  rcsToUpdate(): MaybePromise<string[]>;
+  /** Script to set up env vars (PATH, and potentially others in the future) */
   envScript?(installDir: string): ShellScript;
+  /** Command to source the env script */
   sourceString?(installDir: string): MaybePromise<string>;
-  completionsFilePath?(installDir: string): MaybePromise<string>;
-  completionsSourceString?(
-    installDir: string,
-  ): MaybePromise<string | SourceStringInfo>;
+  /** Path to write completions to */
+  completionsFilePath?(): MaybePromise<string>;
+  /** Command to source the completion file */
+  completionsSourceString?(): MaybePromise<string | SourceStringInfo>;
 }
 
 export class Posix implements UnixShell {
@@ -174,10 +186,24 @@ export class Zsh implements UnixShell {
   async completionsSourceString(): Promise<SourceStringInfo> {
     const filePath = await this.completionsFilePath();
     const completionDir = dirname(filePath);
+    const fpathSetup =
+      `if [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`;
+
+    const zshDotDir = await this.getZshDotDir() ?? homeDir;
+    // try to figure out whether the user already has `compinit` being called
+
+    let append: string | undefined;
+    if (
+      (await filterAsync(
+        [".zcompdump", ".oh_my_zsh", ".zprezto"],
+        (f) => pathExists(join(zshDotDir, f)),
+      )).length == 0
+    ) {
+      append = "autoload -Uz compinit\ncompinit";
+    }
     return {
-      content:
-        `if [[ ":$FPATH:" != *":${completionDir}:"* ]]; then export FPATH="${completionDir}:$FPATH"; fi`,
-      prepend: true,
+      prepend: fpathSetup,
+      append,
     };
   }
 }

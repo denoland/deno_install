@@ -12,32 +12,17 @@ import {
   type UnixShell,
   Zsh,
 } from "./shell.ts";
-import { withContext } from "./util.ts";
+import { ensureExists, warn, withContext } from "./util.ts";
 const {
-  mkdir,
-  isExistingDir,
   readTextFile,
   runCmd,
   writeTextFile,
 } = environment;
 
-function warn(s: string) {
-  console.error(`%cwarning%c: ${s}`, "color: yellow", "color: none");
-}
-
-async function ensureExists(dirPath: string): Promise<void> {
-  if (!await isExistingDir(dirPath)) {
-    await mkdir(dirPath, {
-      recursive: true,
-    });
-  }
-}
-
 type CompletionWriteResult = "fail" | "success" | "up-to-date" | null;
 
 async function writeCompletionFiles(
   availableShells: UnixShell[],
-  installDir: string,
 ): Promise<CompletionWriteResult[]> {
   const written = new Set<string>();
   const results: CompletionWriteResult[] = [];
@@ -51,7 +36,7 @@ async function writeCompletionFiles(
     }
 
     try {
-      const completionFilePath = await shell.completionsFilePath?.(installDir);
+      const completionFilePath = await shell.completionsFilePath?.();
       if (!completionFilePath) {
         results.push(null);
         continue;
@@ -104,15 +89,14 @@ async function writeCompletionFiles(
 
 async function writeCompletionRcCommands(
   availableShells: UnixShell[],
-  installDir: string,
 ) {
   for (const shell of availableShells) {
     if (!shell.supportsCompletion) continue;
 
-    const rcCmd = await shell.completionsSourceString?.(installDir);
+    const rcCmd = await shell.completionsSourceString?.();
     if (!rcCmd) continue;
 
-    for (const rc of await shell.rcsToUpdate(installDir)) {
+    for (const rc of await shell.rcsToUpdate()) {
       await updateRcFile(rc, rcCmd);
     }
   }
@@ -139,57 +123,53 @@ async function writeEnvFiles(availableShells: UnixShell[], installDir: string) {
   }
 }
 
-const shells: UnixShell[] = [
-  new Posix(),
-  new Bash(),
-  new Zsh(),
-  new Fish(),
-];
-
-async function getAvailableShells(installDir: string): Promise<UnixShell[]> {
-  const present = [];
-  for (const shell of shells) {
-    if (await shell.exists(installDir)) {
-      present.push(shell);
-    }
-  }
-  return present;
-}
-
 async function updateRcFile(
   rc: string,
   sourceString: string | SourceStringInfo,
 ): Promise<boolean> {
-  const cmd = typeof sourceString === "string"
-    ? sourceString
-    : sourceString.content;
-  const prepend = typeof sourceString === "string"
-    ? false
-    : sourceString.prepend ?? false;
-  const cmdWithNewline = cmd.startsWith("\n") ? cmd : `\n${cmd}`;
+  let prepend: string | undefined;
+  let append: string | undefined;
+  if (typeof sourceString === "string") {
+    append = sourceString;
+  } else {
+    prepend = sourceString.prepend;
+    append = sourceString.append;
+  }
+  if (!prepend && !append) {
+    return false;
+  }
 
-  let cmdToWrite = cmd;
+  let doPrepend: string | undefined;
+  let doAppend: string | undefined;
   let contents: string | undefined;
   try {
     contents = await readTextFile(rc);
-    if (contents.includes(cmd)) {
-      return false;
+    if (prepend && !contents.includes(prepend)) {
+      doPrepend = prepend.endsWith("\n") ? prepend : prepend + "\n";
     }
-    if (!contents.endsWith("\n")) {
-      cmdToWrite = cmdWithNewline;
+    if (append && !contents.includes(append)) {
+      if (contents.endsWith("\n")) {
+        doAppend = append;
+      } else {
+        doAppend = append.startsWith("\n") ? append : "\n" + append;
+      }
     }
   } catch (_error) {
     // nothing
   }
+  if (!doPrepend && !doAppend) {
+    return false;
+  }
   await ensureExists(dirname(rc));
 
   try {
-    if (prepend) {
-      await writeTextFile(rc, contents ?? "" + cmdWithNewline, {
+    if (doPrepend) {
+      await writeTextFile(rc, doPrepend + contents ?? "", {
         create: true,
       });
-    } else {
-      await writeTextFile(rc, cmdToWrite, {
+    }
+    if (doAppend) {
+      await writeTextFile(rc, doAppend, {
         create: true,
         append: true,
       });
@@ -207,14 +187,32 @@ async function addToPath(availableShells: UnixShell[], installDir: string) {
   for (const shell of availableShells) {
     const sourceCmd = await (shell.sourceString ?? shSourceString)(installDir);
 
-    for (const rc of await shell.rcsToUpdate(installDir)) {
+    for (const rc of await shell.rcsToUpdate()) {
       await updateRcFile(rc, sourceCmd);
     }
   }
 }
 
+// Update this when adding support for a new shell
+const shells: UnixShell[] = [
+  new Posix(),
+  new Bash(),
+  new Zsh(),
+  new Fish(),
+];
+
+async function getAvailableShells(): Promise<UnixShell[]> {
+  const present = [];
+  for (const shell of shells) {
+    if (await shell.exists()) {
+      present.push(shell);
+    }
+  }
+  return present;
+}
+
 async function setupShells(installDir: string) {
-  const availableShells = await getAvailableShells(installDir);
+  const availableShells = await getAvailableShells();
 
   await writeEnvFiles(availableShells, installDir);
 
@@ -224,17 +222,21 @@ async function setupShells(installDir: string) {
 
   const shellsWithCompletion = availableShells.filter((s) =>
     s.supportsCompletion
-  ).map((s) => s.name).join(", ");
+  );
+  const selected = await $.multiSelect(
+    {
+      message: `Set up completions?`,
+      options: shellsWithCompletion.map((s) => s.name),
+    },
+  );
+  const completionsToSetup = selected.map((idx) => shellsWithCompletion[idx]);
 
   if (
-    await $.confirm(
-      `Set up completions for the following shells? ${shellsWithCompletion}`,
-    )
+    completionsToSetup.length > 0
   ) {
-    const results = await writeCompletionFiles(availableShells, installDir);
+    const results = await writeCompletionFiles(completionsToSetup);
     await writeCompletionRcCommands(
-      shells.filter((_s, i) => results[i] !== "fail"),
-      installDir,
+      completionsToSetup.filter((_s, i) => results[i] !== "fail"),
     );
   }
 }

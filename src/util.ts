@@ -1,4 +1,5 @@
 import { environment } from "./environment.ts";
+const { isExistingDir, mkdir } = environment;
 
 export function withContext(ctx: string, error?: unknown) {
   return new Error(ctx, { cause: error });
@@ -22,4 +23,16 @@ export function withEnvVar<T>(
 
 export function shellEnvContains(s: string): boolean {
   return withEnvVar("SHELL", (sh) => sh !== undefined && sh.includes(s));
+}
+
+export function warn(s: string) {
+  console.error(`%cwarning%c: ${s}`, "color: yellow", "color: none");
+}
+
+export async function ensureExists(dirPath: string): Promise<void> {
+  if (!await isExistingDir(dirPath)) {
+    await mkdir(dirPath, {
+      recursive: true,
+    });
+  }
 }
