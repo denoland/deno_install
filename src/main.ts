@@ -13,7 +13,13 @@ import {
   type UnixShell,
   Zsh,
 } from "./shell.ts";
-import { ensureExists, warn, withContext } from "./util.ts";
+import {
+  ensureEndsWith,
+  ensureExists,
+  ensureStartsWith,
+  warn,
+  withContext,
+} from "./util.ts";
 const {
   readTextFile,
   runCmd,
@@ -88,14 +94,13 @@ async function writeCompletionFiles(
 
 class Backups {
   backedUp = new Set<string>();
-  constructor(public backupDir: string) {}
+  constructor(public backupDir: string, public backupContext?: string) {}
 
   async add(path: string, contents: string): Promise<void> {
     if (this.backedUp.has(path)) {
       return;
     }
-    const now = Date.now();
-    const dest = join(this.backupDir, basename(path)) + `.bak.${now}`;
+    const dest = join(this.backupDir, basename(path)) + `.bak`;
     console.log(
       `%cinfo%c: backing '${path}' up to '${dest}'`,
       "color: green",
@@ -134,7 +139,6 @@ async function writeEnvFiles(availableShells: UnixShell[], installDir: string) {
       if (await script.write(installDir)) {
         written.push(script);
       } else {
-        availableShells.splice(i);
         continue;
       }
     }
@@ -148,46 +152,44 @@ async function updateRcFile(
   sourceString: string | SourceStringInfo,
   backups: Backups,
 ): Promise<boolean> {
-  let prepend: string | undefined;
-  let append: string | undefined;
+  let prepend: string = "";
+  let append: string = "";
   if (typeof sourceString === "string") {
     append = sourceString;
   } else {
-    prepend = sourceString.prepend;
-    append = sourceString.append;
+    prepend = sourceString.prepend ?? "";
+    append = sourceString.append ?? "";
   }
   if (!prepend && !append) {
     return false;
   }
-  let prependWithNewline: string | undefined;
-  let appendWithNewline: string | undefined;
-  if (prepend) {
-    prependWithNewline = prepend.endsWith("\n") ? prepend : prepend + "\n";
-  }
-  if (append) {
-    appendWithNewline = append.startsWith("\n") ? append : "\n" + append;
-  }
 
-  let doPrepend: string | undefined;
-  let doAppend: string | undefined;
   let contents: string | undefined;
   try {
     contents = await readTextFile(rc);
-    if (prepend && !contents.includes(prepend)) {
-      doPrepend = prependWithNewline;
-    }
-    if (append && !contents.includes(append)) {
-      if (contents.endsWith("\n")) {
-        doAppend = append;
+    if (prepend) {
+      if (contents.includes(prepend)) {
+        // nothing to prepend
+        prepend = "";
       } else {
-        doAppend = appendWithNewline;
+        // always add a newline
+        prepend = ensureEndsWith(prepend, "\n");
+      }
+    }
+    if (append) {
+      if (contents.includes(append)) {
+        // nothing to append
+        append = "";
+      } else if (!contents.endsWith("\n")) {
+        // add new line to start
+        append = ensureStartsWith(append, "\n");
       }
     }
   } catch (_error) {
-    doPrepend = prependWithNewline;
-    doAppend = appendWithNewline;
+    prepend = prepend ? ensureEndsWith(prepend, "\n") : prepend;
+    append = append ? ensureStartsWith(append, "\n") : append;
   }
-  if (!doPrepend && !doAppend) {
+  if (!prepend && !append) {
     return false;
   }
 
@@ -198,17 +200,10 @@ async function updateRcFile(
   await ensureExists(dirname(rc));
 
   try {
-    if (doPrepend) {
-      await writeTextFile(rc, doPrepend + contents ?? "", {
-        create: true,
-      });
-    }
-    if (doAppend) {
-      await writeTextFile(rc, doAppend, {
-        create: true,
-        append: true,
-      });
-    }
+    await writeTextFile(rc, prepend + (contents ?? "") + append, {
+      create: true,
+    });
+
     return true;
   } catch (error) {
     if (error instanceof Deno.errors.PermissionDenied) {
@@ -257,18 +252,28 @@ async function setupShells(installDir: string, backupDir: string) {
 
   const backups = new Backups(backupDir);
 
-  if (await $.confirm(`Edit shell configs to add deno to the PATH?`)) {
+  if (
+    await $.confirm(`Edit shell configs to add deno to the PATH?`, {
+      default: false,
+    })
+  ) {
     await ensureExists(backupDir);
     await addToPath(availableShells, installDir, backups);
   }
 
   const shellsWithCompletion = availableShells.filter((s) =>
-    s.supportsCompletion
+    s.supportsCompletion !== false
   );
   const selected = await $.multiSelect(
     {
       message: `Set up completions?`,
-      options: shellsWithCompletion.map((s) => s.name),
+      options: shellsWithCompletion.map((s) => {
+        const maybeNotes = typeof s.supportsCompletion === "string"
+          ? ` (${s.supportsCompletion})`
+          : "";
+        return s.name +
+          maybeNotes;
+      }),
     },
   );
   const completionsToSetup = selected.map((idx) => shellsWithCompletion[idx]);
@@ -286,7 +291,7 @@ async function setupShells(installDir: string, backupDir: string) {
 }
 
 async function main() {
-  if (Deno.build.os === "windows") {
+  if (Deno.build.os === "windows" || !Deno.stdin.isTerminal()) {
     // the powershell script already handles setting up the path
     return;
   }

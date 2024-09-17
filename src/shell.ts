@@ -80,7 +80,7 @@ export type SourceStringInfo = { prepend?: string; append?: string };
 /** Abstraction of a Unix-y shell. */
 export interface UnixShell {
   name: string;
-  supportsCompletion: boolean;
+  supportsCompletion: boolean | string;
   /** Does the shell exist on the system? */
   exists(): MaybePromise<boolean>;
   /** List of potential config files for the shell */
@@ -113,7 +113,12 @@ export class Posix implements UnixShell {
 
 export class Bash implements UnixShell {
   name = "bash";
-  supportsCompletion = true;
+  get supportsCompletion() {
+    if (Deno.build.os === "darwin") {
+      return "not recommended on macOS";
+    }
+    return true;
+  }
   async exists(): Promise<boolean> {
     return (await this.rcsToUpdate()).length > 0;
   }
@@ -146,7 +151,7 @@ export class Zsh implements UnixShell {
   async getZshDotDir(): Promise<string | undefined> {
     let zshDotDir;
     if (
-      withEnvVar("SHELL", (sh) => sh && sh.includes("zsh"))
+      shellEnvContains("zsh")
     ) {
       zshDotDir = getEnv("ZDOTDIR");
     } else {

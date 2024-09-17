@@ -36,3 +36,17 @@ export async function ensureExists(dirPath: string): Promise<void> {
     });
   }
 }
+
+export function ensureEndsWith(s: string, suffix: string): string {
+  if (!s.endsWith(suffix)) {
+    return s + suffix;
+  }
+  return s;
+}
+
+export function ensureStartsWith(s: string, prefix: string): string {
+  if (!s.startsWith(prefix)) {
+    return prefix + s;
+  }
+  return s;
+}
