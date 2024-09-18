@@ -26,7 +26,11 @@ export function shellEnvContains(s: string): boolean {
 }
 
 export function warn(s: string) {
-  console.error(`%cwarning%c: ${s}`, "color: yellow", "color: none");
+  console.error(`%cwarning%c: ${s}`, "color: yellow", "color: inherit");
+}
+
+export function info(s: string) {
+  console.error(`%cinfo%c: ${s}`, "color: green", "color: inherit");
 }
 
 export async function ensureExists(dirPath: string): Promise<void> {

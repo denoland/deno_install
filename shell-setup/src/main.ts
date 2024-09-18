@@ -9,14 +9,15 @@ import {
   type ShellScript,
   shEnvScript,
   shSourceString,
-  type SourceStringInfo,
   type UnixShell,
+  type UpdateRcFile,
   Zsh,
 } from "./shell.ts";
 import {
   ensureEndsWith,
   ensureExists,
   ensureStartsWith,
+  info,
   warn,
   withContext,
 } from "./util.ts";
@@ -28,6 +29,7 @@ const {
 
 type CompletionWriteResult = "fail" | "success" | null;
 
+/** Write completion files to the appropriate locations for all supported shells */
 async function writeCompletionFiles(
   availableShells: UnixShell[],
 ): Promise<CompletionWriteResult[]> {
@@ -49,6 +51,7 @@ async function writeCompletionFiles(
         continue;
       }
       await ensureExists(dirname(completionFilePath));
+      // deno completions <shell>
       const output = await runCmd(Deno.execPath(), ["completions", shell.name]);
       if (!output.success) {
         throw new Error(
@@ -92,25 +95,25 @@ async function writeCompletionFiles(
   return results;
 }
 
+/** A little class to manage backing up shell rc files */
 class Backups {
   backedUp = new Set<string>();
-  constructor(public backupDir: string, public backupContext?: string) {}
+  constructor(public backupDir: string) {}
 
   async add(path: string, contents: string): Promise<void> {
     if (this.backedUp.has(path)) {
       return;
     }
     const dest = join(this.backupDir, basename(path)) + `.bak`;
-    console.log(
-      `%cinfo%c: backing '${path}' up to '${dest}'`,
-      "color: green",
-      "color: inherit",
+    info(
+      `backing '${path}' up to '${dest}'`,
     );
     await Deno.writeTextFile(dest, contents);
     this.backedUp.add(path);
   }
 }
 
+/** Write commands necessary to set up completions to shell rc files */
 async function writeCompletionRcCommands(
   availableShells: UnixShell[],
   backups: Backups,
@@ -127,6 +130,7 @@ async function writeCompletionRcCommands(
   }
 }
 
+/** Write the files setting up the PATH vars (and potentially others in the future) for all shells */
 async function writeEnvFiles(availableShells: UnixShell[], installDir: string) {
   const written = new Array<ShellScript>();
 
@@ -147,18 +151,24 @@ async function writeEnvFiles(availableShells: UnixShell[], installDir: string) {
   }
 }
 
+/** Updates an rc file (e.g. `.bashrc`) with a command string.
+ * If the file already contains the command, it will not be updated.
+ * @param rc - path to the rc file
+ * @param command - either the command to append, or an object with commands to prepend and/or append
+ * @param backups - manager for rc file backups
+ */
 async function updateRcFile(
   rc: string,
-  sourceString: string | SourceStringInfo,
+  command: string | UpdateRcFile,
   backups: Backups,
 ): Promise<boolean> {
   let prepend: string = "";
   let append: string = "";
-  if (typeof sourceString === "string") {
-    append = sourceString;
+  if (typeof command === "string") {
+    append = command;
   } else {
-    prepend = sourceString.prepend ?? "";
-    append = sourceString.append ?? "";
+    prepend = command.prepend ?? "";
+    append = command.append ?? "";
   }
   if (!prepend && !append) {
     return false;
@@ -206,13 +216,19 @@ async function updateRcFile(
 
     return true;
   } catch (error) {
-    if (error instanceof Deno.errors.PermissionDenied) {
+    if (
+      error instanceof Deno.errors.PermissionDenied ||
+      error instanceof Deno.errors.NotCapable
+    ) {
       return false;
     }
-    throw withContext(`Failed to amend shell rc file: ${rc}`, error);
+    throw withContext(`Failed to update shell rc file: ${rc}`, error);
   }
 }
 
+/** Write the commands necessary to source the env file (which sets up the path).
+ * Up until this point, we have not modified any shell config files.
+ */
 async function addToPath(
   availableShells: UnixShell[],
   installDir: string,
@@ -254,7 +270,7 @@ async function setupShells(installDir: string, backupDir: string) {
 
   if (
     await $.confirm(`Edit shell configs to add deno to the PATH?`, {
-      default: false,
+      default: true,
     })
   ) {
     await ensureExists(backupDir);

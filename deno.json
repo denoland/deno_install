@@ -1,19 +1,5 @@
 {
-  "name": "@nathanwhit/deno-shell-setup",
-  "version": "0.6.0",
-  "exports": "./src/main.ts",
-  "imports": {
-    "@david/dax": "jsr:@david/dax@^0.42.0",
-    "@david/which": "jsr:@david/which@^0.4.1",
-    "@std/path": "jsr:@std/path@^1.0.4"
-  },
-  "publish": {
-    "include": [
-      "src/*",
-      "deno.json",
-      "deno.lock",
-      "README.md",
-      "LICENSE.md"
-    ]
-  }
+  "workspace": [
+    "./shell-setup"
+  ]
 }

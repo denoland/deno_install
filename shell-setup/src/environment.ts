@@ -1,3 +1,7 @@
+/**
+ * A collection of functions that interact with the environment, to allow
+ * for potentially mocking in tests in the future.
+ */
 import { which } from "@david/which";
 import { homedir as getHomeDir } from "node:os";
 

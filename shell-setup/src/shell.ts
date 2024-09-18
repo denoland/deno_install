@@ -22,6 +22,9 @@ const {
   pathExists,
 } = environment;
 
+/** A shell script, for instance an `env` file. Abstraction adapted from
+ * rustup (see above)
+ */
 export class ShellScript {
   constructor(public name: string, public contents: string) {}
 
@@ -75,11 +78,14 @@ export const shSourceString = (installDir: string) => {
 
 export type MaybePromise<T> = Promise<T> | T;
 
-export type SourceStringInfo = { prepend?: string; append?: string };
+export type UpdateRcFile = { prepend?: string; append?: string };
 
 /** Abstraction of a Unix-y shell. */
 export interface UnixShell {
   name: string;
+  /** Does deno support completions for the shell? If a string, implies true
+   * and the string will appear to the user as a note when prompting for completion install
+   */
   supportsCompletion: boolean | string;
   /** Does the shell exist on the system? */
   exists(): MaybePromise<boolean>;
@@ -94,7 +100,7 @@ export interface UnixShell {
   /** Path to write completions to */
   completionsFilePath?(): MaybePromise<string>;
   /** Command to source the completion file */
-  completionsSourceString?(): MaybePromise<string | SourceStringInfo>;
+  completionsSourceString?(): MaybePromise<string | UpdateRcFile>;
 }
 
 export class Posix implements UnixShell {
@@ -188,7 +194,7 @@ export class Zsh implements UnixShell {
     }
     return join(zshDotDir, "completions", "_deno.zsh");
   }
-  async completionsSourceString(): Promise<SourceStringInfo> {
+  async completionsSourceString(): Promise<UpdateRcFile> {
     const filePath = await this.completionsFilePath();
     const completionDir = dirname(filePath);
     const fpathSetup =
