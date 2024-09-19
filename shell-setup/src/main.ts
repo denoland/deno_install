@@ -1,6 +1,6 @@
 import { environment } from "./environment.ts";
 import { basename, dirname, join } from "@std/path";
-import $ from "@david/dax";
+import { confirm, multiSelect } from "@nathanwhit/promptly";
 
 import {
   Bash,
@@ -218,7 +218,8 @@ async function updateRcFile(
   } catch (error) {
     if (
       error instanceof Deno.errors.PermissionDenied ||
-      error instanceof Deno.errors.NotCapable
+      // deno-lint-ignore no-explicit-any
+      error instanceof (Deno.errors as any).NotCapable
     ) {
       return false;
     }
@@ -269,7 +270,7 @@ async function setupShells(installDir: string, backupDir: string) {
   const backups = new Backups(backupDir);
 
   if (
-    await $.confirm(`Edit shell configs to add deno to the PATH?`, {
+    await confirm(`Edit shell configs to add deno to the PATH?`, {
       default: true,
     })
   ) {
@@ -280,7 +281,7 @@ async function setupShells(installDir: string, backupDir: string) {
   const shellsWithCompletion = availableShells.filter((s) =>
     s.supportsCompletion !== false
   );
-  const selected = await $.multiSelect(
+  const selected = await multiSelect(
     {
       message: `Set up completions?`,
       options: shellsWithCompletion.map((s) => {
