@@ -1,0 +1,15 @@
+{
+  "workspace": [
+    "./shell-setup"
+  ],
+  "lint": {
+    "exclude": [
+      "./shell-setup/bundled.esm.js"
+    ]
+  },
+  "fmt": {
+    "exclude": [
+      "./shell-setup/bundled.esm.js"
+    ]
+  }
+}

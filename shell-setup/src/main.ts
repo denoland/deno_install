@@ -162,8 +162,8 @@ async function updateRcFile(
   command: string | UpdateRcFile,
   backups: Backups,
 ): Promise<boolean> {
-  let prepend: string = "";
-  let append: string = "";
+  let prepend = "";
+  let append = "";
   if (typeof command === "string") {
     append = command;
   } else {
