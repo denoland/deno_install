@@ -14,10 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: denoland/setup-deno@v1
-        with:
-          deno-version: 2.0.0-rc.4
-
       - name: lint
         if: matrix.os == 'macOS-latest'
         run: |
@@ -38,6 +34,13 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: ./install_test.ps1
+
+  check-js:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: 2.0.0-rc.4
 
       - name: deno lint
         run: deno lint
