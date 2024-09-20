@@ -5,7 +5,12 @@
   "lint": {
     "exclude": [
       "./shell-setup/bundled.esm.js"
-    ]
+    ],
+    "rules": {
+      "exclude": [
+        "no-slow-types"
+      ]
+    }
   },
   "fmt": {
     "exclude": [
