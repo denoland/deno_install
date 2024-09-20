@@ -52,7 +52,7 @@ if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2
 	if ! echo | $exe run --allow-sys=homedir - >/dev/null 2>&1; then
 		allow_sys_perm="--allow-sys"
 	fi
-	$exe run $allow_sys_perm --no-check --allow-run="zsh,$exe" --allow-read --allow-env --allow-write jsr:@deno/installer-shell-setup/bundled "$deno_install"
+	$exe run $allow_sys_perm --allow-run="zsh,$exe" --allow-read --allow-env --allow-write jsr:@deno/installer-shell-setup/bundled "$deno_install"
 fi
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
