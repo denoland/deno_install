@@ -1,0 +1,24 @@
+name: Publish
+on:
+  push:
+    branches:
+      - 'publish-shell-setup'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      id-token: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: rc
+
+      - name: Publish to JSR
+        run: deno publish
+
