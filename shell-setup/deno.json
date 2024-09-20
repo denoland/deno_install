@@ -1,6 +1,6 @@
 {
   "name": "@deno/installer-shell-setup",
-  "version": "0.2.0",
+  "version": "0.1.0",
   "exports": {
     ".": "./src/main.ts",
     "./bundled": "./bundled.esm.js"
