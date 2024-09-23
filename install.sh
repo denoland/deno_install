@@ -46,13 +46,7 @@ rm "$exe.zip"
 
 echo "Deno was installed successfully to $exe"
 if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
-
-	allow_sys_perm="--allow-sys=homedir"
-
-	if ! echo | $exe run --allow-sys=homedir - >/dev/null 2>&1; then
-		allow_sys_perm="--allow-sys"
-	fi
-	$exe run $allow_sys_perm --allow-run="zsh,$exe" --allow-read --allow-env --allow-write jsr:@deno/installer-shell-setup/bundled "$deno_install"
+	$exe run -A jsr:@deno/installer-shell-setup/bundled "$deno_install"
 fi
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
