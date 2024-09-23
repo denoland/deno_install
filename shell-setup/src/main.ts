@@ -276,6 +276,9 @@ async function setupShells(installDir: string, backupDir: string) {
   ) {
     await ensureExists(backupDir);
     await addToPath(availableShells, installDir, backups);
+    console.log(
+      "\nDeno was added to the PATH.\nYou may need to restart your shell for it to become available.\n",
+    );
   }
 
   const shellsWithCompletion = availableShells.filter((s) =>
