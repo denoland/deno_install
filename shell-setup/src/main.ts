@@ -18,7 +18,6 @@ import {
   ensureExists,
   ensureStartsWith,
   info,
-  shellEnvContains,
   warn,
   withContext,
 } from "./util.ts";
@@ -333,7 +332,7 @@ async function main() {
 
   try {
     await setupShells(installDir, backupDir);
-  } catch (e) {
+  } catch (_e) {
     warn(
       `Failed to configure your shell environments, you may need to manually add deno to your PATH environment variable.
 
