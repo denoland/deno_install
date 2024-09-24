@@ -255,8 +255,12 @@ const shells: UnixShell[] = [
 async function getAvailableShells(): Promise<UnixShell[]> {
   const present = [];
   for (const shell of shells) {
-    if (await shell.exists()) {
-      present.push(shell);
+    try {
+      if (await shell.exists()) {
+        present.push(shell);
+      }
+    } catch (_e) {
+      continue;
     }
   }
   return present;
@@ -325,7 +329,18 @@ async function main() {
   const installDir = Deno.args[0].trim();
 
   const backupDir = join(installDir, ".shellRcBackups");
-  await setupShells(installDir, backupDir);
+
+  try {
+    await setupShells(installDir, backupDir);
+  } catch (_e) {
+    warn(
+      `Failed to configure your shell environments, you may need to manually add deno to your PATH environment variable.
+
+Manually add the directory to your $HOME/.bashrc (or similar)":
+  export DENO_INSTALL="${installDir}"
+  export PATH="${installDir}/bin:$PATH"\n`,
+    );
+  }
 }
 
 if (import.meta.main) {

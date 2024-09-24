@@ -12,6 +12,7 @@
       ]
     }
   },
+  "lock": "./shell-setup/deno.lock",
   "fmt": {
     "exclude": [
       "./shell-setup/bundled.esm.js"

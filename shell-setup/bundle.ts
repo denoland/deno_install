@@ -11,7 +11,6 @@ const result = await esbuild.build({
   entryPoints: ["./src/main.ts"],
   outfile: "./bundled.esm.js",
   bundle: true,
-  minify: true,
   format: "esm",
 });
 
