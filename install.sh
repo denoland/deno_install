@@ -47,7 +47,7 @@ rm "$exe.zip"
 echo "Deno was installed successfully to $exe"
 
 run_shell_setup() {
-	$exe run -A -r jsr:@deno/installer-shell-setup/bundled "$deno_install"
+	$exe run -A --reload jsr:@deno/installer-shell-setup/bundled "$deno_install"
 
 }
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
