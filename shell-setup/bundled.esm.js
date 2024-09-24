@@ -1387,7 +1387,7 @@ async function main() {
   const backupDir = join3(installDir, ".shellRcBackups");
   try {
     await setupShells(installDir, backupDir);
-  } catch (e) {
+  } catch (_e) {
     warn(
       `Failed to configure your shell environments, you may need to manually add deno to your PATH environment variable.
 
