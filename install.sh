@@ -51,7 +51,7 @@ run_shell_setup() {
 
 }
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
-if [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
+if [ -z "$CI" ] && [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
 	if [ -t 0 ]; then
 		run_shell_setup
 	else
