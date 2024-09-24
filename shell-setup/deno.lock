@@ -159,10 +159,14 @@
     }
   },
   "workspace": {
-    "dependencies": [
-      "jsr:@david/which@~0.4.1",
-      "jsr:@nathanwhit/promptly@~0.1.2",
-      "jsr:@std/path@^1.0.4"
-    ]
+    "members": {
+      "shell-setup": {
+        "dependencies": [
+          "jsr:@david/which@~0.4.1",
+          "jsr:@nathanwhit/promptly@~0.1.2",
+          "jsr:@std/path@^1.0.4"
+        ]
+      }
+    }
   }
 }
