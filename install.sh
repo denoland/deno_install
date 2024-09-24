@@ -45,16 +45,12 @@ chmod +x "$exe"
 rm "$exe.zip"
 
 echo "Deno was installed successfully to $exe"
+if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
+	$exe run -A jsr:@deno/installer-shell-setup/bundled "$deno_install"
+fi
 if command -v deno >/dev/null; then
 	echo "Run 'deno --help' to get started"
 else
-	case $SHELL in
-	/bin/zsh) shell_profile=".zshrc" ;;
-	*) shell_profile=".bashrc" ;;
-	esac
-	echo "Manually add the directory to your \$HOME/$shell_profile (or similar)"
-	echo "  export DENO_INSTALL=\"$deno_install\""
-	echo "  export PATH=\"\$DENO_INSTALL/bin:\$PATH\""
 	echo "Run '$exe --help' to get started"
 fi
 echo

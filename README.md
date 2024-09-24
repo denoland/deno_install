@@ -34,13 +34,15 @@ $v="1.0.0"; irm https://deno.land/install.ps1 | iex
 
 ## Install via Package Manager
 
-**With [winget](https://github.com/microsoft/winget-pkgs/tree/master/manifests/d/DenoLand/Deno):**
+**With
+[winget](https://github.com/microsoft/winget-pkgs/tree/master/manifests/d/DenoLand/Deno):**
 
 ```powershell
 winget install deno
 ```
 
-**With [Scoop](https://github.com/ScoopInstaller/Main/blob/master/bucket/deno.json):**
+**With
+[Scoop](https://github.com/ScoopInstaller/Main/blob/master/bucket/deno.json):**
 
 ```powershell
 scoop install deno
@@ -95,7 +97,8 @@ cargo install deno
 
 ## Install and Manage Multiple Versions
 
-**With [asdf](https://asdf-vm.com) and [asdf-deno](https://github.com/asdf-community/asdf-deno):**
+**With [asdf](https://asdf-vm.com) and
+[asdf-deno](https://github.com/asdf-community/asdf-deno):**
 
 ```sh
 asdf plugin add deno
@@ -123,7 +126,8 @@ asdf global deno 1.0.0
 asdf local deno 1.0.0
 ```
 
-**With [Scoop](https://github.com/lukesampson/scoop/wiki/Switching-Ruby-And-Python-Versions):**
+**With
+[Scoop](https://github.com/lukesampson/scoop/wiki/Switching-Ruby-And-Python-Versions):**
 
 ```sh
 # Install a specific version of deno:
@@ -158,13 +162,17 @@ scoop reset deno
 
 ## Compatibility
 
-- The Shell installer can be used on Windows with [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about), [MSYS](https://www.msys2.org) or equivalent set of tools.
+- The Shell installer can be used on Windows with
+  [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/about),
+  [MSYS](https://www.msys2.org) or equivalent set of tools.
 
 ## Known Issues
 
 ### either unzip or 7z is required
 
-To decompress the `deno` archive, one of either [`unzip`](https://linux.die.net/man/1/unzip) or [`7z`](https://linux.die.net/man/1/7z) must be available on the target system.
+To decompress the `deno` archive, one of either
+[`unzip`](https://linux.die.net/man/1/unzip) or
+[`7z`](https://linux.die.net/man/1/7z) must be available on the target system.
 
 ```sh
 $ curl -fsSL https://deno.land/install.sh | sh
@@ -173,8 +181,10 @@ Error: either unzip or 7z is required to install Deno (see: https://github.com/d
 
 **When does this issue occur?**
 
-During the `install.sh` process, `unzip` or `7z` is used to extract the zip archive.
+During the `install.sh` process, `unzip` or `7z` is used to extract the zip
+archive.
 
 **How can this issue be fixed?**
 
-You can install unzip via `brew install unzip` on MacOS or `apt-get install unzip -y` on Linux.
+You can install unzip via `brew install unzip` on MacOS or
+`apt-get install unzip -y` on Linux.

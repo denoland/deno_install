@@ -34,3 +34,29 @@ jobs:
         if: matrix.os == 'windows-latest'
         shell: pwsh
         run: ./install_test.ps1
+
+  check-js:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: denoland/setup-deno@v1
+        with:
+          deno-version: rc
+
+      - name: deno lint
+        run: deno lint
+
+      - name: check fmt
+        run: deno fmt --check
+
+      - name: check bundled file up to date
+        run: |
+          cd shell-setup
+          deno task bundle
+          if ! git --no-pager diff --exit-code ./bundled.esm.js; then
+            echo 'Bundled script is out of date, update it with `cd shell-setup; deno task bundle`'.
+            exit 1
+          fi
+
