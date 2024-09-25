@@ -43,8 +43,8 @@ else
 fi
 
 # verify checksum
-if command -v sha256sum >/dev/null; then
-	sha256sum -c "$exe.sha256sum"
+if command -v shasum >/dev/null; then
+	shasum -a 256 -c "$exe.sha256sum"
 else
 	echo "Warning: Couldn't verify checksum (sha256sum not found)"
 fi

@@ -59,4 +59,3 @@ jobs:
             echo 'Bundled script is out of date, update it with `cd shell-setup; deno task bundle`'.
             exit 1
           fi
-
