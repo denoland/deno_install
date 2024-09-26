@@ -160,6 +160,21 @@ scoop reset deno
   irm https://deno.land/install.ps1 | iex
   ```
 
+## Verification
+
+As an additional layer of security, you can verify the integrity of the shell
+installer against the provided checksums.
+
+```sh
+curl -fLso install.sh https://deno.land/install.sh
+```
+
+Verify the SHA256 checksum of the installer:
+
+```sh
+shasum -a 256 -c --ignore-missing <(curl -s https://raw.githubusercontent.com/denoland/deno_install/main/SHA256SUM)
+```
+
 ## Compatibility
 
 - The Shell installer can be used on Windows with
