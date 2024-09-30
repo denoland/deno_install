@@ -198,7 +198,6 @@ async function updateRcFile(
     }
   } catch (_error) {
     prepend = prepend ? ensureEndsWith(prepend, "\n") : prepend;
-    append = append ? ensureStartsWith(append, "\n") : append;
   }
   if (!prepend && !append) {
     return false;
@@ -388,9 +387,9 @@ async function main() {
 
   try {
     await setupShells(installDir, backupDir, {
-    skipPrompts: args.yes,
-    noModifyPath: args["no-modify-path"],
-  });
+      skipPrompts: args.yes,
+      noModifyPath: args["no-modify-path"],
+    });
   } catch (_e) {
     warn(
       `Failed to configure your shell environments, you may need to manually add deno to your PATH environment variable.

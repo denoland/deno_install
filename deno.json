@@ -12,7 +12,10 @@
       ]
     }
   },
-  "lock": {"path": "./shell-setup/deno.lock", "frozen": true},
+  "tasks": {
+    "bundle": "cd shell-setup && deno task bundle"
+  },
+  "lock": { "path": "./shell-setup/deno.lock", "frozen": true },
   "fmt": {
     "exclude": [
       "./shell-setup/bundled.esm.js",

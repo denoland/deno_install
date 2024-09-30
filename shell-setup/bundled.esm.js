@@ -1546,7 +1546,6 @@ async function updateRcFile(rc, command, backups) {
     }
   } catch (_error) {
     prepend = prepend ? ensureEndsWith(prepend, "\n") : prepend;
-    append = append ? ensureStartsWith(append, "\n") : append;
   }
   if (!prepend && !append) {
     return false;
