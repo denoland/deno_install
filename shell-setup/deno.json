@@ -15,7 +15,7 @@
     "@std/cli": "jsr:@std/cli@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.4"
   },
-  "exclude": [
-    "./bundle.ts"
-  ]
+  "publish": {
+    "exclude": ["./bundle.ts"]
+  }
 }

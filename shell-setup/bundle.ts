@@ -14,6 +14,8 @@ const result = await esbuild.build({
   format: "esm",
 });
 
-console.log(result.outputFiles);
+if (result.errors.length || result.warnings.length) {
+  console.error(`Errors: ${result.errors}, warnings: ${result.warnings}`);
+}
 
 await esbuild.stop();

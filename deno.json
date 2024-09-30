@@ -12,10 +12,11 @@
       ]
     }
   },
-  "lock": "./shell-setup/deno.lock",
+  "lock": {"path": "./shell-setup/deno.lock", "frozen": true},
   "fmt": {
     "exclude": [
-      "./shell-setup/bundled.esm.js"
+      "./shell-setup/bundled.esm.js",
+      ".github"
     ]
   }
 }
