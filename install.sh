@@ -20,10 +20,42 @@ else
 	esac
 fi
 
-if [ $# -eq 0 ]; then
+print_help_and_exit() {
+	echo "Setup script for installing deno
+
+Options:
+  -y, --yes
+    Skip interactive prompts and accept defaults
+  --no-modify-path
+    Don't add deno to the PATH environment variable
+  -h, --help
+    Print help
+"
+	echo "Note: Deno was not installed"
+	exit 0
+}
+
+# Simple arg parsing - look for help flag, otherwise
+# ignore args starting with '-' and take the first
+# positional arg as the deno version to install
+for arg in "$@"; do
+	case "$arg" in
+	"-h")
+		print_help_and_exit
+		;;
+	"--help")
+		print_help_and_exit
+		;;
+	"-"*) ;;
+	*)
+		if [ -z "$deno_version" ]; then
+			deno_version="$arg"
+		fi
+		;;
+	esac
+done
+if [ -z "$deno_version" ]; then
 	deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"
-else
-	deno_version=$1
 fi
 
 deno_uri="https://dl.deno.land/release/${deno_version}/deno-${target}.zip"
@@ -47,17 +79,17 @@ rm "$exe.zip"
 echo "Deno was installed successfully to $exe"
 
 run_shell_setup() {
-	$exe run -A --reload jsr:@deno/installer-shell-setup/bundled "$deno_install"
-
+	$exe run -A --reload jsr:@deno/installer-shell-setup/bundled "$deno_install" "$@"
 }
+
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
 if [ -z "$CI" ] && [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
 	if [ -t 0 ]; then
-		run_shell_setup
+		run_shell_setup "$@"
 	else
 		# This script is probably running piped into sh, so we don't have direct access to stdin.
 		# Instead, explicitly connect /dev/tty to stdin
-		run_shell_setup </dev/tty
+		run_shell_setup "$@" </dev/tty
 	fi
 fi
 if command -v deno >/dev/null; then
