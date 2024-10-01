@@ -26,7 +26,9 @@ jobs:
         shell: bash
         run: |
           if ! shasum -a 256 -c SHA256SUM; then
-            echo 'Checksum verification failed'
+            echo 'Checksum verification failed.'
+            echo 'If the installer has been updated intentionally, update the checksum with:'
+            echo 'shasum -a 256 install.{sh,ps1} > SHA256SUM'
             exit 1
           fi
       - name: tests shell
@@ -67,3 +69,6 @@ jobs:
             echo 'Bundled script is out of date, update it with `cd shell-setup; deno task bundle`'.
             exit 1
           fi
+      - name: integration tests
+        if: matrix.os != 'windows-latest'
+        run: deno test -A --permit-no-files

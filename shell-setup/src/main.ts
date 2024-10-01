@@ -1,6 +1,7 @@
 import { environment } from "./environment.ts";
 import { basename, dirname, join } from "@std/path";
 import { confirm, multiSelect } from "@nathanwhit/promptly";
+import { parseArgs } from "@std/cli/parse-args";
 
 import {
   Bash,
@@ -197,7 +198,6 @@ async function updateRcFile(
     }
   } catch (_error) {
     prepend = prepend ? ensureEndsWith(prepend, "\n") : prepend;
-    append = append ? ensureStartsWith(append, "\n") : append;
   }
   if (!prepend && !append) {
     return false;
@@ -266,7 +266,20 @@ async function getAvailableShells(): Promise<UnixShell[]> {
   return present;
 }
 
-async function setupShells(installDir: string, backupDir: string) {
+interface SetupOpts {
+  skipPrompts: boolean;
+  noModifyPath: boolean;
+}
+
+async function setupShells(
+  installDir: string,
+  backupDir: string,
+  opts: SetupOpts,
+) {
+  const {
+    skipPrompts,
+    noModifyPath,
+  } = opts;
   const availableShells = await getAvailableShells();
 
   await writeEnvFiles(availableShells, installDir);
@@ -274,9 +287,10 @@ async function setupShells(installDir: string, backupDir: string) {
   const backups = new Backups(backupDir);
 
   if (
-    await confirm(`Edit shell configs to add deno to the PATH?`, {
-      default: true,
-    })
+    (skipPrompts && !noModifyPath) || (!skipPrompts &&
+      await confirm(`Edit shell configs to add deno to the PATH?`, {
+        default: true,
+      }))
   ) {
     await ensureExists(backupDir);
     await addToPath(availableShells, installDir, backups);
@@ -288,7 +302,7 @@ async function setupShells(installDir: string, backupDir: string) {
   const shellsWithCompletion = availableShells.filter((s) =>
     s.supportsCompletion !== false
   );
-  const selected = await multiSelect(
+  const selected = skipPrompts ? [] : await multiSelect(
     {
       message: `Set up completions?`,
       options: shellsWithCompletion.map((s) => {
@@ -314,16 +328,57 @@ async function setupShells(installDir: string, backupDir: string) {
   }
 }
 
-async function main() {
-  if (Deno.build.os === "windows" || !Deno.stdin.isTerminal()) {
-    // the powershell script already handles setting up the path
-    return;
-  }
+function printHelp() {
+  console.log(`\n
+Setup script for installing deno
 
+Options:
+  -y, --yes
+    Skip interactive prompts and accept defaults
+  --no-modify-path
+    Don't add deno to the PATH environment variable
+  -h, --help
+    Print help\n`);
+}
+
+async function main() {
   if (Deno.args.length === 0) {
     throw new Error(
       "Expected the deno install directory as the first argument",
     );
+  }
+
+  const args = parseArgs(Deno.args.slice(1), {
+    boolean: ["yes", "no-modify-path", "help"],
+    alias: {
+      "yes": "y",
+      "help": "h",
+    },
+    default: {
+      yes: false,
+      "no-modify-path": false,
+    },
+    unknown: (arg: string) => {
+      if (arg.startsWith("-")) {
+        printHelp();
+        console.error(`Unknown flag ${arg}. Shell will not be configured`);
+        Deno.exit(1);
+      }
+      return false;
+    },
+  });
+
+  if (args.help) {
+    printHelp();
+    return;
+  }
+
+  if (
+    Deno.build.os === "windows" || (!args.yes && !(Deno.stdin.isTerminal() &&
+      Deno.stdout.isTerminal()))
+  ) {
+    // the powershell script already handles setting up the path
+    return;
   }
 
   const installDir = Deno.args[0].trim();
@@ -331,7 +386,10 @@ async function main() {
   const backupDir = join(installDir, ".shellRcBackups");
 
   try {
-    await setupShells(installDir, backupDir);
+    await setupShells(installDir, backupDir, {
+      skipPrompts: args.yes,
+      noModifyPath: args["no-modify-path"],
+    });
   } catch (_e) {
     warn(
       `Failed to configure your shell environments, you may need to manually add deno to your PATH environment variable.

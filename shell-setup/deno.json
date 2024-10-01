@@ -10,11 +10,12 @@
   },
   "license": "../LICENSE",
   "imports": {
-    "@nathanwhit/promptly": "jsr:@nathanwhit/promptly@^0.1.2",
     "@david/which": "jsr:@david/which@^0.4.1",
+    "@nathanwhit/promptly": "jsr:@nathanwhit/promptly@^0.1.2",
+    "@std/cli": "jsr:@std/cli@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.4"
   },
-  "exclude": [
-    "./bundle.ts"
-  ]
+  "publish": {
+    "exclude": ["./bundle.ts"]
+  }
 }
