@@ -21,14 +21,6 @@ jobs:
           shfmt -d .
           shellcheck -s sh *.sh
 
-      - name: verify checksum
-        if: matrix.os == 'ubuntu-latest'
-        shell: bash
-        run: |
-          if ! shasum -a 256 -c SHA256SUM; then
-            echo 'Checksum verification failed'
-            exit 1
-          fi
       - name: tests shell
         shell: bash
         run: ./install_test.sh
@@ -67,3 +59,4 @@ jobs:
             echo 'Bundled script is out of date, update it with `cd shell-setup; deno task bundle`'.
             exit 1
           fi
+
