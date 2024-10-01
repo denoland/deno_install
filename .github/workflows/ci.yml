@@ -72,3 +72,6 @@ jobs:
       - name: integration tests
         if: matrix.os != 'windows-latest'
         run: deno test -A --permit-no-files
+      
+      - name: dry run publishing
+        run: deno publish --dry-run
