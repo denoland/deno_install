@@ -116,6 +116,7 @@ class TestEnv implements AsyncDisposable, Disposable {
       PATH: searchPaths.values().toArray().join(":"),
       ZDOTDIR: homeDir.toString(),
       SHELL: "/bin/bash",
+      CI: "",
     };
     Object.assign(newEnv, env);
     return new TestEnv(tempDir, homeDir, installDir, installScript, newEnv);
