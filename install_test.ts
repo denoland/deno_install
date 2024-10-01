@@ -9,6 +9,8 @@ Deno.test(
     const { env, tempDir, installScript, installDir } = testEnv;
     await testEnv.homeDir.join(".bashrc").ensureFile();
 
+    console.log("installscript contents", await installScript.readText());
+
     const shellOutput = await runInBash(
       [`cat "${installScript.toString()}" | sh -s -- -y v2.0.0-rc.6`],
       { env, cwd: tempDir },
@@ -47,7 +49,10 @@ Deno.test(
       { env, cwd: tempDir },
     );
 
-    assert(!shellOutput.includes("Deno was added to the PATH"));
+    assert(
+      !shellOutput.includes("Deno was added to the PATH"),
+      `Unexpected output, shouldn't have added to the PATH:\n${shellOutput}`,
+    );
 
     const deno = installDir.join("bin/deno");
     assert(await deno.exists());
