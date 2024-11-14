@@ -82,14 +82,20 @@ run_shell_setup() {
 	$exe run -A --reload jsr:@deno/installer-shell-setup/bundled "$deno_install" "$@"
 }
 
+is_docker() {
+	grep -q '/docker/' /proc/1/cgroup 2>/dev/null || [ -f /.dockerenv ]
+}
+
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
-if [ -z "$CI" ] && [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
-	if [ -t 0 ]; then
-		run_shell_setup "$@"
-	else
-		# This script is probably running piped into sh, so we don't have direct access to stdin.
-		# Instead, explicitly connect /dev/tty to stdin
-		run_shell_setup "$@" </dev/tty
+if { [ -z "$CI" ] && [ -t 1 ]; } || is_docker; then
+	if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
+		if [ -t 0 ]; then
+			run_shell_setup "$@"
+		else
+			# This script is probably running piped into sh, so we don't have direct access to stdin.
+			# Instead, explicitly connect /dev/tty to stdin
+			run_shell_setup "$@" </dev/tty
+		fi
 	fi
 fi
 if command -v deno >/dev/null; then
