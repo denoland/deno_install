@@ -90,7 +90,7 @@ is_docker_build() {
 if { [ -z "$CI" ] && [ -t 1 ]; } || is_docker_build; then
 	if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
 		if is_docker_build; then
-			run_shell_setup "$@"
+			run_shell_setup -y "$@"
 		else
 			if [ -t 0 ]; then
 				run_shell_setup "$@"
