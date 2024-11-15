@@ -89,15 +89,16 @@ is_docker_build() {
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
 if { [ -z "$CI" ] && [ -t 1 ]; } || is_docker_build; then
 	if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
-		if [ -t 0 ]; then
+		if is_docker_build; then
 			run_shell_setup "$@"
-		elif [ -c /dev/tty ]; then
-			# This script is probably running piped into sh, so we don't have direct access to stdin.
-			# Instead, explicitly connect /dev/tty to stdin
-			run_shell_setup "$@" </dev/tty
 		else
-			# probably in a Docker build then
-			run_shell_setup "$@"
+			if [ -t 0 ]; then
+				run_shell_setup "$@"
+			else
+				# This script is probably running piped into sh, so we don't have direct access to stdin.
+				# Instead, explicitly connect /dev/tty to stdin
+				run_shell_setup "$@" </dev/tty
+			fi
 		fi
 	fi
 fi
