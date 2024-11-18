@@ -138,7 +138,7 @@ export class Bash implements UnixShell {
   completionsFilePath(): string {
     const USER = Deno.env.get("USER");
     if (USER === "root") {
-    	return "/usr/local/etc/bash_completion.d/deno.bash";
+      return "/usr/local/etc/bash_completion.d/deno.bash";
     }
     return join(homeDir, ".local/share/bash-completion/completions/deno.bash");
   }
