@@ -136,7 +136,11 @@ export class Bash implements UnixShell {
     return filterAsync(this.rcfiles(), isExistingFile);
   }
   completionsFilePath(): string {
-    return "/usr/local/etc/bash_completion.d/deno.bash";
+    const USER = Deno.env.get("USER");
+    if (USER === "root") {
+    	return "/usr/local/etc/bash_completion.d/deno.bash";
+    }
+    return join(homeDir, ".local/share/bash-completion/completions/deno.bash");
   }
   completionsSourceString(): string {
     return `source ${this.completionsFilePath()}`;
