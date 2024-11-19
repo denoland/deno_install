@@ -35,6 +35,9 @@ Options:
 	exit 0
 }
 
+# Initialize variables
+should_run_shell_setup=false
+
 # Simple arg parsing - look for help flag, otherwise
 # ignore args starting with '-' and take the first
 # positional arg as the deno version to install
@@ -45,6 +48,12 @@ for arg in "$@"; do
 		;;
 	"--help")
 		print_help_and_exit
+		;;
+	"-y")
+		should_run_shell_setup=true
+		;;
+	"--yes")
+		should_run_shell_setup=true
 		;;
 	"-"*) ;;
 	*)
@@ -82,15 +91,11 @@ run_shell_setup() {
 	$exe run -A --reload jsr:@deno/installer-shell-setup/bundled "$deno_install" "$@"
 }
 
-is_docker_build() {
-	[ "$DOCKER_BUILD" = "true" ]
-}
-
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
-if { [ -z "$CI" ] && [ -t 1 ]; } || is_docker_build; then
+if { [ -z "$CI" ] && [ -t 1 ]; } || should_run_shell_setup; then
 	if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
-		if is_docker_build; then
-			run_shell_setup -y "$@"
+		if should_run_shell_setup; then
+			run_shell_setup -y "$@" # doublely sure to pass -y to run_shell_setup in this case
 		else
 			if [ -t 0 ]; then
 				run_shell_setup "$@"
