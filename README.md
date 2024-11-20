@@ -202,4 +202,4 @@ archive.
 **How can this issue be fixed?**
 
 You can install unzip via `brew install unzip` on MacOS or
-`apt-get install unzip -y` on Linux.
+`sudo apt-get install unzip -y` on Linux.
