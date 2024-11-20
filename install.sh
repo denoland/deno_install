@@ -35,6 +35,9 @@ Options:
 	exit 0
 }
 
+# Initialize variables
+should_run_shell_setup=false
+
 # Simple arg parsing - look for help flag, otherwise
 # ignore args starting with '-' and take the first
 # positional arg as the deno version to install
@@ -45,6 +48,12 @@ for arg in "$@"; do
 		;;
 	"--help")
 		print_help_and_exit
+		;;
+	"-y")
+		should_run_shell_setup=true
+		;;
+	"--yes")
+		should_run_shell_setup=true
 		;;
 	"-"*) ;;
 	*)
@@ -83,13 +92,19 @@ run_shell_setup() {
 }
 
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
-if [ -z "$CI" ] && [ -t 1 ] && $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
-	if [ -t 0 ]; then
-		run_shell_setup "$@"
-	else
-		# This script is probably running piped into sh, so we don't have direct access to stdin.
-		# Instead, explicitly connect /dev/tty to stdin
-		run_shell_setup "$@" </dev/tty
+if { [ -z "$CI" ] && [ -t 1 ]; } || $should_run_shell_setup; then
+	if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
+		if $should_run_shell_setup; then
+			run_shell_setup -y "$@" # doublely sure to pass -y to run_shell_setup in this case
+		else
+			if [ -t 0 ]; then
+				run_shell_setup "$@"
+			else
+				# This script is probably running piped into sh, so we don't have direct access to stdin.
+				# Instead, explicitly connect /dev/tty to stdin
+				run_shell_setup "$@" </dev/tty
+			fi
+		fi
 	fi
 fi
 if command -v deno >/dev/null; then
