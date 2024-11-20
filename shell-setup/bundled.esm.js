@@ -1298,7 +1298,11 @@ var Bash = class {
     return filterAsync(this.rcfiles(), isExistingFile);
   }
   completionsFilePath() {
-    return "/usr/local/etc/bash_completion.d/deno.bash";
+    const USER = Deno.env.get("USER");
+    if (USER === "root") {
+      return "/usr/local/etc/bash_completion.d/deno.bash";
+    }
+    return join3(homeDir, ".local/share/bash-completion/completions/deno.bash");
   }
   completionsSourceString() {
     return `source ${this.completionsFilePath()}`;
