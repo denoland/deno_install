@@ -172,7 +172,7 @@ curl -fLso install.sh https://deno.land/install.sh
 Verify the SHA256 checksum of the installer:
 
 ```sh
-shasum -a 256 -c --ignore-missing <(curl -s https://raw.githubusercontent.com/denoland/deno_install/main/SHA256SUM)
+curl -s https://raw.githubusercontent.com/denoland/deno_install/master/SHA256SUM | sha256sum --check --ignore-missing
 ```
 
 ## Compatibility
