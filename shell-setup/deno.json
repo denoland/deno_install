@@ -17,6 +17,9 @@
     "@types/node": "npm:@types/node@*"
   },
   "publish": {
-    "exclude": ["./bundle.ts"]
+    "exclude": [
+      "./bundle.ts",
+      "./src/**/*_test.ts"
+    ]
   }
 }

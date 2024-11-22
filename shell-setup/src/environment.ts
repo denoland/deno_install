@@ -21,7 +21,7 @@ async function tryStat(path: string): Promise<Deno.FileInfo | undefined> {
   }
 }
 
-export const environment = {
+export const _environmentImpl = {
   writeTextFile: Deno.writeTextFile,
   readTextFile: Deno.readTextFile,
   async isExistingFile(path: string): Promise<boolean> {
@@ -32,8 +32,9 @@ export const environment = {
     const info = await tryStat(path);
     return info?.isDirectory ?? false;
   },
-  pathExists(path: string): Promise<boolean> {
-    return tryStat(path).then((info) => info !== undefined);
+  async pathExists(path: string): Promise<boolean> {
+    const info = await tryStat(path);
+    return info !== undefined;
   },
   mkdir: Deno.mkdir,
   homeDir: getHomeDir(),
@@ -53,3 +54,26 @@ export const environment = {
     }).output();
   },
 };
+
+export type Environment = typeof _environmentImpl;
+
+function makeWrapper() {
+  const wrapperEnv: Partial<Environment> = {};
+  for (const keyString in _environmentImpl) {
+    const key = keyString as keyof Environment;
+    if (typeof _environmentImpl[key] === "function") {
+      // deno-lint-ignore no-explicit-any
+      wrapperEnv[key] = function (...args: any[]) {
+        // deno-lint-ignore no-explicit-any
+        return (_environmentImpl[key] as any)(...args);
+        // deno-lint-ignore no-explicit-any
+      } as any;
+    }
+  }
+  Object.defineProperty(wrapperEnv, "homeDir", {
+    get: () => _environmentImpl.homeDir,
+  });
+  return wrapperEnv as Environment;
+}
+
+export const environment: Environment = makeWrapper();
