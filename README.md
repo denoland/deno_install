@@ -18,6 +18,8 @@ curl -fsSL https://deno.land/install.sh | sh
 irm https://deno.land/install.ps1 | iex
 ```
 
+> tips: If you're using Cmder, you can create a new Powershell-type label when you open Cmder
+
 ## Install Specific Version
 
 **With Shell:**
