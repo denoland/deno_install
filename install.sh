@@ -4,8 +4,8 @@
 
 set -e
 
-if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null; then
-	echo "Error: either unzip or 7z is required to install Deno (see: https://github.com/denoland/deno_install#either-unzip-or-7z-is-required )." 1>&2
+if ! { command -v unzip || command -v busybox || command -v 7z || command -v 7zz || command -v 7za || command -v bsdtar; } >/dev/null; then
+	echo "Error: one of unzip, 7z, or bsdtar is required to install Deno (see: https://github.com/denoland/deno_install#archive-extraction-tools)." 1>&2
 	exit 1
 fi
 
@@ -79,8 +79,15 @@ fi
 curl --fail --location --progress-bar --output "$exe.zip" "$deno_uri"
 if command -v unzip >/dev/null; then
 	unzip -d "$bin_dir" -o "$exe.zip"
+elif command -v busybox >/dev/null; then
+	busybox unzip -d "$bin_dir" -o "$exe.zip"
+elif cmd=$(command -v 7z || command -v 7zz || command -v 7za); then
+	"$cmd" x -o"$bin_dir" -y "$exe.zip"
+elif command -v bsdtar >/dev/null; then
+	bsdtar -xf "$exe.zip" -C "$bin_dir"
 else
-	7z x -o"$bin_dir" -y "$exe.zip"
+	echo "Error: No unzip, 7z, or bsdtar command available"
+	exit 1
 fi
 chmod +x "$exe"
 rm "$exe.zip"
