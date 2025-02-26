@@ -23,7 +23,7 @@ $DenoExe = "$BinDir\deno.exe"
 $Target = 'x86_64-pc-windows-msvc'
 
 $Version = if (!$Version) {
-  curl.exe -s "https://dl.deno.land/release-latest.txt"  
+  curl.exe --ssl-revoke-best-effort -s "https://dl.deno.land/release-latest.txt"  
 } else {
   $Version
 }
@@ -34,7 +34,7 @@ if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
 }
 
-curl.exe -Lo $DenoZip $DownloadUrl
+curl.exe --ssl-revoke-best-effort -Lo $DenoZip $DownloadUrl
 
 tar.exe xf $DenoZip -C $BinDir
 
