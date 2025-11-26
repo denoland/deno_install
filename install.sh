@@ -85,7 +85,7 @@ fi
 chmod +x "$exe"
 rm "$exe.zip"
 
-echo "Deno was installed successfully to $exe"
+echo "Deno $deno_version was installed successfully to $exe"
 
 run_shell_setup() {
 	$exe run -A --reload jsr:@deno/installer-shell-setup/bundled "$deno_install" "$@"
