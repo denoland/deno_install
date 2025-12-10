@@ -6,7 +6,7 @@
     "./bundled": "./bundled.esm.js"
   },
   "tasks": {
-    "bundle": "deno run -A ./bundle.ts"
+    "bundle": "deno bundle ./src/main.ts -o ./bundled.esm.js"
   },
   "license": "../LICENSE",
   "imports": {
@@ -14,6 +14,7 @@
     "@nathanwhit/promptly": "jsr:@nathanwhit/promptly@^0.1.2",
     "@std/cli": "jsr:@std/cli@^1.0.6",
     "@std/path": "jsr:@std/path@^1.0.4",
+    // dev deps
     "@types/node": "npm:@types/node@*"
   },
   "publish": {

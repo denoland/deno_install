@@ -1,6 +1,6 @@
-import $, { Path } from "jsr:@david/dax";
-import { Pty } from "jsr:@sigma/pty-ffi";
-import { assert, assertEquals, assertStringIncludes } from "jsr:@std/assert";
+import $, { Path } from "@david/dax";
+import { Pty } from "@sigma/pty-ffi";
+import { assert, assertEquals, assertStringIncludes } from "@std/assert";
 
 Deno.test(
   { name: "install skip prompts", ignore: Deno.build.os === "windows" },
@@ -8,8 +8,6 @@ Deno.test(
     await using testEnv = await TestEnv.setup();
     const { env, tempDir, installScript, installDir } = testEnv;
     await testEnv.homeDir.join(".bashrc").ensureFile();
-
-    console.log("installscript contents", await installScript.readText());
 
     const shellOutput = await runInBash(
       [`cat "${installScript.toString()}" | sh -s -- -y v2.0.0-rc.6`],

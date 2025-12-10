@@ -103,47 +103,31 @@ type FsFunctions = typeof fsFunctions[number];
 // abstract class FsNode {
 // }
 
-type DirNode2 = {
+type DirNode = {
   type: "dir";
-  entries: Map<string, FsNode2>;
+  entries: Map<string, FsNode>;
 };
 
-function newDirNode(entries: Map<string, FsNode2> = new Map()): DirNode2 {
+function newDirNode(entries: Map<string, FsNode> = new Map()): DirNode {
   return {
     type: "dir",
     entries,
   };
 }
 
-function newFileNode(contents: string = ""): FileNode2 {
+function newFileNode(contents: string = ""): FileNode {
   return {
     type: "file",
     contents,
   };
 }
 
-type FileNode2 = {
+type FileNode = {
   type: "file";
   contents: string;
 };
 
-type FsNode2 = DirNode2 | FileNode2;
-
-// class DirNode extends FsNode {
-//   entries: Map<string, FsNode>;
-//   constructor() {
-//     super();
-//     this.entries = new Map();
-//   }
-// }
-
-// class FileNode extends FsNode {
-//   contents: string;
-//   constructor(contents: string) {
-//     super();
-//     this.contents = contents;
-//   }
-// }
+type FsNode = DirNode | FileNode;
 
 function assertNever(never: never): never {
   throw new Error(`unreachable: ${never}`);
@@ -154,7 +138,7 @@ class InMemoryFs implements
     Environment,
     FsFunctions
   > {
-  root: DirNode2;
+  root: DirNode;
 
   constructor() {
     this.root = newDirNode();
@@ -162,10 +146,21 @@ class InMemoryFs implements
       recursive: true,
     });
   }
+  
+  [Symbol.dispose]() {
+    this.reset();
+  }
 
-  #findNode(path: string): FsNode2 | undefined {
+  reset() {
+    this.root = newDirNode();
+    this.mkdir("/test/home", {
+      recursive: true,
+    });
+  }
+
+  #findNode(path: string): FsNode | undefined {
     const parts = path.replace(/\/$/, "").replace(/^\//, "").split("/");
-    let current: FsNode2 = this.root;
+    let current: FsNode = this.root;
     for (const part of parts) {
       if (current.type !== "dir") {
         return undefined;
@@ -179,9 +174,9 @@ class InMemoryFs implements
     return current;
   }
 
-  #findFileOrParentDir(path: string): FsNode2 | undefined {
+  #findFileOrParentDir(path: string): FsNode | undefined {
     const parts = path.replace(/\/$/, "").replace(/^\//, "").split("/");
-    let current: FsNode2 = this.root;
+    let current: FsNode = this.root;
     for (const part of parts) {
       if (current.type !== "dir") {
         return undefined;
@@ -248,7 +243,6 @@ class InMemoryFs implements
     contents: string | ReadableStream<string>,
     options?: Deno.WriteFileOptions,
   ): Promise<void> {
-    console.log("writeTextFile", path, contents, options);
     const {
       append = false,
       create = true,
@@ -265,7 +259,7 @@ class InMemoryFs implements
       throw new Deno.errors.NotFound();
     }
 
-    let fileNode: FsNode2;
+    let fileNode: FsNode;
     if (node.type === "dir") {
       fileNode = newFileNode("");
       node.entries.set(path.toString().split("/").pop()!, fileNode);
@@ -291,7 +285,7 @@ class InMemoryFs implements
     const { recursive = false } = options ?? {};
     path = path.toString().replace(/\/$/, "").replace(/^\//, "");
     const parts = path.split("/");
-    let current: FsNode2 = this.root;
+    let current: FsNode = this.root;
     for (let i = 0; i < parts.length; i++) {
       const part = parts[i];
       if (current.type !== "dir") {
@@ -310,7 +304,7 @@ class InMemoryFs implements
 
   tree(): string {
     let output = "/\n";
-    const walk = (node: FsNode2, indent: string) => {
+    const walk = (node: FsNode, indent: string) => {
       if (node.type === "dir") {
         for (const [name, child] of node.entries) {
           console.log("child", name, child);
