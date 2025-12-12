@@ -146,7 +146,7 @@ class InMemoryFs implements
       recursive: true,
     });
   }
-  
+
   [Symbol.dispose]() {
     this.reset();
   }
