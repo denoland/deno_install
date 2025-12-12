@@ -20,7 +20,7 @@
   "publish": {
     "exclude": [
       "./bundle.ts",
-      "./src/**/*_test.ts"
+      "./src/test/*.ts"
     ]
   }
 }
