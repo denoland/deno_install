@@ -7,8 +7,9 @@ rm -f ~/.deno/bin/deno
 unset DENO_INSTALL
 sh ./install.sh
 ~/.deno/bin/deno --version
-ls -la ~/.deno/bin
-~/.deno/bin/dx -h
+if [ "$OS" != "Windows_NT" ]; then
+  ~/.deno/bin/dx -h
+fi
 
 # Test that we can install a specific version at a custom location.
 rm -rf ~/deno-1.15.0
