@@ -51,7 +51,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - uses: denoland/setup-deno@v1
+      - uses: denoland/setup-deno@v2
 
       - name: deno lint
         run: deno lint
