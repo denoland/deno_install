@@ -86,6 +86,7 @@ chmod +x "$exe"
 rm "$exe.zip"
 if $exe eval 'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1)'; then
 	"$exe" x --install-alias
+	# shellcheck disable=SC2016
 	echo 'Installed dx alias, if this conflicts with an existing command, you can remove it with `rm $(which dx)` and choose a new name with `dx --install-alias <new-name>`'
 fi
 echo "Deno was installed successfully to $exe"
