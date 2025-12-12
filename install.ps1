@@ -47,7 +47,8 @@ if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
   $Env:Path += ";${BinDir}"
 }
 
-& $DenoExe eval 'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1)'
+$versionCheck = @'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1);'@
+& $DenoExe eval $versionCheck
 if ($LASTEXITCODE -eq 0) {
   & $DenoExe x --install-alias
   Write-Output 'Installed dx alias, if this conflicts with an existing command, you can remove it with `Remove-Item $(Get-Command dx).Path` and choose a new name with `dx --install-alias <new-name>`'
