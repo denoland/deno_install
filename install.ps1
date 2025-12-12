@@ -47,7 +47,7 @@ if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
   $Env:Path += ";${BinDir}"
 }
 
-$versionCheck = @'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1);'@
+$versionCheck = 'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1);'
 & $DenoExe eval $versionCheck
 if ($LASTEXITCODE -eq 0) {
   & $DenoExe x --install-alias
