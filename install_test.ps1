@@ -7,6 +7,7 @@ Remove-Item "~\.deno" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = ""
 $v = $null; .\install.ps1
 ~\.deno\bin\deno.exe --version
+Get-ChildItem -Force ~\.deno\bin
 ~\.deno\bin\dx.cmd -h
 
 # Test that we can install a specific version at a custom location.
