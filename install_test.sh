@@ -8,7 +8,7 @@ unset DENO_INSTALL
 sh ./install.sh
 ~/.deno/bin/deno --version
 if [ "$OS" != "Windows_NT" ]; then
-  ~/.deno/bin/dx -h
+    ~/.deno/bin/dx -h
 fi
 
 # Test that we can install a specific version at a custom location.
