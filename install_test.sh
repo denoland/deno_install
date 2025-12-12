@@ -7,6 +7,7 @@ rm -f ~/.deno/bin/deno
 unset DENO_INSTALL
 sh ./install.sh
 ~/.deno/bin/deno --version
+~/.deno/bin/dx -h
 
 # Test that we can install a specific version at a custom location.
 rm -rf ~/deno-1.15.0

@@ -47,6 +47,11 @@ if (!(";${Path};".ToLower() -like "*;${BinDir};*".ToLower())) {
   $Env:Path += ";${BinDir}"
 }
 
+& $DenoExe eval 'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1)'
+if ($LASTEXITCODE -eq 0) {
+  & $DenoExe x --install-alias
+}
+
 Write-Output "Deno was installed successfully to ${DenoExe}"
 Write-Output "Run 'deno --help' to get started"
 Write-Output "Stuck? Join our Discord https://discord.gg/deno"

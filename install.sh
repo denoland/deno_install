@@ -84,7 +84,9 @@ else
 fi
 chmod +x "$exe"
 rm "$exe.zip"
-
+if $exe eval 'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 || (major === 2 && minor < 6)) Deno.exit(1)'; then
+	"$exe" x --install-alias
+fi
 echo "Deno was installed successfully to $exe"
 
 run_shell_setup() {
@@ -93,7 +95,7 @@ run_shell_setup() {
 
 # If stdout is a terminal, see if we can run shell setup script (which includes interactive prompts)
 if { [ -z "$CI" ] && [ -t 1 ]; } || $should_run_shell_setup; then
-	if $exe eval 'const [major, minor] = Deno.version.deno.split("."); if (major < 2 && minor < 42) Deno.exit(1)'; then
+	if $exe eval 'const [major, minor] = Deno.version.deno.split(".").map(Number); if (major < 2 && minor < 42) Deno.exit(1)'; then
 		if $should_run_shell_setup; then
 			run_shell_setup -y "$@" # doublely sure to pass -y to run_shell_setup in this case
 		else
