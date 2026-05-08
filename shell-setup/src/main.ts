@@ -204,7 +204,8 @@ async function setupShells(
   );
   const selected = skipPrompts ? [] : await multiSelect(
     {
-      message: `Set up completions?`,
+      message:
+        `Set up completions? (Space to toggle, Up/Down to navigate, Enter to confirm)`,
       options: shellsWithCompletion.map((s) => {
         const maybeNotes = typeof s.supportsCompletion === "string"
           ? ` (${s.supportsCompletion})`
