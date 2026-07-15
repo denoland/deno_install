@@ -48,7 +48,7 @@ $Wow64Ps = "$env:SystemRoot\SysWOW64\WindowsPowerShell\v1.0\powershell.exe"
 if (Test-Path $Wow64Ps) {
   Remove-Item "~\deno-emulated" -Recurse -Force -ErrorAction SilentlyContinue
   $env:DENO_INSTALL = "$Home\deno-emulated"
-  & $Wow64Ps -NoProfile -Command "`$v = `$null; .\install.ps1"
+  & $Wow64Ps -NoProfile -ExecutionPolicy Bypass -Command "`$v = `$null; .\install.ps1"
   if ($LASTEXITCODE -ne 0) {
     throw "emulated x86 install.ps1 failed with exit code $LASTEXITCODE"
   }
