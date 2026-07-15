@@ -11,12 +11,22 @@ fi
 
 if [ "$OS" = "Windows_NT" ]; then
 	# Resolve the *native* Windows architecture, not the process architecture.
-	# When an x64 process runs under ARM64 emulation, Windows reports the native
-	# arch in PROCESSOR_ARCHITEW6432; otherwise PROCESSOR_ARCHITECTURE holds it.
+	# A native ARM64 shell reports ARM64 directly. A 64-bit x64 shell emulated on
+	# ARM64 is not a WOW64 process, so PROCESSOR_ARCHITEW6432 is unset and
+	# PROCESSOR_ARCHITECTURE reports AMD64 (only a 32-bit x86 shell sets the
+	# ARCHITEW6432 variable). When the env vars don't say ARM64, fall back to the
+	# physical CPU identifier in the registry, which x64/x86 emulation does not
+	# rewrite.
 	native_arch="${PROCESSOR_ARCHITEW6432:-$PROCESSOR_ARCHITECTURE}"
 	case "$native_arch" in
 	ARM64 | arm64) target="aarch64-pc-windows-msvc" ;;
-	*) target="x86_64-pc-windows-msvc" ;;
+	*)
+		cpu_identifier="$(MSYS_NO_PATHCONV=1 reg query 'HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0' /v Identifier 2>/dev/null || true)"
+		case "$cpu_identifier" in
+		*ARM* | *arm*) target="aarch64-pc-windows-msvc" ;;
+		*) target="x86_64-pc-windows-msvc" ;;
+		esac
+		;;
 	esac
 else
 	case $(uname -sm) in

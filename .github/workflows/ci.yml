@@ -53,6 +53,10 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v3
 
+      - name: tests shell (native arm64)
+        shell: bash
+        run: ./install_test_arm.sh
+
       - name: tests powershell core (native arm64)
         shell: pwsh
         run: ./install_test_arm.ps1

@@ -32,7 +32,12 @@ Remove-Item "~\deno-arm64-old" -Recurse -Force -ErrorAction SilentlyContinue
 $env:DENO_INSTALL = "$Home\deno-arm64-old"
 $rejected = $false
 try {
+  $global:LASTEXITCODE = 0
   $v = "2.6.7"; .\install.ps1
+  # A terminating error is caught below; a plain non-zero `exit` is caught here.
+  if ($LASTEXITCODE -ne 0) {
+    $rejected = $true
+  }
 } catch {
   $rejected = $true
 }
