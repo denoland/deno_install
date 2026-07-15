@@ -45,6 +45,26 @@ jobs:
         shell: pwsh
         run: ./install_test.ps1
 
+  # Native Windows ARM64 coverage. Legacy v1.x installs stay on the x64 runner
+  # above because those releases have no ARM64 artifacts.
+  test-windows-arm:
+    runs-on: windows-11-arm
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: tests shell (native arm64)
+        shell: bash
+        run: ./install_test_arm.sh
+
+      - name: tests powershell core (native arm64)
+        shell: pwsh
+        run: ./install_test_arm.ps1
+
+      - name: tests windows powershell (native arm64)
+        shell: powershell
+        run: ./install_test_arm.ps1
+
   check-js:
     runs-on: ubuntu-latest
     steps:

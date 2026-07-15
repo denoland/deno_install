@@ -10,7 +10,24 @@ if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null; then
 fi
 
 if [ "$OS" = "Windows_NT" ]; then
-	target="x86_64-pc-windows-msvc"
+	# Resolve the *native* Windows architecture, not the process architecture.
+	# A native ARM64 shell reports ARM64 directly. A 64-bit x64 shell emulated on
+	# ARM64 is not a WOW64 process, so PROCESSOR_ARCHITEW6432 is unset and
+	# PROCESSOR_ARCHITECTURE reports AMD64 (only a 32-bit x86 shell sets the
+	# ARCHITEW6432 variable). When the env vars don't say ARM64, fall back to the
+	# physical CPU identifier in the registry, which x64/x86 emulation does not
+	# rewrite.
+	native_arch="${PROCESSOR_ARCHITEW6432:-$PROCESSOR_ARCHITECTURE}"
+	case "$native_arch" in
+	ARM64 | arm64) target="aarch64-pc-windows-msvc" ;;
+	*)
+		cpu_identifier="$(MSYS_NO_PATHCONV=1 reg query 'HKLM\HARDWARE\DESCRIPTION\System\CentralProcessor\0' /v Identifier 2>/dev/null || true)"
+		case "$cpu_identifier" in
+		*ARM* | *arm*) target="aarch64-pc-windows-msvc" ;;
+		*) target="x86_64-pc-windows-msvc" ;;
+		esac
+		;;
+	esac
 else
 	case $(uname -sm) in
 	"Darwin x86_64") target="x86_64-apple-darwin" ;;
@@ -65,6 +82,32 @@ for arg in "$@"; do
 done
 if [ -z "$deno_version" ]; then
 	deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"
+fi
+
+# Native Windows ARM64 artifacts are published starting with Deno v2.6.8.
+# Refuse to silently install the x64 build under emulation for older versions.
+if [ "$target" = "aarch64-pc-windows-msvc" ]; then
+	v="${deno_version#v}"
+	v="${v%%-*}"
+	case "$v" in
+	# Canary hash or unknown format: assume a current build.
+	*[!0-9.]* | "") ;;
+	*)
+		major="${v%%.*}"
+		rest="${v#*.}"
+		minor="${rest%%.*}"
+		patch="${rest#*.}"
+		patch="${patch%%.*}"
+		[ "$minor" = "$rest" ] && minor=0
+		case "$patch" in *[!0-9]* | "") patch=0 ;; esac
+		if [ "$major" -lt 2 ] ||
+			{ [ "$major" -eq 2 ] && [ "$minor" -lt 6 ]; } ||
+			{ [ "$major" -eq 2 ] && [ "$minor" -eq 6 ] && [ "$patch" -lt 8 ]; }; then
+			echo "Error: native Windows ARM64 artifact unavailable for Deno ${deno_version} (arm64 builds start at v2.6.8)." 1>&2
+			exit 1
+		fi
+		;;
+	esac
 fi
 
 # Stable releases come from GitHub, matching `deno upgrade`. The
