@@ -67,7 +67,15 @@ if [ -z "$deno_version" ]; then
 	deno_version="$(curl -s https://dl.deno.land/release-latest.txt)"
 fi
 
-deno_uri="https://dl.deno.land/release/${deno_version}/deno-${target}.zip"
+# Stable releases come from GitHub, matching `deno upgrade`. The
+# dl.deno.land/release/<version>/ path also serves the LTS channel, so
+# lts-marked binaries can overwrite it for the current stable version; GitHub is
+# the canonical stable source. Prereleases (rc) are only published to
+# dl.deno.land, so keep fetching those from there.
+case "$deno_version" in
+*-*) deno_uri="https://dl.deno.land/release/${deno_version}/deno-${target}.zip" ;;
+*) deno_uri="https://github.com/denoland/deno/releases/download/${deno_version}/deno-${target}.zip" ;;
+esac
 deno_install="${DENO_INSTALL:-$HOME/.deno}"
 bin_dir="$deno_install/bin"
 exe="$bin_dir/deno"
