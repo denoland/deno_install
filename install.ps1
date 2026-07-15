@@ -28,7 +28,11 @@ $Version = if (!$Version) {
   $Version
 }
 
-$DownloadUrl = "https://dl.deno.land/release/${Version}/deno-${Target}.zip"
+# Download stable binaries from GitHub releases. dl.deno.land/release/<version>/
+# also serves the LTS channel, so lts-marked binaries can overwrite that path
+# for the current stable version; use GitHub as the canonical stable source,
+# matching `deno upgrade`.
+$DownloadUrl = "https://github.com/denoland/deno/releases/download/${Version}/deno-${Target}.zip"
 
 if (!(Test-Path $BinDir)) {
   New-Item $BinDir -ItemType Directory | Out-Null
