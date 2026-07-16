@@ -2,6 +2,8 @@
 # Copyright 2019 the Deno authors. All rights reserved. MIT license.
 # TODO(everyone): Keep this script simple and easily auditable.
 
+echo
+echo "Stuck? Join our Discord https://discord.gg/deno"
 set -e
 
 if ! command -v unzip >/dev/null && ! command -v 7z >/dev/null; then
@@ -124,5 +126,3 @@ if command -v deno >/dev/null; then
 else
 	echo "Run '$exe --help' to get started"
 fi
-echo
-echo "Stuck? Join our Discord https://discord.gg/deno"
